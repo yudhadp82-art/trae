@@ -166,6 +166,8 @@ export default function Products() {
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const productNameOptions = Array.from(new Set(products.map(p => p.name).filter(Boolean))).slice(0, 100);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -301,8 +303,15 @@ export default function Products() {
                   required
                   value={formData.name}
                   onChange={e => setFormData({ ...formData, name: e.target.value })}
+                  list="product-name-options"
+                  placeholder="Type name…"
                   className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
                 />
+                <datalist id="product-name-options">
+                  {productNameOptions.map((n) => (
+                    <option key={n} value={n} />
+                  ))}
+                </datalist>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
