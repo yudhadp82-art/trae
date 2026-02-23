@@ -1,1 +1,228 @@
-{"data":"aW1wb3J0IHsgdXNlU3RhdGUsIHVzZUVmZmVjdCB9IGZyb20gJ3JlYWN0JzsNCmltcG9ydCB7IGRvYywgZ2V0RG9jLCBzZXREb2MgfSBmcm9tICdmaXJlYmFzZS9maXJlc3RvcmUnOw0KaW1wb3J0IHsgZGIgfSBmcm9tICcuLi9hcGkvZmlyZWJhc2UnOw0KaW1wb3J0IHsgU2V0dGluZ3MgYXMgU2V0dGluZ3NJY29uLCBTYXZlLCBNZXNzYWdlU3F1YXJlLCBBbGVydENpcmNsZSwgQ2hlY2tDaXJjbGUgfSBmcm9tICdsdWNpZGUtcmVhY3QnOw0KDQpleHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBTZXR0aW5ncygpIHsNCiAgY29uc3QgW3RlbGVncmFtQ29uZmlnLCBzZXRUZWxlZ3JhbUNvbmZpZ10gPSB1c2VTdGF0ZSh7DQogICAgYm90VG9rZW46ICc4MzA2NDQyMzc5OkFBRmNlN1ZBcjE1aTVwb2paRDZzOG94Ry12UE9qVFNadHZRJywNCiAgICBjaGF0SWQ6ICc3NzM3MzA1NzM4JywNCiAgICBpc0FjdGl2ZTogdHJ1ZQ0KICB9KTsNCiAgY29uc3QgW2xvYWRpbmcsIHNldExvYWRpbmddID0gdXNlU3RhdGUodHJ1ZSk7DQogIGNvbnN0IFtzYXZpbmcsIHNldFNhdmluZ10gPSB1c2VTdGF0ZShmYWxzZSk7DQogIGNvbnN0IFt0ZXN0U3RhdHVzLCBzZXRUZXN0U3RhdHVzXSA9IHVzZVN0YXRlPCdpZGxlJyB8ICdzdWNjZXNzJyB8ICdlcnJvcic+KCdpZGxlJyk7DQoNCiAgdXNlRWZmZWN0KCgpID0+IHsNCiAgICBmZXRjaFNldHRpbmdzKCk7DQogIH0sIFtdKTsNCg0KICBjb25zdCBmZXRjaFNldHRpbmdzID0gYXN5bmMgKCkgPT4gew0KICAgIHRyeSB7DQogICAgICBjb25zdCBkb2NSZWYgPSBkb2MoZGIsICdzZXR0aW5ncycsICd0ZWxlZ3JhbScpOw0KICAgICAgY29uc3QgZG9jU25hcCA9IGF3YWl0IGdldERvYyhkb2NSZWYpOw0KICAgICAgaWYgKGRvY1NuYXAuZXhpc3RzKCkpIHsNCiAgICAgICAgc2V0VGVsZWdyYW1Db25maWcoZG9jU25hcC5kYXRhKCkgYXMgYW55KTsNCiAgICAgIH0NCiAgICB9IGNhdGNoIChlcnJvcikgew0KICAgICAgY29uc29sZS5lcnJvcigiRXJyb3IgZmV0Y2hpbmcgc2V0dGluZ3M6IiwgZXJyb3IpOw0KICAgIH0gZmluYWxseSB7DQogICAgICBzZXRMb2FkaW5nKGZhbHNlKTsNCiAgICB9DQogIH07DQoNCiAgY29uc3QgaGFuZGxlU2F2ZSA9IGFzeW5jIChlOiBSZWFjdC5Gb3JtRXZlbnQpID0+IHsNCiAgICBlLnByZXZlbnREZWZhdWx0KCk7DQogICAgc2V0U2F2aW5nKHRydWUpOw0KICAgIHRyeSB7DQogICAgICBhd2FpdCBzZXREb2MoZG9jKGRiLCAnc2V0dGluZ3MnLCAndGVsZWdyYW0nKSwgdGVsZWdyYW1Db25maWcpOw0KICAgICAgYWxlcnQoJ1BlbmdhdHVyYW4gYmVyaGFzaWwgZGlzaW1wYW4hJyk7DQogICAgfSBjYXRjaCAoZXJyb3IpIHsNCiAgICAgIGNvbnNvbGUuZXJyb3IoIkVycm9yIHNhdmluZyBzZXR0aW5nczoiLCBlcnJvcik7DQogICAgICBhbGVydCgnR2FnYWwgbWVueWltcGFuIHBlbmdhdHVyYW4uJyk7DQogICAgfSBmaW5hbGx5IHsNCiAgICAgIHNldFNhdmluZyhmYWxzZSk7DQogICAgfQ0KICB9Ow0KDQogIGNvbnN0IGhhbmRsZUdldENoYXRJZCA9IGFzeW5jICgpID0+IHsNCiAgICBpZiAoIXRlbGVncmFtQ29uZmlnLmJvdFRva2VuKSB7DQogICAgICBhbGVydCgnTW9ob24gaXNpIEJvdCBUb2tlbiB0ZXJsZWJpaCBkYWh1bHUuJyk7DQogICAgICByZXR1cm47DQogICAgfQ0KDQogICAgc2V0TG9hZGluZyh0cnVlKTsNCiAgICB0cnkgew0KICAgICAgY29uc3QgcmVzcG9uc2UgPSBhd2FpdCBmZXRjaChgaHR0cHM6Ly9hcGkudGVsZWdyYW0ub3JnL2JvdCR7dGVsZWdyYW1Db25maWcuYm90VG9rZW59L2dldFVwZGF0ZXNgKTsNCiAgICAgIGNvbnN0IGRhdGEgPSBhd2FpdCByZXNwb25zZS5qc29uKCk7DQoNCiAgICAgIGlmIChkYXRhLm9rICYmIGRhdGEucmVzdWx0Lmxlbmd0aCA+IDApIHsNCiAgICAgICAgLy8gR2V0IHRoZSBsYXN0IGNoYXQgSUQgZnJvbSB1cGRhdGVzDQogICAgICAgIGNvbnN0IGxhc3RVcGRhdGUgPSBkYXRhLnJlc3VsdFtkYXRhLnJlc3VsdC5sZW5ndGggLSAxXTsNCiAgICAgICAgY29uc3QgY2hhdElkID0gbGFzdFVwZGF0ZS5tZXNzYWdlPy5jaGF0LmlkIHx8IGxhc3RVcGRhdGUubXlfY2hhdF9tZW1iZXI/LmNoYXQuaWQ7DQogICAgICAgIA0KICAgICAgICBpZiAoY2hhdElkKSB7DQogICAgICAgICAgc2V0VGVsZWdyYW1Db25maWcocHJldiA9PiAoeyAuLi5wcmV2LCBjaGF0SWQ6IGNoYXRJZC50b1N0cmluZygpIH0pKTsNCiAgICAgICAgICBhbGVydChgQ2hhdCBJRCBkaXRlbXVrYW46ICR7Y2hhdElkfWApOw0KICAgICAgICB9IGVsc2Ugew0KICAgICAgICAgIGFsZXJ0KCdUaWRhayBkYXBhdCBtZW5lbXVrYW4gQ2hhdCBJRCBkYXJpIHVwZGF0ZSB0ZXJha2hpci4gQ29iYSBraXJpbSBwZXNhbiAiaGFsbyIga2UgYm90IEFuZGEgdGVybGViaWggZGFodWx1LicpOw0KICAgICAgICB9DQogICAgICB9IGVsc2Ugew0KICAgICAgICBhbGVydCgnVGlkYWsgYWRhIHVwZGF0ZSBkaXRlbXVrYW4uIFBhc3Rpa2FuIEFuZGEgc3VkYWggbWVuZ2lyaW0gcGVzYW4ga2UgYm90IEFuZGEuJyk7DQogICAgICB9DQogICAgfSBjYXRjaCAoZXJyb3IpIHsNCiAgICAgIGNvbnNvbGUuZXJyb3IoIkVycm9yIGdldHRpbmcgdXBkYXRlczoiLCBlcnJvcik7DQogICAgICBhbGVydCgnR2FnYWwgbWVuZ2FtYmlsIHVwZGF0ZSBkYXJpIFRlbGVncmFtLicpOw0KICAgIH0gZmluYWxseSB7DQogICAgICBzZXRMb2FkaW5nKGZhbHNlKTsNCiAgICB9DQogIH07DQoNCiAgY29uc3QgaGFuZGxlVGVzdE1lc3NhZ2UgPSBhc3luYyAoKSA9PiB7DQogICAgaWYgKCF0ZWxlZ3JhbUNvbmZpZy5ib3RUb2tlbiB8fCAhdGVsZWdyYW1Db25maWcuY2hhdElkKSB7DQogICAgICBhbGVydCgnTW9ob24gbGVuZ2thcGkgQm90IFRva2VuIGRhbiBDaGF0IElEIHRlcmxlYmloIGRhaHVsdS4nKTsNCiAgICAgIHJldHVybjsNCiAgICB9DQoNCiAgICBzZXRUZXN0U3RhdHVzKCdpZGxlJyk7DQogICAgdHJ5IHsNCiAgICAgIGNvbnN0IG1lc3NhZ2UgPSAi8J+UlCAqVGVzIE5vdGlmaWthc2kgUE9TKlxuXG5JbmkgYWRhbGFoIHBlc2FuIHVqaSBjb2JhIGludGVncmFzaSBUZWxlZ3JhbS4iOw0KICAgICAgY29uc3QgdXJsID0gYGh0dHBzOi8vYXBpLnRlbGVncmFtLm9yZy9ib3Qke3RlbGVncmFtQ29uZmlnLmJvdFRva2VufS9zZW5kTWVzc2FnZWA7DQogICAgICANCiAgICAgIGNvbnN0IHJlc3BvbnNlID0gYXdhaXQgZmV0Y2godXJsLCB7DQogICAgICAgIG1ldGhvZDogJ1BPU1QnLA0KICAgICAgICBoZWFkZXJzOiB7DQogICAgICAgICAgJ0NvbnRlbnQtVHlwZSc6ICdhcHBsaWNhdGlvbi9qc29uJywNCiAgICAgICAgfSwNCiAgICAgICAgYm9keTogSlNPTi5zdHJpbmdpZnkoew0KICAgICAgICAgIGNoYXRfaWQ6IHRlbGVncmFtQ29uZmlnLmNoYXRJZCwNCiAgICAgICAgICB0ZXh0OiBtZXNzYWdlLA0KICAgICAgICAgIHBhcnNlX21vZGU6ICdNYXJrZG93bicNCiAgICAgICAgfSkNCiAgICAgIH0pOw0KDQogICAgICBjb25zdCBkYXRhID0gYXdhaXQgcmVzcG9uc2UuanNvbigpOw0KICAgICAgDQogICAgICBpZiAoZGF0YS5vaykgew0KICAgICAgICBzZXRUZXN0U3RhdHVzKCdzdWNjZXNzJyk7DQogICAgICAgIGFsZXJ0KCdQZXNhbiB0ZXMgYmVyaGFzaWwgZGlraXJpbSEgU2lsYWthbiBjZWsgVGVsZWdyYW0gQW5kYS4nKTsNCiAgICAgIH0gZWxzZSB7DQogICAgICAgIGNvbnNvbGUuZXJyb3IoJ1RlbGVncmFtIEFQSSBFcnJvcjonLCBkYXRhKTsNCiAgICAgICAgaWYgKGRhdGEuZGVzY3JpcHRpb24/LmluY2x1ZGVzKCdjaGF0IG5vdCBmb3VuZCcpKSB7DQogICAgICAgICAgdGhyb3cgbmV3IEVycm9yKCdDaGF0IElEIHRpZGFrIGRpdGVtdWthbi4gUGFzdGlrYW4gQW5kYSBzdWRhaCBtZW5la2FuIFNUQVJUIHBhZGEgYm90IEFuZGEuJyk7DQogICAgICAgIH0NCiAgICAgICAgdGhyb3cgbmV3IEVycm9yKGRhdGEuZGVzY3JpcHRpb24gfHwgJ0dhZ2FsIG1lbmdpcmltIHBlc2FuJyk7DQogICAgICB9DQogICAgfSBjYXRjaCAoZXJyb3I6IGFueSkgew0KICAgICAgY29uc29sZS5lcnJvcigiVGVzdCBtZXNzYWdlIGVycm9yOiIsIGVycm9yKTsNCiAgICAgIHNldFRlc3RTdGF0dXMoJ2Vycm9yJyk7DQogICAgICBhbGVydChgR2FnYWwgbWVuZ2lyaW0gcGVzYW4gdGVzOiAke2Vycm9yLm1lc3NhZ2V9YCk7DQogICAgfQ0KICB9Ow0KDQogIHJldHVybiAoDQogICAgPGRpdiBjbGFzc05hbWU9Im1heC13LTR4bCBteC1hdXRvIHNwYWNlLXktNiI+DQogICAgICA8ZGl2IGNsYXNzTmFtZT0iZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTMgbWItOCI+DQogICAgICAgIDxkaXYgY2xhc3NOYW1lPSJwLTMgYmctc2xhdGUtMTAwIHJvdW5kZWQteGwiPg0KICAgICAgICAgIDxTZXR0aW5nc0ljb24gY2xhc3NOYW1lPSJ3LTggaC04IHRleHQtc2xhdGUtNzAwIiAvPg0KICAgICAgICA8L2Rpdj4NCiAgICAgICAgPGRpdj4NCiAgICAgICAgICA8aDEgY2xhc3NOYW1lPSJ0ZXh0LTJ4bCBmb250LWJvbGQgdGV4dC1zbGF0ZS04MDAiPlBlbmdhdHVyYW48L2gxPg0KICAgICAgICAgIDxwIGNsYXNzTmFtZT0idGV4dC1zbGF0ZS01MDAiPktvbmZpZ3VyYXNpIHNpc3RlbSBkYW4gaW50ZWdyYXNpPC9wPg0KICAgICAgICA8L2Rpdj4NCiAgICAgIDwvZGl2Pg0KDQogICAgICB7LyogVGVsZWdyYW0gSW50ZWdyYXRpb24gQ2FyZCAqL30NCiAgICAgIDxkaXYgY2xhc3NOYW1lPSJiZy13aGl0ZSByb3VuZGVkLXhsIHNoYWRvdy1zbSBib3JkZXIgYm9yZGVyLXNsYXRlLTIwMCBvdmVyZmxvdy1oaWRkZW4iPg0KICAgICAgICA8ZGl2IGNsYXNzTmFtZT0icC02IGJvcmRlci1iIGJvcmRlci1zbGF0ZS0xMDAgYmctc2xhdGUtNTAgZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTMiPg0KICAgICAgICAgIDxNZXNzYWdlU3F1YXJlIGNsYXNzTmFtZT0idy02IGgtNiB0ZXh0LWJsdWUtNTAwIiAvPg0KICAgICAgICAgIDxoMiBjbGFzc05hbWU9InRleHQtbGcgZm9udC1ib2xkIHRleHQtc2xhdGUtODAwIj5JbnRlZ3Jhc2kgVGVsZWdyYW0gQm90PC9oMj4NCiAgICAgICAgPC9kaXY+DQogICAgICAgIA0KICAgICAgICA8ZGl2IGNsYXNzTmFtZT0icC02Ij4NCiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT0iYmctYmx1ZS01MCBib3JkZXIgYm9yZGVyLWJsdWUtMTAwIHJvdW5kZWQtbGcgcC00IG1iLTYgdGV4dC1zbSB0ZXh0LWJsdWUtNzAwIGZsZXggZ2FwLTMgaXRlbXMtc3RhcnQiPg0KICAgICAgICAgICAgPEFsZXJ0Q2lyY2xlIGNsYXNzTmFtZT0idy01IGgtNSBzaHJpbmstMCBtdC0wLjUiIC8+DQogICAgICAgICAgICA8ZGl2Pg0KICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9ImZvbnQtc2VtaWJvbGQgbWItMSI+Q2FyYSBtZW5kYXBhdGthbiBCb3QgVG9rZW4gJiBDaGF0IElEOjwvcD4NCiAgICAgICAgICAgICAgPHVsIGNsYXNzTmFtZT0ibGlzdC1kaXNjIGxpc3QtaW5zaWRlIHNwYWNlLXktMSBtbC0xIG9wYWNpdHktOTAiPg0KICAgICAgICAgICAgICAgIDxsaT5CdWF0IGJvdCBiYXJ1IGRpIFRlbGVncmFtIG1lbGFsdWkgPHN0cm9uZz5AQm90RmF0aGVyPC9zdHJvbmc+IHVudHVrIG1lbmRhcGF0a2FuIDxzdHJvbmc+Qm90IFRva2VuPC9zdHJvbmc+LjwvbGk+DQogICAgICAgICAgICAgICAgPGxpPk11bGFpIGNoYXQgZGVuZ2FuIGJvdCBiYXJ1IEFuZGEuPC9saT4NCiAgICAgICAgICAgICAgICA8bGk+S2lyaW0gcGVzYW4ga2UgYm90IEFuZGEsIGxhbHUgYnVrYSA8Y29kZT5odHRwczovL2FwaS50ZWxlZ3JhbS5vcmcvYm90W1RPS0VOXS9nZXRVcGRhdGVzPC9jb2RlPiB1bnR1ayBtZWxpaGF0IDxzdHJvbmc+Q2hhdCBJRDwvc3Ryb25nPiBBbmRhLjwvbGk+DQogICAgICAgICAgICAgIDwvdWw+DQogICAgICAgICAgICA8L2Rpdj4NCiAgICAgICAgICA8L2Rpdj4NCg0KICAgICAgICAgIDxmb3JtIG9uU3VibWl0PXtoYW5kbGVTYXZlfSBjbGFzc05hbWU9InNwYWNlLXktNCI+DQogICAgICAgICAgICA8ZGl2Pg0KICAgICAgICAgICAgICA8bGFiZWwgY2xhc3NOYW1lPSJibG9jayB0ZXh0LXNtIGZvbnQtbWVkaXVtIHRleHQtc2xhdGUtNzAwIG1iLTEiPkJvdCBUb2tlbjwvbGFiZWw+DQogICAgICAgICAgICAgIDxpbnB1dA0KICAgICAgICAgICAgICAgIHR5cGU9InRleHQiDQogICAgICAgICAgICAgICAgdmFsdWU9e3RlbGVncmFtQ29uZmlnLmJvdFRva2VufQ0KICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gc2V0VGVsZWdyYW1Db25maWcoeyAuLi50ZWxlZ3JhbUNvbmZpZywgYm90VG9rZW46IGUudGFyZ2V0LnZhbHVlIH0pfQ0KICAgICAgICAgICAgICAgIGNsYXNzTmFtZT0idy1mdWxsIHB4LTQgcHktMiBib3JkZXIgYm9yZGVyLXNsYXRlLTMwMCByb3VuZGVkLWxnIGZvY3VzOnJpbmctMiBmb2N1czpyaW5nLWJsdWUtNTAwIGZvY3VzOmJvcmRlci1ibHVlLTUwMCBvdXRsaW5lLW5vbmUgdHJhbnNpdGlvbi1hbGwgZm9udC1tb25vIHRleHQtc20iDQogICAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9IjEyMzQ1Njc4OTpBQkNkZWZHSElqa2xNTk9wcXJzVFVWd3h5eiINCiAgICAgICAgICAgICAgLz4NCiAgICAgICAgICAgIDwvZGl2Pg0KDQogICAgICAgICAgICA8ZGl2Pg0KICAgICAgICAgICAgICA8bGFiZWwgY2xhc3NOYW1lPSJibG9jayB0ZXh0LXNtIGZvbnQtbWVkaXVtIHRleHQtc2xhdGUtNzAwIG1iLTEiPkNoYXQgSUQ8L2xhYmVsPg0KICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT0iZmxleCBnYXAtMiI+DQogICAgICAgICAgICAgICAgPGlucHV0DQogICAgICAgICAgICAgICAgICB0eXBlPSJ0ZXh0Ig0KICAgICAgICAgICAgICAgICAgdmFsdWU9e3RlbGVncmFtQ29uZmlnLmNoYXRJZH0NCiAgICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gc2V0VGVsZWdyYW1Db25maWcoeyAuLi50ZWxlZ3JhbUNvbmZpZywgY2hhdElkOiBlLnRhcmdldC52YWx1ZSB9KX0NCiAgICAgICAgICAgICAgICAgIGNsYXNzTmFtZT0idy1mdWxsIHB4LTQgcHktMiBib3JkZXIgYm9yZGVyLXNsYXRlLTMwMCByb3VuZGVkLWxnIGZvY3VzOnJpbmctMiBmb2N1czpyaW5nLWJsdWUtNTAwIGZvY3VzOmJvcmRlci1ibHVlLTUwMCBvdXRsaW5lLW5vbmUgdHJhbnNpdGlvbi1hbGwgZm9udC1tb25vIHRleHQtc20iDQogICAgICAgICAgICAgICAgICBwbGFjZWhvbGRlcj0iLTEwMDEyMzQ1Njc4OSINCiAgICAgICAgICAgICAgICAvPg0KICAgICAgICAgICAgICAgIDxidXR0b24NCiAgICAgICAgICAgICAgICAgIHR5cGU9ImJ1dHRvbiINCiAgICAgICAgICAgICAgICAgIG9uQ2xpY2s9e2hhbmRsZUdldENoYXRJZH0NCiAgICAgICAgICAgICAgICAgIGNsYXNzTmFtZT0icHgtNCBweS0yIGJnLXNsYXRlLTEwMCBob3ZlcjpiZy1zbGF0ZS0yMDAgdGV4dC1zbGF0ZS02MDAgcm91bmRlZC1sZyBmb250LW1lZGl1bSB0cmFuc2l0aW9uLWNvbG9ycyB0ZXh0LXNtIHdoaXRlc3BhY2Utbm93cmFwIg0KICAgICAgICAgICAgICAgID4NCiAgICAgICAgICAgICAgICAgIENhcmkgQ2hhdCBJRA0KICAgICAgICAgICAgICAgIDwvYnV0dG9uPg0KICAgICAgICAgICAgICA8L2Rpdj4NCiAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPSJ0ZXh0LXhzIHRleHQtc2xhdGUtNTAwIG10LTEiPg0KICAgICAgICAgICAgICAgIFRpcHM6IEtpcmltIHBlc2FuIGtlIGJvdCBBbmRhLCBsYWx1IGtsaWsgIkNhcmkgQ2hhdCBJRCIgdW50dWsgbWVuZ2lzaSBvdG9tYXRpcy4NCiAgICAgICAgICAgICAgPC9wPg0KICAgICAgICAgICAgPC9kaXY+DQoNCiAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPSJmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMiBwdC0yIj4NCiAgICAgICAgICAgICAgPGlucHV0DQogICAgICAgICAgICAgICAgdHlwZT0iY2hlY2tib3giDQogICAgICAgICAgICAgICAgaWQ9ImlzQWN0aXZlIg0KICAgICAgICAgICAgICAgIGNoZWNrZWQ9e3RlbGVncmFtQ29uZmlnLmlzQWN0aXZlfQ0KICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gc2V0VGVsZWdyYW1Db25maWcoeyAuLi50ZWxlZ3JhbUNvbmZpZywgaXNBY3RpdmU6IGUudGFyZ2V0LmNoZWNrZWQgfSl9DQogICAgICAgICAgICAgICAgY2xhc3NOYW1lPSJ3LTQgaC00IHRleHQtYmx1ZS02MDAgcm91bmRlZCBib3JkZXItc2xhdGUtMzAwIGZvY3VzOnJpbmctYmx1ZS01MDAiDQogICAgICAgICAgICAgIC8+DQogICAgICAgICAgICAgIDxsYWJlbCBodG1sRm9yPSJpc0FjdGl2ZSIgY2xhc3NOYW1lPSJ0ZXh0LXNtIHRleHQtc2xhdGUtNzAwIGZvbnQtbWVkaXVtIHNlbGVjdC1ub25lIj4NCiAgICAgICAgICAgICAgICBBa3RpZmthbiBOb3RpZmlrYXNpIFRlbGVncmFtDQogICAgICAgICAgICAgIDwvbGFiZWw+DQogICAgICAgICAgICA8L2Rpdj4NCg0KICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9InB0LTYgZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1iZXR3ZWVuIGJvcmRlci10IGJvcmRlci1zbGF0ZS0xMDAgbXQtNiI+DQogICAgICAgICAgICAgIDxidXR0b24NCiAgICAgICAgICAgICAgICB0eXBlPSJidXR0b24iDQogICAgICAgICAgICAgICAgb25DbGljaz17aGFuZGxlVGVzdE1lc3NhZ2V9DQogICAgICAgICAgICAgICAgZGlzYWJsZWQ9eyF0ZWxlZ3JhbUNvbmZpZy5ib3RUb2tlbiB8fCAhdGVsZWdyYW1Db25maWcuY2hhdElkfQ0KICAgICAgICAgICAgICAgIGNsYXNzTmFtZT0icHgtNCBweS0yIHRleHQtc2xhdGUtNjAwIGJnLXNsYXRlLTEwMCBob3ZlcjpiZy1zbGF0ZS0yMDAgcm91bmRlZC1sZyBmb250LW1lZGl1bSB0cmFuc2l0aW9uLWNvbG9ycyBmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMiBkaXNhYmxlZDpvcGFjaXR5LTUwIg0KICAgICAgICAgICAgICA+DQogICAgICAgICAgICAgICAge3Rlc3RTdGF0dXMgPT09ICdzdWNjZXNzJyA/IDxDaGVja0NpcmNsZSBjbGFzc05hbWU9InctNCBoLTQgdGV4dC1ncmVlbi02MDAiIC8+IDogPE1lc3NhZ2VTcXVhcmUgY2xhc3NOYW1lPSJ3LTQgaC00IiAvPn0NCiAgICAgICAgICAgICAgICBUZXMgUGVzYW4NCiAgICAgICAgICAgICAgPC9idXR0b24+DQoNCiAgICAgICAgICAgICAgPGJ1dHRvbg0KICAgICAgICAgICAgICAgIHR5cGU9InN1Ym1pdCINCiAgICAgICAgICAgICAgICBkaXNhYmxlZD17c2F2aW5nIHx8IGxvYWRpbmd9DQogICAgICAgICAgICAgICAgY2xhc3NOYW1lPSJweC02IHB5LTIgYmctYmx1ZS02MDAgaG92ZXI6YmctYmx1ZS03MDAgdGV4dC13aGl0ZSByb3VuZGVkLWxnIGZvbnQtYm9sZCBzaGFkb3ctbGcgc2hhZG93LWJsdWUtMjAwIHRyYW5zaXRpb24tYWxsIGZsZXggaXRlbXMtY2VudGVyIGdhcC0yIGRpc2FibGVkOm9wYWNpdHktNTAiDQogICAgICAgICAgICAgID4NCiAgICAgICAgICAgICAgICA8U2F2ZSBjbGFzc05hbWU9InctNCBoLTQiIC8+DQogICAgICAgICAgICAgICAge3NhdmluZyA/ICdNZW55aW1wYW4uLi4nIDogJ1NpbXBhbiBQZW5nYXR1cmFuJ30NCiAgICAgICAgICAgICAgPC9idXR0b24+DQogICAgICAgICAgICA8L2Rpdj4NCiAgICAgICAgICA8L2Zvcm0+DQogICAgICAgIDwvZGl2Pg0KICAgICAgPC9kaXY+DQogICAgPC9kaXY+DQogICk7DQp9"}
+import { useState, useEffect } from 'react';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { db } from '../api/firebase';
+import { Settings as SettingsIcon, Save, MessageSquare, AlertCircle, CheckCircle } from 'lucide-react';
+
+export default function Settings() {
+  const [telegramConfig, setTelegramConfig] = useState({
+    botToken: '8306442379:AAFce7VAr15i5pojZD6s8oxG-vPOjTSZtvQ',
+    chatId: '7737305738',
+    isActive: true
+  });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [testStatus, setTestStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const docRef = doc(db, 'settings', 'telegram');
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setTelegramConfig(docSnap.data() as any);
+      }
+    } catch (error) {
+      console.error("Error fetching settings:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      await setDoc(doc(db, 'settings', 'telegram'), telegramConfig);
+      alert('Pengaturan berhasil disimpan!');
+    } catch (error) {
+      console.error("Error saving settings:", error);
+      alert('Gagal menyimpan pengaturan.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleGetChatId = async () => {
+    if (!telegramConfig.botToken) {
+      alert('Mohon isi Bot Token terlebih dahulu.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(`https://api.telegram.org/bot${telegramConfig.botToken}/getUpdates`);
+      const data = await response.json();
+
+      if (data.ok && data.result.length > 0) {
+        // Get the last chat ID from updates
+        const lastUpdate = data.result[data.result.length - 1];
+        const chatId = lastUpdate.message?.chat.id || lastUpdate.my_chat_member?.chat.id;
+        
+        if (chatId) {
+          setTelegramConfig(prev => ({ ...prev, chatId: chatId.toString() }));
+          alert(`Chat ID ditemukan: ${chatId}`);
+        } else {
+          alert('Tidak dapat menemukan Chat ID dari update terakhir. Coba kirim pesan "halo" ke bot Anda terlebih dahulu.');
+        }
+      } else {
+        alert('Tidak ada update ditemukan. Pastikan Anda sudah mengirim pesan ke bot Anda.');
+      }
+    } catch (error) {
+      console.error("Error getting updates:", error);
+      alert('Gagal mengambil update dari Telegram.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleTestMessage = async () => {
+    if (!telegramConfig.botToken || !telegramConfig.chatId) {
+      alert('Mohon lengkapi Bot Token dan Chat ID terlebih dahulu.');
+      return;
+    }
+
+    setTestStatus('idle');
+    try {
+      const message = "🔔 *Tes Notifikasi POS*\n\nIni adalah pesan uji coba integrasi Telegram.";
+      const url = `https://api.telegram.org/bot${telegramConfig.botToken}/sendMessage`;
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id: telegramConfig.chatId,
+          text: message,
+          parse_mode: 'Markdown'
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.ok) {
+        setTestStatus('success');
+        alert('Pesan tes berhasil dikirim! Silakan cek Telegram Anda.');
+      } else {
+        console.error('Telegram API Error:', data);
+        if (data.description?.includes('chat not found')) {
+          throw new Error('Chat ID tidak ditemukan. Pastikan Anda sudah menekan START pada bot Anda.');
+        }
+        throw new Error(data.description || 'Gagal mengirim pesan');
+      }
+    } catch (error: any) {
+      console.error("Test message error:", error);
+      setTestStatus('error');
+      alert(`Gagal mengirim pesan tes: ${error.message}`);
+    }
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto space-y-6">
+      <div className="flex items-center gap-3 mb-8">
+        <div className="p-3 bg-slate-100 rounded-xl">
+          <SettingsIcon className="w-8 h-8 text-slate-700" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold text-slate-800">Pengaturan</h1>
+          <p className="text-slate-500">Konfigurasi sistem dan integrasi</p>
+        </div>
+      </div>
+
+      {/* Telegram Integration Card */}
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="p-6 border-b border-slate-100 bg-slate-50 flex items-center gap-3">
+          <MessageSquare className="w-6 h-6 text-blue-500" />
+          <h2 className="text-lg font-bold text-slate-800">Integrasi Telegram Bot</h2>
+        </div>
+        
+        <div className="p-6">
+          <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6 text-sm text-blue-700 flex gap-3 items-start">
+            <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-semibold mb-1">Cara mendapatkan Bot Token & Chat ID:</p>
+              <ul className="list-disc list-inside space-y-1 ml-1 opacity-90">
+                <li>Buat bot baru di Telegram melalui <strong>@BotFather</strong> untuk mendapatkan <strong>Bot Token</strong>.</li>
+                <li>Mulai chat dengan bot baru Anda.</li>
+                <li>Kirim pesan ke bot Anda, lalu buka <code>https://api.telegram.org/bot[TOKEN]/getUpdates</code> untuk melihat <strong>Chat ID</strong> Anda.</li>
+              </ul>
+            </div>
+          </div>
+
+          <form onSubmit={handleSave} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Bot Token</label>
+              <input
+                type="text"
+                value={telegramConfig.botToken}
+                onChange={(e) => setTelegramConfig({ ...telegramConfig, botToken: e.target.value })}
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all font-mono text-sm"
+                placeholder="123456789:ABCdefGHIjklMNOpqrsTUVwxyz"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Chat ID</label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={telegramConfig.chatId}
+                  onChange={(e) => setTelegramConfig({ ...telegramConfig, chatId: e.target.value })}
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all font-mono text-sm"
+                  placeholder="-100123456789"
+                />
+                <button
+                  type="button"
+                  onClick={handleGetChatId}
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg font-medium transition-colors text-sm whitespace-nowrap"
+                >
+                  Cari Chat ID
+                </button>
+              </div>
+              <p className="text-xs text-slate-500 mt-1">
+                Tips: Kirim pesan ke bot Anda, lalu klik "Cari Chat ID" untuk mengisi otomatis.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 pt-2">
+              <input
+                type="checkbox"
+                id="isActive"
+                checked={telegramConfig.isActive}
+                onChange={(e) => setTelegramConfig({ ...telegramConfig, isActive: e.target.checked })}
+                className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
+              />
+              <label htmlFor="isActive" className="text-sm text-slate-700 font-medium select-none">
+                Aktifkan Notifikasi Telegram
+              </label>
+            </div>
+
+            <div className="pt-6 flex items-center justify-between border-t border-slate-100 mt-6">
+              <button
+                type="button"
+                onClick={handleTestMessage}
+                disabled={!telegramConfig.botToken || !telegramConfig.chatId}
+                className="px-4 py-2 text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg font-medium transition-colors flex items-center gap-2 disabled:opacity-50"
+              >
+                {testStatus === 'success' ? <CheckCircle className="w-4 h-4 text-green-600" /> : <MessageSquare className="w-4 h-4" />}
+                Tes Pesan
+              </button>
+
+              <button
+                type="submit"
+                disabled={saving || loading}
+                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold shadow-lg shadow-blue-200 transition-all flex items-center gap-2 disabled:opacity-50"
+              >
+                <Save className="w-4 h-4" />
+                {saving ? 'Menyimpan...' : 'Simpan Pengaturan'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}

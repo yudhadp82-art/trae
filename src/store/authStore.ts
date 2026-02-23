@@ -1,1 +1,22 @@
-{"data":"aW1wb3J0IHsgY3JlYXRlIH0gZnJvbSAnenVzdGFuZCc7DQppbXBvcnQgeyBVc2VyIH0gZnJvbSAnLi4vdHlwZXMnOw0KDQppbnRlcmZhY2UgQXV0aFN0YXRlIHsNCiAgdXNlcjogVXNlciB8IG51bGw7DQogIGlzQXV0aGVudGljYXRlZDogYm9vbGVhbjsNCiAgc2V0VXNlcjogKHVzZXI6IFVzZXIgfCBudWxsKSA9PiB2b2lkOw0KICBsb2dvdXQ6ICgpID0+IHZvaWQ7DQp9DQoNCmV4cG9ydCBjb25zdCB1c2VBdXRoU3RvcmUgPSBjcmVhdGU8QXV0aFN0YXRlPigoc2V0KSA9PiAoew0KICB1c2VyOiB7DQogICAgdWlkOiAnYWRtaW4tMTIzJywNCiAgICBuYW1lOiAnQWRtaW4gVG9rbycsDQogICAgZW1haWw6ICdhZG1pbkBwb3MuY29tJywNCiAgICByb2xlOiAnYWRtaW4nLA0KICAgIGNyZWF0ZWRBdDogbmV3IERhdGUoKQ0KICB9LA0KICBpc0F1dGhlbnRpY2F0ZWQ6IHRydWUsDQogIHNldFVzZXI6ICh1c2VyKSA9PiBzZXQoeyB1c2VyLCBpc0F1dGhlbnRpY2F0ZWQ6ICEhdXNlciB9KSwNCiAgbG9nb3V0OiAoKSA9PiB7fSwgLy8gTG9nb3V0IGRpbm9uYWt0aWZrYW4NCn0pKTsNCg=="}
+import { create } from 'zustand';
+import { User } from '../types';
+
+interface AuthState {
+  user: User | null;
+  isAuthenticated: boolean;
+  setUser: (user: User | null) => void;
+  logout: () => void;
+}
+
+export const useAuthStore = create<AuthState>((set) => ({
+  user: {
+    uid: 'admin-123',
+    name: 'Admin Toko',
+    email: 'admin@pos.com',
+    role: 'admin',
+    createdAt: new Date()
+  },
+  isAuthenticated: true,
+  setUser: (user) => set({ user, isAuthenticated: !!user }),
+  logout: () => {}, // Logout dinonaktifkan
+}));

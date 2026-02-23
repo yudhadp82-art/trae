@@ -1,1 +1,13 @@
-{"data":"LyoqIEB0eXBlIHtpbXBvcnQoJ3RhaWx3aW5kY3NzJykuQ29uZmlnfSAqLwoKZXhwb3J0IGRlZmF1bHQgewogIGRhcmtNb2RlOiAiY2xhc3MiLAogIGNvbnRlbnQ6IFsiLi9pbmRleC5odG1sIiwgIi4vc3JjLyoqLyoue2pzLHRzLGpzeCx0c3h9Il0sCiAgdGhlbWU6IHsKICAgIGNvbnRhaW5lcjogewogICAgICBjZW50ZXI6IHRydWUsCiAgICB9LAogICAgZXh0ZW5kOiB7fSwKICB9LAogIHBsdWdpbnM6IFtdLAp9Owo="}
+/** @type {import('tailwindcss').Config} */
+
+export default {
+  darkMode: "class",
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  theme: {
+    container: {
+      center: true,
+    },
+    extend: {},
+  },
+  plugins: [],
+};

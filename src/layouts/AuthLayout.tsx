@@ -1,1 +1,9 @@
-{"data":"aW1wb3J0IHsgT3V0bGV0IH0gZnJvbSAncmVhY3Qtcm91dGVyLWRvbSc7DQoNCmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIEF1dGhMYXlvdXQoKSB7DQogIHJldHVybiAoDQogICAgPGRpdiBjbGFzc05hbWU9Im1pbi1oLXNjcmVlbiBiZy1zbGF0ZS01MCBmbGV4IGl0ZW1zLWNlbnRlciBqdXN0aWZ5LWNlbnRlciBwLTQiPg0KICAgICAgPE91dGxldCAvPg0KICAgIDwvZGl2Pg0KICApOw0KfQ0K"}
+import { Outlet } from 'react-router-dom';
+
+export default function AuthLayout() {
+  return (
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+      <Outlet />
+    </div>
+  );
+}

@@ -1,1 +1,9 @@
-{"data":"aW1wb3J0IHR5cGUgeyBDYXBhY2l0b3JDb25maWcgfSBmcm9tICdAY2FwYWNpdG9yL2NsaSc7Cgpjb25zdCBjb25maWc6IENhcGFjaXRvckNvbmZpZyA9IHsKICBhcHBJZDogJ2NvbS5rZG1wLnBvcycsCiAgYXBwTmFtZTogJ0tETVAgUE9TJywKICB3ZWJEaXI6ICdkaXN0Jwp9OwoKZXhwb3J0IGRlZmF1bHQgY29uZmlnOwo="}
+import type { CapacitorConfig } from '@capacitor/cli';
+
+const config: CapacitorConfig = {
+  appId: 'com.kdmp.pos',
+  appName: 'KDMP POS',
+  webDir: 'dist'
+};
+
+export default config;

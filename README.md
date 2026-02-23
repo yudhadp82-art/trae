@@ -1,1 +1,57 @@
-{"data":"IyBSZWFjdCArIFR5cGVTY3JpcHQgKyBWaXRlCgpUaGlzIHRlbXBsYXRlIHByb3ZpZGVzIGEgbWluaW1hbCBzZXR1cCB0byBnZXQgUmVhY3Qgd29ya2luZyBpbiBWaXRlIHdpdGggSE1SIGFuZCBzb21lIEVTTGludCBydWxlcy4KCkN1cnJlbnRseSwgdHdvIG9mZmljaWFsIHBsdWdpbnMgYXJlIGF2YWlsYWJsZToKCi0gW0B2aXRlanMvcGx1Z2luLXJlYWN0XShodHRwczovL2dpdGh1Yi5jb20vdml0ZWpzL3ZpdGUtcGx1Z2luLXJlYWN0L2Jsb2IvbWFpbi9wYWNrYWdlcy9wbHVnaW4tcmVhY3QpIHVzZXMgW0JhYmVsXShodHRwczovL2JhYmVsanMuaW8vKSBmb3IgRmFzdCBSZWZyZXNoCi0gW0B2aXRlanMvcGx1Z2luLXJlYWN0LXN3Y10oaHR0cHM6Ly9naXRodWIuY29tL3ZpdGVqcy92aXRlLXBsdWdpbi1yZWFjdC9ibG9iL21haW4vcGFja2FnZXMvcGx1Z2luLXJlYWN0LXN3YykgdXNlcyBbU1dDXShodHRwczovL3N3Yy5ycy8pIGZvciBGYXN0IFJlZnJlc2gKCiMjIEV4cGFuZGluZyB0aGUgRVNMaW50IGNvbmZpZ3VyYXRpb24KCklmIHlvdSBhcmUgZGV2ZWxvcGluZyBhIHByb2R1Y3Rpb24gYXBwbGljYXRpb24sIHdlIHJlY29tbWVuZCB1cGRhdGluZyB0aGUgY29uZmlndXJhdGlvbiB0byBlbmFibGUgdHlwZS1hd2FyZSBsaW50IHJ1bGVzOgoKYGBganMKZXhwb3J0IGRlZmF1bHQgdHNlc2xpbnQuY29uZmlnKHsKICBleHRlbmRzOiBbCiAgICAvLyBSZW1vdmUgLi4udHNlc2xpbnQuY29uZmlncy5yZWNvbW1lbmRlZCBhbmQgcmVwbGFjZSB3aXRoIHRoaXMKICAgIC4uLnRzZXNsaW50LmNvbmZpZ3MucmVjb21tZW5kZWRUeXBlQ2hlY2tlZCwKICAgIC8vIEFsdGVybmF0aXZlbHksIHVzZSB0aGlzIGZvciBzdHJpY3RlciBydWxlcwogICAgLi4udHNlc2xpbnQuY29uZmlncy5zdHJpY3RUeXBlQ2hlY2tlZCwKICAgIC8vIE9wdGlvbmFsbHksIGFkZCB0aGlzIGZvciBzdHlsaXN0aWMgcnVsZXMKICAgIC4uLnRzZXNsaW50LmNvbmZpZ3Muc3R5bGlzdGljVHlwZUNoZWNrZWQsCiAgXSwKICBsYW5ndWFnZU9wdGlvbnM6IHsKICAgIC8vIG90aGVyIG9wdGlvbnMuLi4KICAgIHBhcnNlck9wdGlvbnM6IHsKICAgICAgcHJvamVjdDogWycuL3RzY29uZmlnLm5vZGUuanNvbicsICcuL3RzY29uZmlnLmFwcC5qc29uJ10sCiAgICAgIHRzY29uZmlnUm9vdERpcjogaW1wb3J0Lm1ldGEuZGlybmFtZSwKICAgIH0sCiAgfSwKfSkKYGBgCgpZb3UgY2FuIGFsc28gaW5zdGFsbCBbZXNsaW50LXBsdWdpbi1yZWFjdC14XShodHRwczovL2dpdGh1Yi5jb20vUmVsMWN4L2VzbGludC1yZWFjdC90cmVlL21haW4vcGFja2FnZXMvcGx1Z2lucy9lc2xpbnQtcGx1Z2luLXJlYWN0LXgpIGFuZCBbZXNsaW50LXBsdWdpbi1yZWFjdC1kb21dKGh0dHBzOi8vZ2l0aHViLmNvbS9SZWwxY3gvZXNsaW50LXJlYWN0L3RyZWUvbWFpbi9wYWNrYWdlcy9wbHVnaW5zL2VzbGludC1wbHVnaW4tcmVhY3QtZG9tKSBmb3IgUmVhY3Qtc3BlY2lmaWMgbGludCBydWxlczoKCmBgYGpzCi8vIGVzbGludC5jb25maWcuanMKaW1wb3J0IHJlYWN0WCBmcm9tICdlc2xpbnQtcGx1Z2luLXJlYWN0LXgnCmltcG9ydCByZWFjdERvbSBmcm9tICdlc2xpbnQtcGx1Z2luLXJlYWN0LWRvbScKCmV4cG9ydCBkZWZhdWx0IHRzZXNsaW50LmNvbmZpZyh7CiAgZXh0ZW5kczogWwogICAgLy8gb3RoZXIgY29uZmlncy4uLgogICAgLy8gRW5hYmxlIGxpbnQgcnVsZXMgZm9yIFJlYWN0CiAgICByZWFjdFguY29uZmlnc1sncmVjb21tZW5kZWQtdHlwZXNjcmlwdCddLAogICAgLy8gRW5hYmxlIGxpbnQgcnVsZXMgZm9yIFJlYWN0IERPTQogICAgcmVhY3REb20uY29uZmlncy5yZWNvbW1lbmRlZCwKICBdLAogIGxhbmd1YWdlT3B0aW9uczogewogICAgLy8gb3RoZXIgb3B0aW9ucy4uLgogICAgcGFyc2VyT3B0aW9uczogewogICAgICBwcm9qZWN0OiBbJy4vdHNjb25maWcubm9kZS5qc29uJywgJy4vdHNjb25maWcuYXBwLmpzb24nXSwKICAgICAgdHNjb25maWdSb290RGlyOiBpbXBvcnQubWV0YS5kaXJuYW1lLAogICAgfSwKICB9LAp9KQpgYGAK"}
+# React + TypeScript + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default tseslint.config({
+  extends: [
+    // Remove ...tseslint.configs.recommended and replace with this
+    ...tseslint.configs.recommendedTypeChecked,
+    // Alternatively, use this for stricter rules
+    ...tseslint.configs.strictTypeChecked,
+    // Optionally, add this for stylistic rules
+    ...tseslint.configs.stylisticTypeChecked,
+  ],
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
+```
+
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default tseslint.config({
+  extends: [
+    // other configs...
+    // Enable lint rules for React
+    reactX.configs['recommended-typescript'],
+    // Enable lint rules for React DOM
+    reactDom.configs.recommended,
+  ],
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
+```

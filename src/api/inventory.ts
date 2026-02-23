@@ -1,1 +1,81 @@
-{"data":"aW1wb3J0IHsgY29sbGVjdGlvbiwgYWRkRG9jLCBzZXJ2ZXJUaW1lc3RhbXAsIHVwZGF0ZURvYywgZG9jLCBnZXREb2MsIHF1ZXJ5LCBvcmRlckJ5LCBvblNuYXBzaG90IH0gZnJvbSAnZmlyZWJhc2UvZmlyZXN0b3JlJzsNCmltcG9ydCB7IGRiIH0gZnJvbSAnLi9maXJlYmFzZSc7DQppbXBvcnQgeyBJbnZlbnRvcnlMb2cgfSBmcm9tICcuLi90eXBlcyc7DQoNCmV4cG9ydCBjb25zdCBnZXRJbnZlbnRvcnlMb2dzID0gKGNhbGxiYWNrOiAobG9nczogSW52ZW50b3J5TG9nW10pID0+IHZvaWQpID0+IHsNCiAgY29uc3QgcSA9IHF1ZXJ5KGNvbGxlY3Rpb24oZGIsICdpbnZlbnRvcnlfbG9ncycpLCBvcmRlckJ5KCdjcmVhdGVkQXQnLCAnZGVzYycpKTsNCiAgDQogIHJldHVybiBvblNuYXBzaG90KHEsIChzbmFwc2hvdCkgPT4gew0KICAgIGNvbnN0IGxvZ3MgPSBzbmFwc2hvdC5kb2NzLm1hcChkb2MgPT4gKHsNCiAgICAgIGlkOiBkb2MuaWQsDQogICAgICAuLi5kb2MuZGF0YSgpLA0KICAgICAgY3JlYXRlZEF0OiBkb2MuZGF0YSgpLmNyZWF0ZWRBdD8udG9EYXRlKCkNCiAgICB9KSkgYXMgSW52ZW50b3J5TG9nW107DQogICAgY2FsbGJhY2sobG9ncyk7DQogIH0pOw0KfTsNCg0KZXhwb3J0IGNvbnN0IGFkZFN0b2NrQWRqdXN0bWVudCA9IGFzeW5jICgNCiAgcHJvZHVjdElkOiBzdHJpbmcsDQogIHByb2R1Y3ROYW1lOiBzdHJpbmcsDQogIHR5cGU6ICdpbicgfCAnb3V0JyB8ICdhZGp1c3RtZW50JywNCiAgcXVhbnRpdHk6IG51bWJlciwNCiAgcmVhc29uOiBzdHJpbmcsDQogIHVzZXJJZDogc3RyaW5nDQopID0+IHsNCiAgdHJ5IHsNCiAgICAvLyAxLiBHZXQgY3VycmVudCBwcm9kdWN0IHN0b2NrDQogICAgY29uc3QgcHJvZHVjdFJlZiA9IGRvYyhkYiwgJ3Byb2R1Y3RzJywgcHJvZHVjdElkKTsNCiAgICBjb25zdCBwcm9kdWN0U25hcCA9IGF3YWl0IGdldERvYyhwcm9kdWN0UmVmKTsNCiAgICANCiAgICBpZiAoIXByb2R1Y3RTbmFwLmV4aXN0cygpKSB7DQogICAgICB0aHJvdyBuZXcgRXJyb3IoJ1Byb2R1Y3Qgbm90IGZvdW5kJyk7DQogICAgfQ0KDQogICAgY29uc3QgY3VycmVudFN0b2NrID0gcHJvZHVjdFNuYXAuZGF0YSgpLnN0b2NrIHx8IDA7DQogICAgbGV0IG5ld1N0b2NrID0gY3VycmVudFN0b2NrOw0KDQogICAgLy8gMi4gQ2FsY3VsYXRlIG5ldyBzdG9jayBiYXNlZCBvbiB0eXBlDQogICAgaWYgKHR5cGUgPT09ICdpbicpIHsNCiAgICAgIG5ld1N0b2NrICs9IHF1YW50aXR5Ow0KICAgIH0gZWxzZSBpZiAodHlwZSA9PT0gJ291dCcpIHsNCiAgICAgIG5ld1N0b2NrIC09IHF1YW50aXR5Ow0KICAgIH0gZWxzZSBpZiAodHlwZSA9PT0gJ2FkanVzdG1lbnQnKSB7DQogICAgICAvLyBJZiBhZGp1c3RtZW50LCBxdWFudGl0eSBpcyB0aGUgbmV3IGFic29sdXRlIHZhbHVlIChvcHRpb25hbCwgb3IgdHJlYXQgYXMgZGlmZikNCiAgICAgIC8vIExldCdzIHRyZWF0IGFkanVzdG1lbnQgYXMgYWJzb2x1dGUgdmFsdWUgZm9yIHNpbXBsaWNpdHksIG9yIGRpZmZlcmVuY2UNCiAgICAgIC8vIEJ1dCB0eXBpY2FsbHkgYWRqdXN0bWVudCBtZWFucyAic2V0IHRvIFgiLiANCiAgICAgIC8vIEhvd2V2ZXIsIHRvIGtlZXAgaXQgc2ltcGxlIHdpdGggc2lnbmVkIHF1YW50aXR5LCBsZXQncyBhc3N1bWU6DQogICAgICAvLyBhZGp1c3RtZW50IHdpdGggcG9zaXRpdmUgcXVhbnRpdHkgPSBhZGQsIG5lZ2F0aXZlID0gcmVtb3ZlLg0KICAgICAgLy8gQnV0IHN0YW5kYXJkIFVJIHVzdWFsbHkgaGFzICJTdG9jayBJbiIgYW5kICJTdG9jayBPdXQiLg0KICAgICAgLy8gTGV0J3Mgc3RpY2sgdG86ICdpbicgYWRkcywgJ291dCcgc3VidHJhY3RzLg0KICAgICAgLy8gJ2FkanVzdG1lbnQnIG1pZ2h0IGJlIHVzZWQgZm9yIGNvcnJlY3Rpb25zLiBMZXQncyBzYXkgaXQgYWRkcyAoY2FuIGJlIG5lZ2F0aXZlKS4NCiAgICAgIG5ld1N0b2NrICs9IHF1YW50aXR5Ow0KICAgIH0NCg0KICAgIGlmIChuZXdTdG9jayA8IDApIHsNCiAgICAgIHRocm93IG5ldyBFcnJvcignSW5zdWZmaWNpZW50IHN0b2NrJyk7DQogICAgfQ0KDQogICAgLy8gMy4gVXBkYXRlIHByb2R1Y3Qgc3RvY2sNCiAgICBhd2FpdCB1cGRhdGVEb2MocHJvZHVjdFJlZiwgew0KICAgICAgc3RvY2s6IG5ld1N0b2NrLA0KICAgICAgdXBkYXRlZEF0OiBzZXJ2ZXJUaW1lc3RhbXAoKQ0KICAgIH0pOw0KDQogICAgLy8gNC4gQ3JlYXRlIGludmVudG9yeSBsb2cNCiAgICBhd2FpdCBhZGREb2MoY29sbGVjdGlvbihkYiwgJ2ludmVudG9yeV9sb2dzJyksIHsNCiAgICAgIHByb2R1Y3RJZCwNCiAgICAgIHByb2R1Y3ROYW1lLA0KICAgICAgdHlwZSwNCiAgICAgIHF1YW50aXR5LA0KICAgICAgcmVhc29uLA0KICAgICAgdXNlcklkLA0KICAgICAgY3JlYXRlZEF0OiBzZXJ2ZXJUaW1lc3RhbXAoKQ0KICAgIH0pOw0KDQogICAgcmV0dXJuIHRydWU7DQogIH0gY2F0Y2ggKGVycm9yKSB7DQogICAgY29uc29sZS5lcnJvcignRXJyb3IgYWRqdXN0aW5nIHN0b2NrOicsIGVycm9yKTsNCiAgICB0aHJvdyBlcnJvcjsNCiAgfQ0KfTsNCg=="}
+import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { db } from './firebase';
+import { InventoryLog } from '../types';
+
+export const getInventoryLogs = (callback: (logs: InventoryLog[]) => void) => {
+  const q = query(collection(db, 'inventory_logs'), orderBy('createdAt', 'desc'));
+  
+  return onSnapshot(q, (snapshot) => {
+    const logs = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: doc.data().createdAt?.toDate()
+    })) as InventoryLog[];
+    callback(logs);
+  });
+};
+
+export const addStockAdjustment = async (
+  productId: string,
+  productName: string,
+  type: 'in' | 'out' | 'adjustment',
+  quantity: number,
+  reason: string,
+  userId: string
+) => {
+  try {
+    // 1. Get current product stock
+    const productRef = doc(db, 'products', productId);
+    const productSnap = await getDoc(productRef);
+    
+    if (!productSnap.exists()) {
+      throw new Error('Product not found');
+    }
+
+    const currentStock = productSnap.data().stock || 0;
+    let newStock = currentStock;
+
+    // 2. Calculate new stock based on type
+    if (type === 'in') {
+      newStock += quantity;
+    } else if (type === 'out') {
+      newStock -= quantity;
+    } else if (type === 'adjustment') {
+      // If adjustment, quantity is the new absolute value (optional, or treat as diff)
+      // Let's treat adjustment as absolute value for simplicity, or difference
+      // But typically adjustment means "set to X". 
+      // However, to keep it simple with signed quantity, let's assume:
+      // adjustment with positive quantity = add, negative = remove.
+      // But standard UI usually has "Stock In" and "Stock Out".
+      // Let's stick to: 'in' adds, 'out' subtracts.
+      // 'adjustment' might be used for corrections. Let's say it adds (can be negative).
+      newStock += quantity;
+    }
+
+    if (newStock < 0) {
+      throw new Error('Insufficient stock');
+    }
+
+    // 3. Update product stock
+    await updateDoc(productRef, {
+      stock: newStock,
+      updatedAt: serverTimestamp()
+    });
+
+    // 4. Create inventory log
+    await addDoc(collection(db, 'inventory_logs'), {
+      productId,
+      productName,
+      type,
+      quantity,
+      reason,
+      userId,
+      createdAt: serverTimestamp()
+    });
+
+    return true;
+  } catch (error) {
+    console.error('Error adjusting stock:', error);
+    throw error;
+  }
+};

@@ -1,1 +1,16 @@
-{"data":"ZXh0IHsKICAgIG1pblNka1ZlcnNpb24gPSAyNAogICAgY29tcGlsZVNka1ZlcnNpb24gPSAzNgogICAgdGFyZ2V0U2RrVmVyc2lvbiA9IDM2CiAgICBhbmRyb2lkeEFjdGl2aXR5VmVyc2lvbiA9ICcxLjExLjAnCiAgICBhbmRyb2lkeEFwcENvbXBhdFZlcnNpb24gPSAnMS43LjEnCiAgICBhbmRyb2lkeENvb3JkaW5hdG9yTGF5b3V0VmVyc2lvbiA9ICcxLjMuMCcKICAgIGFuZHJvaWR4Q29yZVZlcnNpb24gPSAnMS4xNy4wJwogICAgYW5kcm9pZHhGcmFnbWVudFZlcnNpb24gPSAnMS44LjknCiAgICBjb3JlU3BsYXNoU2NyZWVuVmVyc2lvbiA9ICcxLjIuMCcKICAgIGFuZHJvaWR4V2Via2l0VmVyc2lvbiA9ICcxLjE0LjAnCiAgICBqdW5pdFZlcnNpb24gPSAnNC4xMy4yJwogICAgYW5kcm9pZHhKdW5pdFZlcnNpb24gPSAnMS4zLjAnCiAgICBhbmRyb2lkeEVzcHJlc3NvQ29yZVZlcnNpb24gPSAnMy43LjAnCiAgICBjb3Jkb3ZhQW5kcm9pZFZlcnNpb24gPSAnMTQuMC4xJwp9"}
+ext {
+    minSdkVersion = 24
+    compileSdkVersion = 36
+    targetSdkVersion = 36
+    androidxActivityVersion = '1.11.0'
+    androidxAppCompatVersion = '1.7.1'
+    androidxCoordinatorLayoutVersion = '1.3.0'
+    androidxCoreVersion = '1.17.0'
+    androidxFragmentVersion = '1.8.9'
+    coreSplashScreenVersion = '1.2.0'
+    androidxWebkitVersion = '1.14.0'
+    junitVersion = '4.13.2'
+    androidxJunitVersion = '1.3.0'
+    androidxEspressoCoreVersion = '3.7.0'
+    cordovaAndroidVersion = '14.0.1'
+}

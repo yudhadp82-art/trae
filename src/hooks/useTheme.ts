@@ -1,1 +1,29 @@
-{"data":"aW1wb3J0IHsgdXNlU3RhdGUsIHVzZUVmZmVjdCB9IGZyb20gJ3JlYWN0JzsKCnR5cGUgVGhlbWUgPSAnbGlnaHQnIHwgJ2RhcmsnOwoKZXhwb3J0IGZ1bmN0aW9uIHVzZVRoZW1lKCkgewogIGNvbnN0IFt0aGVtZSwgc2V0VGhlbWVdID0gdXNlU3RhdGU8VGhlbWU+KCgpID0+IHsKICAgIGNvbnN0IHNhdmVkVGhlbWUgPSBsb2NhbFN0b3JhZ2UuZ2V0SXRlbSgndGhlbWUnKSBhcyBUaGVtZTsKICAgIGlmIChzYXZlZFRoZW1lKSB7CiAgICAgIHJldHVybiBzYXZlZFRoZW1lOwogICAgfQogICAgcmV0dXJuIHdpbmRvdy5tYXRjaE1lZGlhKCcocHJlZmVycy1jb2xvci1zY2hlbWU6IGRhcmspJykubWF0Y2hlcyA/ICdkYXJrJyA6ICdsaWdodCc7CiAgfSk7CgogIHVzZUVmZmVjdCgoKSA9PiB7CiAgICBkb2N1bWVudC5kb2N1bWVudEVsZW1lbnQuY2xhc3NMaXN0LnJlbW92ZSgnbGlnaHQnLCAnZGFyaycpOwogICAgZG9jdW1lbnQuZG9jdW1lbnRFbGVtZW50LmNsYXNzTGlzdC5hZGQodGhlbWUpOwogICAgbG9jYWxTdG9yYWdlLnNldEl0ZW0oJ3RoZW1lJywgdGhlbWUpOwogIH0sIFt0aGVtZV0pOwoKICBjb25zdCB0b2dnbGVUaGVtZSA9ICgpID0+IHsKICAgIHNldFRoZW1lKHByZXZUaGVtZSA9PiBwcmV2VGhlbWUgPT09ICdsaWdodCcgPyAnZGFyaycgOiAnbGlnaHQnKTsKICB9OwoKICByZXR1cm4gewogICAgdGhlbWUsCiAgICB0b2dnbGVUaGVtZSwKICAgIGlzRGFyazogdGhlbWUgPT09ICdkYXJrJwogIH07Cn0g"}
+import { useState, useEffect } from 'react';
+
+type Theme = 'light' | 'dark';
+
+export function useTheme() {
+  const [theme, setTheme] = useState<Theme>(() => {
+    const savedTheme = localStorage.getItem('theme') as Theme;
+    if (savedTheme) {
+      return savedTheme;
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.remove('light', 'dark');
+    document.documentElement.classList.add(theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  };
+
+  return {
+    theme,
+    toggleTheme,
+    isDark: theme === 'dark'
+  };
+} 

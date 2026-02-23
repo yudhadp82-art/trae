@@ -1,1 +1,66 @@
-{"data":"aW1wb3J0IHsgY3JlYXRlIH0gZnJvbSAnenVzdGFuZCc7DQppbXBvcnQgeyBDYXJ0SXRlbSwgUHJvZHVjdCB9IGZyb20gJy4uL3R5cGVzJzsNCg0KaW50ZXJmYWNlIENhcnRTdGF0ZSB7DQogIGl0ZW1zOiBDYXJ0SXRlbVtdOw0KICBhZGRUb0NhcnQ6IChwcm9kdWN0OiBQcm9kdWN0KSA9PiB2b2lkOw0KICByZW1vdmVGcm9tQ2FydDogKHByb2R1Y3RJZDogc3RyaW5nKSA9PiB2b2lkOw0KICB1cGRhdGVRdWFudGl0eTogKHByb2R1Y3RJZDogc3RyaW5nLCBxdWFudGl0eTogbnVtYmVyKSA9PiB2b2lkOw0KICBjbGVhckNhcnQ6ICgpID0+IHZvaWQ7DQogIGdldFRvdGFsOiAoKSA9PiBudW1iZXI7DQp9DQoNCmV4cG9ydCBjb25zdCB1c2VDYXJ0U3RvcmUgPSBjcmVhdGU8Q2FydFN0YXRlPigoc2V0LCBnZXQpID0+ICh7DQogIGl0ZW1zOiBbXSwNCiAgDQogIGFkZFRvQ2FydDogKHByb2R1Y3QpID0+IHsNCiAgICBjb25zdCBpdGVtcyA9IGdldCgpLml0ZW1zOw0KICAgIGNvbnN0IGV4aXN0aW5nSXRlbSA9IGl0ZW1zLmZpbmQoaXRlbSA9PiBpdGVtLnByb2R1Y3RJZCA9PT0gcHJvZHVjdC5pZCk7DQoNCiAgICBpZiAoZXhpc3RpbmdJdGVtKSB7DQogICAgICBzZXQoew0KICAgICAgICBpdGVtczogaXRlbXMubWFwKGl0ZW0gPT4NCiAgICAgICAgICBpdGVtLnByb2R1Y3RJZCA9PT0gcHJvZHVjdC5pZA0KICAgICAgICAgICAgPyB7IC4uLml0ZW0sIHF1YW50aXR5OiBpdGVtLnF1YW50aXR5ICsgMSB9DQogICAgICAgICAgICA6IGl0ZW0NCiAgICAgICAgKQ0KICAgICAgfSk7DQogICAgfSBlbHNlIHsNCiAgICAgIHNldCh7DQogICAgICAgIGl0ZW1zOiBbLi4uaXRlbXMsIHsNCiAgICAgICAgICBwcm9kdWN0SWQ6IHByb2R1Y3QuaWQsDQogICAgICAgICAgbmFtZTogcHJvZHVjdC5uYW1lLA0KICAgICAgICAgIHByaWNlOiBwcm9kdWN0LnByaWNlLA0KICAgICAgICAgIGNvc3RQcmljZTogcHJvZHVjdC5jb3N0UHJpY2UsDQogICAgICAgICAgcXVhbnRpdHk6IDENCiAgICAgICAgfV0NCiAgICAgIH0pOw0KICAgIH0NCiAgfSwNCg0KICByZW1vdmVGcm9tQ2FydDogKHByb2R1Y3RJZCkgPT4gew0KICAgIHNldCh7DQogICAgICBpdGVtczogZ2V0KCkuaXRlbXMuZmlsdGVyKGl0ZW0gPT4gaXRlbS5wcm9kdWN0SWQgIT09IHByb2R1Y3RJZCkNCiAgICB9KTsNCiAgfSwNCg0KICB1cGRhdGVRdWFudGl0eTogKHByb2R1Y3RJZCwgcXVhbnRpdHkpID0+IHsNCiAgICBpZiAocXVhbnRpdHkgPD0gMCkgew0KICAgICAgZ2V0KCkucmVtb3ZlRnJvbUNhcnQocHJvZHVjdElkKTsNCiAgICB9IGVsc2Ugew0KICAgICAgc2V0KHsNCiAgICAgICAgaXRlbXM6IGdldCgpLml0ZW1zLm1hcChpdGVtID0+DQogICAgICAgICAgaXRlbS5wcm9kdWN0SWQgPT09IHByb2R1Y3RJZA0KICAgICAgICAgICAgPyB7IC4uLml0ZW0sIHF1YW50aXR5IH0NCiAgICAgICAgICAgIDogaXRlbQ0KICAgICAgICApDQogICAgICB9KTsNCiAgICB9DQogIH0sDQoNCiAgY2xlYXJDYXJ0OiAoKSA9PiBzZXQoeyBpdGVtczogW10gfSksDQoNCiAgZ2V0VG90YWw6ICgpID0+IHsNCiAgICByZXR1cm4gZ2V0KCkuaXRlbXMucmVkdWNlKCh0b3RhbCwgaXRlbSkgPT4gdG90YWwgKyAoaXRlbS5wcmljZSAqIGl0ZW0ucXVhbnRpdHkpLCAwKTsNCiAgfQ0KfSkpOw0K"}
+import { create } from 'zustand';
+import { CartItem, Product } from '../types';
+
+interface CartState {
+  items: CartItem[];
+  addToCart: (product: Product) => void;
+  removeFromCart: (productId: string) => void;
+  updateQuantity: (productId: string, quantity: number) => void;
+  clearCart: () => void;
+  getTotal: () => number;
+}
+
+export const useCartStore = create<CartState>((set, get) => ({
+  items: [],
+  
+  addToCart: (product) => {
+    const items = get().items;
+    const existingItem = items.find(item => item.productId === product.id);
+
+    if (existingItem) {
+      set({
+        items: items.map(item =>
+          item.productId === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      });
+    } else {
+      set({
+        items: [...items, {
+          productId: product.id,
+          name: product.name,
+          price: product.price,
+          costPrice: product.costPrice,
+          quantity: 1
+        }]
+      });
+    }
+  },
+
+  removeFromCart: (productId) => {
+    set({
+      items: get().items.filter(item => item.productId !== productId)
+    });
+  },
+
+  updateQuantity: (productId, quantity) => {
+    if (quantity <= 0) {
+      get().removeFromCart(productId);
+    } else {
+      set({
+        items: get().items.map(item =>
+          item.productId === productId
+            ? { ...item, quantity }
+            : item
+        )
+      });
+    }
+  },
+
+  clearCart: () => set({ items: [] }),
+
+  getTotal: () => {
+    return get().items.reduce((total, item) => total + (item.price * item.quantity), 0);
+  }
+}));

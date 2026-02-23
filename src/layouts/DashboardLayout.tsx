@@ -1,1 +1,147 @@
-{"data":"aW1wb3J0IHsgT3V0bGV0LCBOYXZMaW5rLCB1c2VOYXZpZ2F0ZSB9IGZyb20gJ3JlYWN0LXJvdXRlci1kb20nOw0KaW1wb3J0IHsgdXNlQXV0aFN0b3JlIH0gZnJvbSAnLi4vc3RvcmUvYXV0aFN0b3JlJzsNCmltcG9ydCB7IA0KICBMYXlvdXREYXNoYm9hcmQsIA0KICBTaG9wcGluZ0NhcnQsIA0KICBQYWNrYWdlLCANCiAgVXNlcnMsIA0KICBTZXR0aW5ncywgDQogIExvZ091dCwNCiAgTWVudSwNCiAgWCwNCiAgQ2xpcGJvYXJkTGlzdCwNCiAgQmFyQ2hhcnQzLA0KICBUcnVjaywNCiAgU3RvcmUsDQogIFdhbGxldCwNCiAgU2VuZA0KfSBmcm9tICdsdWNpZGUtcmVhY3QnOw0KaW1wb3J0IHsgdXNlU3RhdGUgfSBmcm9tICdyZWFjdCc7DQoNCmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIERhc2hib2FyZExheW91dCgpIHsNCiAgY29uc3QgeyB1c2VyIH0gPSB1c2VBdXRoU3RvcmUoKTsNCiAgY29uc3QgW2lzTW9iaWxlTWVudU9wZW4sIHNldElzTW9iaWxlTWVudU9wZW5dID0gdXNlU3RhdGUoZmFsc2UpOw0KDQogIGNvbnN0IG5hdkl0ZW1zID0gWw0KICAgIHsgdG86ICcvZGFzaGJvYXJkJywgaWNvbjogTGF5b3V0RGFzaGJvYXJkLCBsYWJlbDogJ0Rhc2hib2FyZCcgfSwNCiAgICB7IHRvOiAnL3BvcycsIGljb246IFNob3BwaW5nQ2FydCwgbGFiZWw6ICdQT1MnIH0sDQogICAgeyB0bzogJy90ZWxlZ3JhbS1vcmRlcnMnLCBpY29uOiBTZW5kLCBsYWJlbDogJ1RlbGVncmFtJyB9LA0KICAgIHsgdG86ICcvcHJvZHVjdHMnLCBpY29uOiBQYWNrYWdlLCBsYWJlbDogJ1Byb2R1Y3RzJyB9LA0KICAgIHsgdG86ICcvaW52ZW50b3J5JywgaWNvbjogQ2xpcGJvYXJkTGlzdCwgbGFiZWw6ICdJbnZlbnRvcnknIH0sDQogICAgeyB0bzogJy9wdXJjaGFzZXMnLCBpY29uOiBUcnVjaywgbGFiZWw6ICdQdXJjaGFzZXMnIH0sDQogICAgeyB0bzogJy9yZXBvcnRzJywgaWNvbjogQmFyQ2hhcnQzLCBsYWJlbDogJ1JlcG9ydHMnIH0sDQogICAgeyB0bzogJy9jdXN0b21lcnMnLCBpY29uOiBVc2VycywgbGFiZWw6ICdDdXN0b21lcnMnIH0sDQogICAgeyB0bzogJy9zYXZpbmdzJywgaWNvbjogV2FsbGV0LCBsYWJlbDogJ1NhdmluZ3MnIH0sDQogICAgeyB0bzogJy9zZXR0aW5ncycsIGljb246IFNldHRpbmdzLCBsYWJlbDogJ1NldHRpbmdzJyB9LA0KICBdOw0KDQogIHJldHVybiAoDQogICAgPGRpdiBjbGFzc05hbWU9Im1pbi1oLXNjcmVlbiBiZy1zbGF0ZS01MCBmbGV4IGZsZXgtY29sIj4NCiAgICAgIHsvKiBUb3AgTmF2YmFyICovfQ0KICAgICAgPGhlYWRlciBjbGFzc05hbWU9ImJnLXJlZC03MDAgdGV4dC13aGl0ZSBzaGFkb3ctbWQgc3RpY2t5IHRvcC0wIHotNTAiPg0KICAgICAgICA8ZGl2IGNsYXNzTmFtZT0iY29udGFpbmVyIG14LWF1dG8gcHgtNCI+DQogICAgICAgICAgPGRpdiBjbGFzc05hbWU9ImZsZXggaXRlbXMtY2VudGVyIGp1c3RpZnktYmV0d2VlbiBoLTIwIj4NCiAgICAgICAgICAgIHsvKiBMb2dvIFNlY3Rpb24gKi99DQogICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT0iZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTMgc2hyaW5rLTAiPg0KICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT0idy0xMCBoLTEwIGJnLXdoaXRlIHJvdW5kZWQtbGcgZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIgc2hyaW5rLTAgb3ZlcmZsb3ctaGlkZGVuIHAtMC41Ij4NCiAgICAgICAgICAgICAgICA8aW1nIA0KICAgICAgICAgICAgICAgICAgc3JjPSJodHRwczovL2kuaW1ndXIuY29tL1hPRnptNHUucG5nIiANCiAgICAgICAgICAgICAgICAgIG9uRXJyb3I9eyhlKSA9PiB7DQogICAgICAgICAgICAgICAgICAgIGUuY3VycmVudFRhcmdldC5vbmVycm9yID0gbnVsbDsgDQogICAgICAgICAgICAgICAgICAgIGUuY3VycmVudFRhcmdldC5zcmMgPSAiaHR0cHM6Ly91aS1hdmF0YXJzLmNvbS9hcGkvP25hbWU9S09QK0RFUyZiYWNrZ3JvdW5kPWZmZiZjb2xvcj1kYzI2MjYmYm9sZD10cnVlIjsNCiAgICAgICAgICAgICAgICAgIH19DQogICAgICAgICAgICAgICAgICBhbHQ9IkxvZ28iIA0KICAgICAgICAgICAgICAgICAgY2xhc3NOYW1lPSJ3LWZ1bGwgaC1mdWxsIG9iamVjdC1jb250YWluIiANCiAgICAgICAgICAgICAgICAvPg0KICAgICAgICAgICAgICA8L2Rpdj4NCiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9ImZsZXggZmxleC1jb2wgb3ZlcmZsb3ctaGlkZGVuIj4NCiAgICAgICAgICAgICAgICA8aDEgY2xhc3NOYW1lPSJ0ZXh0LWJhc2UgZm9udC1ib2xkIHRleHQtd2hpdGUgbGVhZGluZy10aWdodCB0cnVuY2F0ZSI+S0RNUDwvaDE+DQogICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPSJ0ZXh0LVsxMHB4XSB0ZXh0LXNsYXRlLTQwMCBmb250LW1lZGl1bSB0cnVuY2F0ZSB0cmFja2luZy13aWRlIj5TSU5EQU5HSkFZQSBDSVBBTkFTPC9zcGFuPg0KICAgICAgICAgICAgICA8L2Rpdj4NCiAgICAgICAgICAgIDwvZGl2Pg0KDQogICAgICAgICAgICB7LyogRGVza3RvcCBOYXZpZ2F0aW9uICovfQ0KICAgICAgICAgICAgPG5hdiBjbGFzc05hbWU9ImhpZGRlbiBsZzpmbGV4IGl0ZW1zLWNlbnRlciBzcGFjZS14LTEgb3ZlcmZsb3cteC1hdXRvIG5vLXNjcm9sbGJhciBteC00Ij4NCiAgICAgICAgICAgICAge25hdkl0ZW1zLm1hcCgoaXRlbSkgPT4gKA0KICAgICAgICAgICAgICAgIDxOYXZMaW5rDQogICAgICAgICAgICAgICAgICBrZXk9e2l0ZW0udG99DQogICAgICAgICAgICAgICAgICB0bz17aXRlbS50b30NCiAgICAgICAgICAgICAgICAgIGNsYXNzTmFtZT17KHsgaXNBY3RpdmUgfSkgPT4gYA0KICAgICAgICAgICAgICAgICAgICBmbGV4IGZsZXgtY29sIGl0ZW1zLWNlbnRlciBqdXN0aWZ5LWNlbnRlciBweC0zIHB5LTIgcm91bmRlZC1sZyB0cmFuc2l0aW9uLWNvbG9ycyBtaW4tdy1bNzBweF0NCiAgICAgICAgICAgICAgICAgICAgJHtpc0FjdGl2ZSANCiAgICAgICAgICAgICAgICAgICAgICA/ICdiZy13aGl0ZSB0ZXh0LXJlZC03MDAgc2hhZG93LXNtIGZvbnQtYm9sZCcgDQogICAgICAgICAgICAgICAgICAgICAgOiAndGV4dC1yZWQtMTAwIGhvdmVyOmJnLXJlZC04MDAgaG92ZXI6dGV4dC13aGl0ZSd9DQogICAgICAgICAgICAgICAgICBgfQ0KICAgICAgICAgICAgICAgID4NCiAgICAgICAgICAgICAgICAgIDxpdGVtLmljb24gY2xhc3NOYW1lPSJ3LTUgaC01IG1iLTEiIC8+DQogICAgICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9InRleHQtWzEwcHhdIHVwcGVyY2FzZSB0cmFja2luZy13aWRlIj57aXRlbS5sYWJlbH08L3NwYW4+DQogICAgICAgICAgICAgICAgPC9OYXZMaW5rPg0KICAgICAgICAgICAgICApKX0NCiAgICAgICAgICAgIDwvbmF2Pg0KDQogICAgICAgICAgICB7LyogVXNlciBQcm9maWxlICYgTW9iaWxlIE1lbnUgVG9nZ2xlICovfQ0KICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9ImZsZXggaXRlbXMtY2VudGVyIGdhcC00IHNocmluay0wIj4NCiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9ImhpZGRlbiBtZDpmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMyBwbC00IGJvcmRlci1sIGJvcmRlci1zbGF0ZS04MDAiPg0KICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPSJ0ZXh0LXJpZ2h0IGhpZGRlbiB4bDpibG9jayI+DQogICAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9InRleHQtc20gZm9udC1tZWRpdW0gbGVhZGluZy1ub25lIj57dXNlcj8ubmFtZX08L3A+DQogICAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9InRleHQteHMgdGV4dC1zbGF0ZS01MDAgY2FwaXRhbGl6ZSBtdC0xIj57dXNlcj8ucm9sZX08L3A+DQogICAgICAgICAgICAgICAgPC9kaXY+DQogICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9InctOSBoLTkgcm91bmRlZC1mdWxsIGJnLWVtZXJhbGQtNTAwIGZsZXggaXRlbXMtY2VudGVyIGp1c3RpZnktY2VudGVyIGZvbnQtYm9sZCB0ZXh0LXNtIHNoYWRvdy1zbSBib3JkZXItMiBib3JkZXItc2xhdGUtODAwIj4NCiAgICAgICAgICAgICAgICAgIHt1c2VyPy5uYW1lPy5jaGFyQXQoMCkgfHwgJ1UnfQ0KICAgICAgICAgICAgICAgIDwvZGl2Pg0KICAgICAgICAgICAgICA8L2Rpdj4NCg0KICAgICAgICAgICAgICB7LyogTW9iaWxlIE1lbnUgQnV0dG9uICovfQ0KICAgICAgICAgICAgICA8YnV0dG9uIA0KICAgICAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHNldElzTW9iaWxlTWVudU9wZW4oIWlzTW9iaWxlTWVudU9wZW4pfSANCiAgICAgICAgICAgICAgICBjbGFzc05hbWU9ImxnOmhpZGRlbiBwLTIgdGV4dC1zbGF0ZS00MDAgaG92ZXI6dGV4dC13aGl0ZSBob3ZlcjpiZy1zbGF0ZS04MDAgcm91bmRlZC1sZyB0cmFuc2l0aW9uLWNvbG9ycyINCiAgICAgICAgICAgICAgPg0KICAgICAgICAgICAgICAgIHtpc01vYmlsZU1lbnVPcGVuID8gPFggY2xhc3NOYW1lPSJ3LTYgaC02IiAvPiA6IDxNZW51IGNsYXNzTmFtZT0idy02IGgtNiIgLz59DQogICAgICAgICAgICAgIDwvYnV0dG9uPg0KICAgICAgICAgICAgPC9kaXY+DQogICAgICAgICAgPC9kaXY+DQogICAgICAgIDwvZGl2Pg0KDQogICAgICAgIHsvKiBNb2JpbGUgTmF2aWdhdGlvbiBEcm9wZG93biAqL30NCiAgICAgICAge2lzTW9iaWxlTWVudU9wZW4gJiYgKA0KICAgICAgICAgIDxuYXYgY2xhc3NOYW1lPSJsZzpoaWRkZW4gYm9yZGVyLXQgYm9yZGVyLXJlZC04MDAgYmctcmVkLTcwMCBhYnNvbHV0ZSB3LWZ1bGwgbGVmdC0wIHNoYWRvdy14bCBhbmltYXRlLWluIHNsaWRlLWluLWZyb20tdG9wLTIgei00MCI+DQogICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT0iY29udGFpbmVyIG14LWF1dG8gcC00IGdyaWQgZ3JpZC1jb2xzLTIgc206Z3JpZC1jb2xzLTMgZ2FwLTIiPg0KICAgICAgICAgICAgICB7bmF2SXRlbXMubWFwKChpdGVtKSA9PiAoDQogICAgICAgICAgICAgICAgPE5hdkxpbmsNCiAgICAgICAgICAgICAgICAgIGtleT17aXRlbS50b30NCiAgICAgICAgICAgICAgICAgIHRvPXtpdGVtLnRvfQ0KICAgICAgICAgICAgICAgICAgb25DbGljaz17KCkgPT4gc2V0SXNNb2JpbGVNZW51T3BlbihmYWxzZSl9DQogICAgICAgICAgICAgICAgICBjbGFzc05hbWU9eyh7IGlzQWN0aXZlIH0pID0+IGANCiAgICAgICAgICAgICAgICAgICAgZmxleCBmbGV4LWNvbCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIgcC00IHJvdW5kZWQteGwgdHJhbnNpdGlvbi1jb2xvcnMgYm9yZGVyIGJvcmRlci1yZWQtODAwDQogICAgICAgICAgICAgICAgICAgICR7aXNBY3RpdmUgDQogICAgICAgICAgICAgICAgICAgICAgPyAnYmctd2hpdGUgdGV4dC1yZWQtNzAwIGJvcmRlci13aGl0ZSBzaGFkb3ctbGcnIA0KICAgICAgICAgICAgICAgICAgICAgIDogJ2JnLXJlZC04MDAvNTAgdGV4dC1yZWQtMjAwIGhvdmVyOmJnLXJlZC04MDAgaG92ZXI6dGV4dC13aGl0ZSd9DQogICAgICAgICAgICAgICAgICBgfQ0KICAgICAgICAgICAgICAgID4NCiAgICAgICAgICAgICAgICAgIDxpdGVtLmljb24gY2xhc3NOYW1lPSJ3LTYgaC02IG1iLTIiIC8+DQogICAgICAgICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9InRleHQteHMgZm9udC1tZWRpdW0iPntpdGVtLmxhYmVsfTwvc3Bhbj4NCiAgICAgICAgICAgICAgICA8L05hdkxpbms+DQogICAgICAgICAgICAgICkpfQ0KICAgICAgICAgICAgPC9kaXY+DQogICAgICAgICAgICANCiAgICAgICAgICAgIHsvKiBNb2JpbGUgVXNlciBJbmZvICovfQ0KICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9InAtNCBib3JkZXItdCBib3JkZXItcmVkLTgwMCBiZy1yZWQtOTAwLzUwIGZsZXggaXRlbXMtY2VudGVyIGdhcC0zIj4NCiAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPSJ3LTEwIGgtMTAgcm91bmRlZC1mdWxsIGJnLXdoaXRlIHRleHQtcmVkLTcwMCBmbGV4IGl0ZW1zLWNlbnRlciBqdXN0aWZ5LWNlbnRlciBmb250LWJvbGQiPg0KICAgICAgICAgICAgICAgICAge3VzZXI/Lm5hbWU/LmNoYXJBdCgwKSB8fCAnVSd9DQogICAgICAgICAgICAgICA8L2Rpdj4NCiAgICAgICAgICAgICAgIDxkaXY+DQogICAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9InRleHQtc20gZm9udC1tZWRpdW0gdGV4dC13aGl0ZSI+e3VzZXI/Lm5hbWV9PC9wPg0KICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPSJ0ZXh0LXhzIHRleHQtcmVkLTMwMCBjYXBpdGFsaXplIj57dXNlcj8ucm9sZX08L3A+DQogICAgICAgICAgICAgICA8L2Rpdj4NCiAgICAgICAgICAgIDwvZGl2Pg0KICAgICAgICAgIDwvbmF2Pg0KICAgICAgICApfQ0KICAgICAgPC9oZWFkZXI+DQoNCiAgICAgIHsvKiBNYWluIENvbnRlbnQgKi99DQogICAgICA8bWFpbiBjbGFzc05hbWU9ImZsZXgtMSBjb250YWluZXIgbXgtYXV0byBwLTQgbWQ6cC02IHctZnVsbCBtYXgtdy03eGwiPg0KICAgICAgICA8T3V0bGV0IC8+DQogICAgICA8L21haW4+DQogICAgPC9kaXY+DQogICk7DQp9DQo="}
+import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../store/authStore';
+import { 
+  LayoutDashboard, 
+  ShoppingCart, 
+  Package, 
+  Users, 
+  Settings, 
+  LogOut,
+  Menu,
+  X,
+  ClipboardList,
+  BarChart3,
+  Truck,
+  Store,
+  Wallet,
+  Send
+} from 'lucide-react';
+import { useState } from 'react';
+
+export default function DashboardLayout() {
+  const { user } = useAuthStore();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const navItems = [
+    { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { to: '/pos', icon: ShoppingCart, label: 'POS' },
+    { to: '/telegram-orders', icon: Send, label: 'Telegram' },
+    { to: '/products', icon: Package, label: 'Products' },
+    { to: '/inventory', icon: ClipboardList, label: 'Inventory' },
+    { to: '/purchases', icon: Truck, label: 'Purchases' },
+    { to: '/reports', icon: BarChart3, label: 'Reports' },
+    { to: '/customers', icon: Users, label: 'Customers' },
+    { to: '/savings', icon: Wallet, label: 'Savings' },
+    { to: '/settings', icon: Settings, label: 'Settings' },
+  ];
+
+  return (
+    <div className="min-h-screen bg-slate-50 flex flex-col">
+      {/* Top Navbar */}
+      <header className="bg-red-700 text-white shadow-md sticky top-0 z-50">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-20">
+            {/* Logo Section */}
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shrink-0 overflow-hidden p-0.5">
+                <img 
+                  src="https://i.imgur.com/XOFzm4u.png" 
+                  onError={(e) => {
+                    e.currentTarget.onerror = null; 
+                    e.currentTarget.src = "https://ui-avatars.com/api/?name=KOP+DES&background=fff&color=dc2626&bold=true";
+                  }}
+                  alt="Logo" 
+                  className="w-full h-full object-contain" 
+                />
+              </div>
+              <div className="flex flex-col overflow-hidden">
+                <h1 className="text-base font-bold text-white leading-tight truncate">KDMP</h1>
+                <span className="text-[10px] text-slate-400 font-medium truncate tracking-wide">SINDANGJAYA CIPANAS</span>
+              </div>
+            </div>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center space-x-1 overflow-x-auto no-scrollbar mx-4">
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) => `
+                    flex flex-col items-center justify-center px-3 py-2 rounded-lg transition-colors min-w-[70px]
+                    ${isActive 
+                      ? 'bg-white text-red-700 shadow-sm font-bold' 
+                      : 'text-red-100 hover:bg-red-800 hover:text-white'}
+                  `}
+                >
+                  <item.icon className="w-5 h-5 mb-1" />
+                  <span className="text-[10px] uppercase tracking-wide">{item.label}</span>
+                </NavLink>
+              ))}
+            </nav>
+
+            {/* User Profile & Mobile Menu Toggle */}
+            <div className="flex items-center gap-4 shrink-0">
+              <div className="hidden md:flex items-center gap-3 pl-4 border-l border-slate-800">
+                <div className="text-right hidden xl:block">
+                  <p className="text-sm font-medium leading-none">{user?.name}</p>
+                  <p className="text-xs text-slate-500 capitalize mt-1">{user?.role}</p>
+                </div>
+                <div className="w-9 h-9 rounded-full bg-emerald-500 flex items-center justify-center font-bold text-sm shadow-sm border-2 border-slate-800">
+                  {user?.name?.charAt(0) || 'U'}
+                </div>
+              </div>
+
+              {/* Mobile Menu Button */}
+              <button 
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+                className="lg:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+              >
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Navigation Dropdown */}
+        {isMobileMenuOpen && (
+          <nav className="lg:hidden border-t border-red-800 bg-red-700 absolute w-full left-0 shadow-xl animate-in slide-in-from-top-2 z-40">
+            <div className="container mx-auto p-4 grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={({ isActive }) => `
+                    flex flex-col items-center justify-center p-4 rounded-xl transition-colors border border-red-800
+                    ${isActive 
+                      ? 'bg-white text-red-700 border-white shadow-lg' 
+                      : 'bg-red-800/50 text-red-200 hover:bg-red-800 hover:text-white'}
+                  `}
+                >
+                  <item.icon className="w-6 h-6 mb-2" />
+                  <span className="text-xs font-medium">{item.label}</span>
+                </NavLink>
+              ))}
+            </div>
+            
+            {/* Mobile User Info */}
+            <div className="p-4 border-t border-red-800 bg-red-900/50 flex items-center gap-3">
+               <div className="w-10 h-10 rounded-full bg-white text-red-700 flex items-center justify-center font-bold">
+                  {user?.name?.charAt(0) || 'U'}
+               </div>
+               <div>
+                  <p className="text-sm font-medium text-white">{user?.name}</p>
+                  <p className="text-xs text-red-300 capitalize">{user?.role}</p>
+               </div>
+            </div>
+          </nav>
+        )}
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 container mx-auto p-4 md:p-6 w-full max-w-7xl">
+        <Outlet />
+      </main>
+    </div>
+  );
+}

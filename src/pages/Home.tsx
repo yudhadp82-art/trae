@@ -1,1 +1,3 @@
-{"data":"ZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gSG9tZSgpIHsKICByZXR1cm4gPGRpdj48L2Rpdj47Cn0="}
+export default function Home() {
+  return <div></div>;
+}

@@ -1,1 +1,15 @@
-{"data":"aW1wb3J0IHsgZGVmaW5lQ29uZmlnIH0gZnJvbSAndml0ZScKaW1wb3J0IHJlYWN0IGZyb20gJ0B2aXRlanMvcGx1Z2luLXJlYWN0JwppbXBvcnQgdHNjb25maWdQYXRocyBmcm9tICJ2aXRlLXRzY29uZmlnLXBhdGhzIjsKCi8vIGh0dHBzOi8vdml0ZS5kZXYvY29uZmlnLwpleHBvcnQgZGVmYXVsdCBkZWZpbmVDb25maWcoewogIGJhc2U6ICcvJywKICBidWlsZDogewogICAgc291cmNlbWFwOiB0cnVlLCAvLyBFbmFibGUgc291cmNlbWFwIGZvciBkZWJ1Z2dpbmcKICB9LAogIHBsdWdpbnM6IFsKICAgIHJlYWN0KCksCiAgICB0c2NvbmZpZ1BhdGhzKCkKICBdLAp9KQo="}
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tsconfigPaths from "vite-tsconfig-paths";
+
+// https://vite.dev/config/
+export default defineConfig({
+  base: '/',
+  build: {
+    sourcemap: true, // Enable sourcemap for debugging
+  },
+  plugins: [
+    react(),
+    tsconfigPaths()
+  ],
+})

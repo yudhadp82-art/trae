@@ -1,1 +1,20 @@
-{"data":"ewogICJzaG9ydF9uYW1lIjogIktETVAgUE9TIiwKICAibmFtZSI6ICJLRE1QIFNJTkRBTkdKQVlBIENJUEFOQVMiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL2kuaW1ndXIuY29tL1hPRnptNHUucG5nIiwKICAgICAgInNpemVzIjogIjE5MngxOTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgICB9LAogICAgewogICAgICAic3JjIjogImh0dHBzOi8vaS5pbWd1ci5jb20vWE9Gem00dS5wbmciLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIKICAgIH0KICBdLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgInRoZW1lX2NvbG9yIjogIiMwZjE3MmEiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmZmZmZmYiCn0K"}
+{
+  "short_name": "KDMP POS",
+  "name": "KDMP SINDANGJAYA CIPANAS",
+  "icons": [
+    {
+      "src": "https://i.imgur.com/XOFzm4u.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.imgur.com/XOFzm4u.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#0f172a",
+  "background_color": "#ffffff"
+}

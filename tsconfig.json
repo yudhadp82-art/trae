@@ -1,1 +1,36 @@
-{"data":"ewogICJjb21waWxlck9wdGlvbnMiOiB7CiAgICAidHNCdWlsZEluZm9GaWxlIjogIi4vbm9kZV9tb2R1bGVzLy50bXAvdHNjb25maWcuYXBwLnRzYnVpbGRpbmZvIiwKICAgICJ0YXJnZXQiOiAiRVMyMDIwIiwKICAgICJ1c2VEZWZpbmVGb3JDbGFzc0ZpZWxkcyI6IHRydWUsCiAgICAibGliIjogWwogICAgICAiRVMyMDIwIiwKICAgICAgIkRPTSIsCiAgICAgICJET00uSXRlcmFibGUiCiAgICBdLAogICAgIm1vZHVsZSI6ICJFU05leHQiLAogICAgInNraXBMaWJDaGVjayI6IHRydWUsCiAgICAibW9kdWxlUmVzb2x1dGlvbiI6ICJidW5kbGVyIiwKICAgICJhbGxvd0ltcG9ydGluZ1RzRXh0ZW5zaW9ucyI6IHRydWUsCiAgICAidmVyYmF0aW1Nb2R1bGVTeW50YXgiOiBmYWxzZSwKICAgICJtb2R1bGVEZXRlY3Rpb24iOiAiZm9yY2UiLAogICAgIm5vRW1pdCI6IHRydWUsCiAgICAianN4IjogInJlYWN0LWpzeCIsCiAgICAic3RyaWN0IjogZmFsc2UsCiAgICAibm9VbnVzZWRMb2NhbHMiOiBmYWxzZSwKICAgICJub1VudXNlZFBhcmFtZXRlcnMiOiBmYWxzZSwKICAgICJub0ZhbGx0aHJvdWdoQ2FzZXNJblN3aXRjaCI6IGZhbHNlLAogICAgIm5vVW5jaGVja2VkU2lkZUVmZmVjdEltcG9ydHMiOiBmYWxzZSwKICAgICJmb3JjZUNvbnNpc3RlbnRDYXNpbmdJbkZpbGVOYW1lcyI6IGZhbHNlLAogICAgImJhc2VVcmwiOiAiLi8iLAogICAgInBhdGhzIjogewogICAgICAiQC8qIjogWwogICAgICAgICIuL3NyYy8qIgogICAgICBdCiAgICB9CiAgfSwKICAiaW5jbHVkZSI6IFsKICAgICJzcmMiLAogICAgImFwaSIKICBdCn0K"}
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": false,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": false,
+    "noUncheckedSideEffectImports": false,
+    "forceConsistentCasingInFileNames": false,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "include": [
+    "src",
+    "api"
+  ]
+}

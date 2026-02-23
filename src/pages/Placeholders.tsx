@@ -1,1 +1,7 @@
-{"data":"aW1wb3J0IFJlYWN0IGZyb20gJ3JlYWN0JzsNCg0KZXhwb3J0IGNvbnN0IERhc2hib2FyZCA9ICgpID0+IDxoMSBjbGFzc05hbWU9InRleHQtMnhsIGZvbnQtYm9sZCI+RGFzaGJvYXJkPC9oMT47DQpleHBvcnQgY29uc3QgUE9TID0gKCkgPT4gPGgxIGNsYXNzTmFtZT0idGV4dC0yeGwgZm9udC1ib2xkIj5QT1MgU3lzdGVtPC9oMT47DQpleHBvcnQgY29uc3QgUHJvZHVjdHMgPSAoKSA9PiA8aDEgY2xhc3NOYW1lPSJ0ZXh0LTJ4bCBmb250LWJvbGQiPlByb2R1Y3QgTWFuYWdlbWVudDwvaDE+Ow0KZXhwb3J0IGNvbnN0IEN1c3RvbWVycyA9ICgpID0+IDxoMSBjbGFzc05hbWU9InRleHQtMnhsIGZvbnQtYm9sZCI+Q3VzdG9tZXIgTWFuYWdlbWVudDwvaDE+Ow0KZXhwb3J0IGNvbnN0IFNldHRpbmdzID0gKCkgPT4gPGgxIGNsYXNzTmFtZT0idGV4dC0yeGwgZm9udC1ib2xkIj5TZXR0aW5nczwvaDE+Ow0K"}
+import React from 'react';
+
+export const Dashboard = () => <h1 className="text-2xl font-bold">Dashboard</h1>;
+export const POS = () => <h1 className="text-2xl font-bold">POS System</h1>;
+export const Products = () => <h1 className="text-2xl font-bold">Product Management</h1>;
+export const Customers = () => <h1 className="text-2xl font-bold">Customer Management</h1>;
+export const Settings = () => <h1 className="text-2xl font-bold">Settings</h1>;

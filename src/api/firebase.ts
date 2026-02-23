@@ -1,1 +1,19 @@
-{"data":"aW1wb3J0IHsgaW5pdGlhbGl6ZUFwcCB9IGZyb20gJ2ZpcmViYXNlL2FwcCc7CmltcG9ydCB7IGdldEF1dGggfSBmcm9tICdmaXJlYmFzZS9hdXRoJzsKaW1wb3J0IHsgZ2V0RmlyZXN0b3JlIH0gZnJvbSAnZmlyZWJhc2UvZmlyZXN0b3JlJzsKCi8vIFlvdXIgd2ViIGFwcCdzIEZpcmViYXNlIGNvbmZpZ3VyYXRpb24KY29uc3QgZmlyZWJhc2VDb25maWcgPSB7CiAgYXBpS2V5OiBpbXBvcnQubWV0YS5lbnYuVklURV9GSVJFQkFTRV9BUElfS0VZLAogIGF1dGhEb21haW46IGltcG9ydC5tZXRhLmVudi5WSVRFX0ZJUkVCQVNFX0FVVEhfRE9NQUlOLAogIHByb2plY3RJZDogaW1wb3J0Lm1ldGEuZW52LlZJVEVfRklSRUJBU0VfUFJPSkVDVF9JRCwKICBzdG9yYWdlQnVja2V0OiBpbXBvcnQubWV0YS5lbnYuVklURV9GSVJFQkFTRV9TVE9SQUdFX0JVQ0tFVCwKICBtZXNzYWdpbmdTZW5kZXJJZDogaW1wb3J0Lm1ldGEuZW52LlZJVEVfRklSRUJBU0VfTUVTU0FHSU5HX1NFTkRFUl9JRCwKICBhcHBJZDogaW1wb3J0Lm1ldGEuZW52LlZJVEVfRklSRUJBU0VfQVBQX0lECn07CgovLyBJbml0aWFsaXplIEZpcmViYXNlCmNvbnN0IGFwcCA9IGluaXRpYWxpemVBcHAoZmlyZWJhc2VDb25maWcpOwpleHBvcnQgY29uc3QgYXV0aCA9IGdldEF1dGgoYXBwKTsKZXhwb3J0IGNvbnN0IGRiID0gZ2V0RmlyZXN0b3JlKGFwcCk7CmV4cG9ydCBkZWZhdWx0IGFwcDsK"}
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export default app;

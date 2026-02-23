@@ -1,1 +1,7 @@
-{"data":"PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0ndXRmLTgnPz4KPHJlc291cmNlcz4KICAgIDxzdHJpbmcgbmFtZT0iYXBwX25hbWUiPktETVAgUE9TPC9zdHJpbmc+CiAgICA8c3RyaW5nIG5hbWU9InRpdGxlX2FjdGl2aXR5X21haW4iPktETVAgUE9TPC9zdHJpbmc+CiAgICA8c3RyaW5nIG5hbWU9InBhY2thZ2VfbmFtZSI+Y29tLmtkbXAucG9zPC9zdHJpbmc+CiAgICA8c3RyaW5nIG5hbWU9ImN1c3RvbV91cmxfc2NoZW1lIj5jb20ua2RtcC5wb3M8L3N0cmluZz4KPC9yZXNvdXJjZXM+Cg=="}
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">KDMP POS</string>
+    <string name="title_activity_main">KDMP POS</string>
+    <string name="package_name">com.kdmp.pos</string>
+    <string name="custom_url_scheme">com.kdmp.pos</string>
+</resources>

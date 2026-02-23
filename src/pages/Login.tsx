@@ -1,1 +1,146 @@
-{"data":"aW1wb3J0IFJlYWN0LCB7IHVzZVN0YXRlIH0gZnJvbSAncmVhY3QnOw0KaW1wb3J0IHsgdXNlTmF2aWdhdGUgfSBmcm9tICdyZWFjdC1yb3V0ZXItZG9tJzsNCmltcG9ydCB7IHVzZUF1dGhTdG9yZSB9IGZyb20gJy4uL3N0b3JlL2F1dGhTdG9yZSc7DQppbXBvcnQgeyBTdG9yZSwgVXNlciwgTG9jayB9IGZyb20gJ2x1Y2lkZS1yZWFjdCc7DQppbXBvcnQgeyBzaWduSW5XaXRoRW1haWxBbmRQYXNzd29yZCwgY3JlYXRlVXNlcldpdGhFbWFpbEFuZFBhc3N3b3JkIH0gZnJvbSAnZmlyZWJhc2UvYXV0aCc7DQppbXBvcnQgeyBhdXRoLCBkYiB9IGZyb20gJy4uL2FwaS9maXJlYmFzZSc7DQppbXBvcnQgeyBkb2MsIGdldERvYywgc2V0RG9jLCBzZXJ2ZXJUaW1lc3RhbXAgfSBmcm9tICdmaXJlYmFzZS9maXJlc3RvcmUnOw0KDQpleHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBMb2dpbigpIHsNCiAgY29uc3QgW2VtYWlsLCBzZXRFbWFpbF0gPSB1c2VTdGF0ZSgnJyk7DQogIGNvbnN0IFtwYXNzd29yZCwgc2V0UGFzc3dvcmRdID0gdXNlU3RhdGUoJycpOw0KICBjb25zdCBbZXJyb3IsIHNldEVycm9yXSA9IHVzZVN0YXRlKCcnKTsNCiAgY29uc3QgW2xvYWRpbmcsIHNldExvYWRpbmddID0gdXNlU3RhdGUoZmFsc2UpOw0KICBjb25zdCBuYXZpZ2F0ZSA9IHVzZU5hdmlnYXRlKCk7DQogIGNvbnN0IHNldFVzZXIgPSB1c2VBdXRoU3RvcmUoKHN0YXRlKSA9PiBzdGF0ZS5zZXRVc2VyKTsNCg0KICBjb25zdCBoYW5kbGVTdWJtaXQgPSBhc3luYyAoZTogUmVhY3QuRm9ybUV2ZW50KSA9PiB7DQogICAgZS5wcmV2ZW50RGVmYXVsdCgpOw0KICAgIHNldExvYWRpbmcodHJ1ZSk7DQogICAgc2V0RXJyb3IoJycpOw0KDQogICAgdHJ5IHsNCiAgICAgIGNvbnN0IHVzZXJDcmVkZW50aWFsID0gYXdhaXQgc2lnbkluV2l0aEVtYWlsQW5kUGFzc3dvcmQoYXV0aCwgZW1haWwsIHBhc3N3b3JkKTsNCiAgICAgIC8vIC4uLiByZXN0IG9mIGxvZ2ljDQoNCiAgICAgIGNvbnN0IHVzZXJEb2MgPSBhd2FpdCBnZXREb2MoZG9jKGRiLCAndXNlcnMnLCB1c2VyQ3JlZGVudGlhbC51c2VyLnVpZCkpOw0KICAgICAgDQogICAgICBpZiAodXNlckRvYy5leGlzdHMoKSkgew0KICAgICAgICBjb25zdCB1c2VyRGF0YSA9IHVzZXJEb2MuZGF0YSgpOw0KICAgICAgICBzZXRVc2VyKHsNCiAgICAgICAgICB1aWQ6IHVzZXJDcmVkZW50aWFsLnVzZXIudWlkLA0KICAgICAgICAgIGVtYWlsOiB1c2VyQ3JlZGVudGlhbC51c2VyLmVtYWlsISwNCiAgICAgICAgICBuYW1lOiB1c2VyRGF0YS5uYW1lLA0KICAgICAgICAgIHJvbGU6IHVzZXJEYXRhLnJvbGUsDQogICAgICAgICAgY3JlYXRlZEF0OiB1c2VyRGF0YS5jcmVhdGVkQXQudG9EYXRlKCksDQogICAgICAgIH0pOw0KICAgICAgICBuYXZpZ2F0ZSgnL2Rhc2hib2FyZCcpOw0KICAgICAgfSBlbHNlIHsNCiAgICAgICAgLy8gRmFsbGJhY2sgaWYgdXNlciBkb2N1bWVudCBkb2Vzbid0IGV4aXN0IChlLmcuIGNyZWF0ZWQgbWFudWFsbHkgaW4gYXV0aCBjb25zb2xlKQ0KICAgICAgICBzZXRVc2VyKHsNCiAgICAgICAgICB1aWQ6IHVzZXJDcmVkZW50aWFsLnVzZXIudWlkLA0KICAgICAgICAgIGVtYWlsOiB1c2VyQ3JlZGVudGlhbC51c2VyLmVtYWlsISwNCiAgICAgICAgICBuYW1lOiAnVXNlcicsDQogICAgICAgICAgcm9sZTogJ2Nhc2hpZXInLCAvLyBEZWZhdWx0IHJvbGUNCiAgICAgICAgICBjcmVhdGVkQXQ6IG5ldyBEYXRlKCksDQogICAgICAgIH0pOw0KICAgICAgICBuYXZpZ2F0ZSgnL2Rhc2hib2FyZCcpOw0KICAgICAgfQ0KICAgIH0gY2F0Y2ggKGVycjogYW55KSB7DQogICAgICBzZXRFcnJvcignSW52YWxpZCBlbWFpbCBvciBwYXNzd29yZCcpOw0KICAgICAgY29uc29sZS5lcnJvcihlcnIpOw0KICAgIH0gZmluYWxseSB7DQogICAgICBzZXRMb2FkaW5nKGZhbHNlKTsNCiAgICB9DQogIH07DQoNCiAgY29uc3QgaGFuZGxlQ3JlYXRlQWRtaW4gPSBhc3luYyAoKSA9PiB7DQogICAgdHJ5IHsNCiAgICAgIGNvbnN0IHVzZXJDcmVkZW50aWFsID0gYXdhaXQgY3JlYXRlVXNlcldpdGhFbWFpbEFuZFBhc3N3b3JkKGF1dGgsICdhZG1pbkBwb3MuY29tJywgJ2FkbWluMTIzJyk7DQogICAgICBhd2FpdCBzZXREb2MoZG9jKGRiLCAndXNlcnMnLCB1c2VyQ3JlZGVudGlhbC51c2VyLnVpZCksIHsNCiAgICAgICAgdWlkOiB1c2VyQ3JlZGVudGlhbC51c2VyLnVpZCwNCiAgICAgICAgbmFtZTogJ0FkbWluIFRva28nLA0KICAgICAgICBlbWFpbDogJ2FkbWluQHBvcy5jb20nLA0KICAgICAgICByb2xlOiAnYWRtaW4nLA0KICAgICAgICBjcmVhdGVkQXQ6IHNlcnZlclRpbWVzdGFtcCgpDQogICAgICB9KTsNCiAgICAgIGFsZXJ0KCdBa3VuIEFkbWluIEJlcmhhc2lsIERpYnVhdCFcbkVtYWlsOiBhZG1pbkBwb3MuY29tXG5QYXNzOiBhZG1pbjEyMycpOw0KICAgICAgc2V0RW1haWwoJ2FkbWluQHBvcy5jb20nKTsNCiAgICAgIHNldFBhc3N3b3JkKCdhZG1pbjEyMycpOw0KICAgIH0gY2F0Y2ggKGVycm9yOiBhbnkpIHsNCiAgICAgIGNvbnNvbGUuZXJyb3IoZXJyb3IpOw0KICAgICAgYWxlcnQoJ0dhZ2FsIG1lbWJ1YXQgYWRtaW46ICcgKyBlcnJvci5tZXNzYWdlKTsNCiAgICB9DQogIH07DQoNCiAgcmV0dXJuICgNCiAgICA8ZGl2IGNsYXNzTmFtZT0iYmctd2hpdGUgcC04IHJvdW5kZWQteGwgc2hhZG93LWxnIHctZnVsbCBtYXgtdy1tZCBib3JkZXIgYm9yZGVyLXNsYXRlLTEwMCI+DQogICAgICA8ZGl2IGNsYXNzTmFtZT0idGV4dC1jZW50ZXIgbWItOCI+DQogICAgICAgIDxkaXYgY2xhc3NOYW1lPSJiZy1lbWVyYWxkLTEwMCBwLTMgcm91bmRlZC1mdWxsIHctMTYgaC0xNiBmbGV4IGl0ZW1zLWNlbnRlciBqdXN0aWZ5LWNlbnRlciBteC1hdXRvIG1iLTQiPg0KICAgICAgICAgIDxTdG9yZSBjbGFzc05hbWU9InctOCBoLTggdGV4dC1lbWVyYWxkLTYwMCIgLz4NCiAgICAgICAgPC9kaXY+DQogICAgICAgIDxoMSBjbGFzc05hbWU9InRleHQtMnhsIGZvbnQtYm9sZCB0ZXh0LXNsYXRlLTgwMCI+V2VsY29tZSBCYWNrPC9oMT4NCiAgICAgICAgPHAgY2xhc3NOYW1lPSJ0ZXh0LXNsYXRlLTUwMCBtdC0yIj5TaWduIGluIHRvIHlvdXIgUE9TIGFjY291bnQ8L3A+DQogICAgICA8L2Rpdj4NCg0KICAgICAge2Vycm9yICYmICgNCiAgICAgICAgPGRpdiBjbGFzc05hbWU9ImJnLXJlZC01MCB0ZXh0LXJlZC02MDAgcC0zIHJvdW5kZWQtbGcgbWItNiB0ZXh0LXNtIGZsZXggaXRlbXMtY2VudGVyIj4NCiAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9Im1yLTIiPuKaoO+4jzwvc3Bhbj4NCiAgICAgICAgICB7ZXJyb3J9DQogICAgICAgIDwvZGl2Pg0KICAgICAgKX0NCg0KICAgICAgPGZvcm0gb25TdWJtaXQ9e2hhbmRsZVN1Ym1pdH0gY2xhc3NOYW1lPSJzcGFjZS15LTYiPg0KICAgICAgICA8ZGl2Pg0KICAgICAgICAgIDxsYWJlbCBjbGFzc05hbWU9ImJsb2NrIHRleHQtc20gZm9udC1tZWRpdW0gdGV4dC1zbGF0ZS03MDAgbWItMiI+RW1haWwgQWRkcmVzczwvbGFiZWw+DQogICAgICAgICAgPGRpdiBjbGFzc05hbWU9InJlbGF0aXZlIj4NCiAgICAgICAgICAgIDxVc2VyIGNsYXNzTmFtZT0iYWJzb2x1dGUgbGVmdC0zIHRvcC0xLzIgLXRyYW5zbGF0ZS15LTEvMiB3LTUgaC01IHRleHQtc2xhdGUtNDAwIiAvPg0KICAgICAgICAgICAgPGlucHV0DQogICAgICAgICAgICAgIHR5cGU9ImVtYWlsIg0KICAgICAgICAgICAgICByZXF1aXJlZA0KICAgICAgICAgICAgICB2YWx1ZT17ZW1haWx9DQogICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gc2V0RW1haWwoZS50YXJnZXQudmFsdWUpfQ0KICAgICAgICAgICAgICBjbGFzc05hbWU9InctZnVsbCBwbC0xMCBwci00IHB5LTIgYm9yZGVyIGJvcmRlci1zbGF0ZS0zMDAgcm91bmRlZC1sZyBmb2N1czpyaW5nLTIgZm9jdXM6cmluZy1lbWVyYWxkLTUwMCBmb2N1czpib3JkZXItZW1lcmFsZC01MDAgb3V0bGluZS1ub25lIHRyYW5zaXRpb24tYWxsIg0KICAgICAgICAgICAgICBwbGFjZWhvbGRlcj0iYWRtaW5AZXhhbXBsZS5jb20iDQogICAgICAgICAgICAvPg0KICAgICAgICAgIDwvZGl2Pg0KICAgICAgICA8L2Rpdj4NCg0KICAgICAgICA8ZGl2Pg0KICAgICAgICAgIDxsYWJlbCBjbGFzc05hbWU9ImJsb2NrIHRleHQtc20gZm9udC1tZWRpdW0gdGV4dC1zbGF0ZS03MDAgbWItMiI+UGFzc3dvcmQ8L2xhYmVsPg0KICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPSJyZWxhdGl2ZSI+DQogICAgICAgICAgICA8TG9jayBjbGFzc05hbWU9ImFic29sdXRlIGxlZnQtMyB0b3AtMS8yIC10cmFuc2xhdGUteS0xLzIgdy01IGgtNSB0ZXh0LXNsYXRlLTQwMCIgLz4NCiAgICAgICAgICAgIDxpbnB1dA0KICAgICAgICAgICAgICB0eXBlPSJwYXNzd29yZCINCiAgICAgICAgICAgICAgcmVxdWlyZWQNCiAgICAgICAgICAgICAgdmFsdWU9e3Bhc3N3b3JkfQ0KICAgICAgICAgICAgICBvbkNoYW5nZT17KGUpID0+IHNldFBhc3N3b3JkKGUudGFyZ2V0LnZhbHVlKX0NCiAgICAgICAgICAgICAgY2xhc3NOYW1lPSJ3LWZ1bGwgcGwtMTAgcHItNCBweS0yIGJvcmRlciBib3JkZXItc2xhdGUtMzAwIHJvdW5kZWQtbGcgZm9jdXM6cmluZy0yIGZvY3VzOnJpbmctZW1lcmFsZC01MDAgZm9jdXM6Ym9yZGVyLWVtZXJhbGQtNTAwIG91dGxpbmUtbm9uZSB0cmFuc2l0aW9uLWFsbCINCiAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9IuKAouKAouKAouKAouKAouKAouKAouKAoiINCiAgICAgICAgICAgIC8+DQogICAgICAgICAgPC9kaXY+DQogICAgICAgIDwvZGl2Pg0KDQogICAgICAgIDxidXR0b24NCiAgICAgICAgICB0eXBlPSJzdWJtaXQiDQogICAgICAgICAgZGlzYWJsZWQ9e2xvYWRpbmd9DQogICAgICAgICAgY2xhc3NOYW1lPSJ3LWZ1bGwgYmctZW1lcmFsZC02MDAgaG92ZXI6YmctZW1lcmFsZC03MDAgdGV4dC13aGl0ZSBmb250LXNlbWlib2xkIHB5LTIuNSByb3VuZGVkLWxnIHRyYW5zaXRpb24tY29sb3JzIGRpc2FibGVkOm9wYWNpdHktNTAgZGlzYWJsZWQ6Y3Vyc29yLW5vdC1hbGxvd2VkIGZsZXggaXRlbXMtY2VudGVyIGp1c3RpZnktY2VudGVyIg0KICAgICAgICA+DQogICAgICAgICAge2xvYWRpbmcgPyAoDQogICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT0idy01IGgtNSBib3JkZXItMiBib3JkZXItd2hpdGUgYm9yZGVyLXQtdHJhbnNwYXJlbnQgcm91bmRlZC1mdWxsIGFuaW1hdGUtc3BpbiIgLz4NCiAgICAgICAgICApIDogKA0KICAgICAgICAgICAgJ1NpZ24gSW4nDQogICAgICAgICAgKX0NCiAgICAgICAgPC9idXR0b24+DQoNCiAgICAgICAgPGJ1dHRvbg0KICAgICAgICAgIHR5cGU9ImJ1dHRvbiINCiAgICAgICAgICBvbkNsaWNrPXtoYW5kbGVDcmVhdGVBZG1pbn0NCiAgICAgICAgICBjbGFzc05hbWU9InctZnVsbCB0ZXh0LXNtIHRleHQtc2xhdGUtNTAwIGhvdmVyOnRleHQtZW1lcmFsZC02MDAgbXQtNCB1bmRlcmxpbmUiDQogICAgICAgID4NCiAgICAgICAgICBCdWF0IEFrdW4gQWRtaW4gKERlbW8pDQogICAgICAgIDwvYnV0dG9uPg0KICAgICAgPC9mb3JtPg0KICAgIDwvZGl2Pg0KICApOw0KfQ0K"}
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../store/authStore';
+import { Store, User, Lock } from 'lucide-react';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from '../api/firebase';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+
+export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const setUser = useAuthStore((state) => state.setUser);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      // ... rest of logic
+
+      const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
+      
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        setUser({
+          uid: userCredential.user.uid,
+          email: userCredential.user.email!,
+          name: userData.name,
+          role: userData.role,
+          createdAt: userData.createdAt.toDate(),
+        });
+        navigate('/dashboard');
+      } else {
+        // Fallback if user document doesn't exist (e.g. created manually in auth console)
+        setUser({
+          uid: userCredential.user.uid,
+          email: userCredential.user.email!,
+          name: 'User',
+          role: 'cashier', // Default role
+          createdAt: new Date(),
+        });
+        navigate('/dashboard');
+      }
+    } catch (err: any) {
+      setError('Invalid email or password');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateAdmin = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, 'admin@pos.com', 'admin123');
+      await setDoc(doc(db, 'users', userCredential.user.uid), {
+        uid: userCredential.user.uid,
+        name: 'Admin Toko',
+        email: 'admin@pos.com',
+        role: 'admin',
+        createdAt: serverTimestamp()
+      });
+      alert('Akun Admin Berhasil Dibuat!\nEmail: admin@pos.com\nPass: admin123');
+      setEmail('admin@pos.com');
+      setPassword('admin123');
+    } catch (error: any) {
+      console.error(error);
+      alert('Gagal membuat admin: ' + error.message);
+    }
+  };
+
+  return (
+    <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-slate-100">
+      <div className="text-center mb-8">
+        <div className="bg-emerald-100 p-3 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+          <Store className="w-8 h-8 text-emerald-600" />
+        </div>
+        <h1 className="text-2xl font-bold text-slate-800">Welcome Back</h1>
+        <p className="text-slate-500 mt-2">Sign in to your POS account</p>
+      </div>
+
+      {error && (
+        <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-6 text-sm flex items-center">
+          <span className="mr-2">⚠️</span>
+          {error}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Email Address</label>
+          <div className="relative">
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+              placeholder="admin@example.com"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Password</label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+              placeholder="••••••••"
+            />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+        >
+          {loading ? (
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          ) : (
+            'Sign In'
+          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={handleCreateAdmin}
+          className="w-full text-sm text-slate-500 hover:text-emerald-600 mt-4 underline"
+        >
+          Buat Akun Admin (Demo)
+        </button>
+      </form>
+    </div>
+  );
+}

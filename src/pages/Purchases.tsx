@@ -1,1 +1,252 @@
-{"data":"aW1wb3J0IHsgdXNlU3RhdGUsIHVzZUVmZmVjdCB9IGZyb20gJ3JlYWN0JzsKaW1wb3J0IHsgY29sbGVjdGlvbiwgcXVlcnksIG9yZGVyQnksIG9uU25hcHNob3QsIGFkZERvYywgc2VydmVyVGltZXN0YW1wLCB3cml0ZUJhdGNoLCBkb2MsIGluY3JlbWVudCB9IGZyb20gJ2ZpcmViYXNlL2ZpcmVzdG9yZSc7CmltcG9ydCB7IGRiIH0gZnJvbSAnLi4vYXBpL2ZpcmViYXNlJzsKaW1wb3J0IHsgUHJvZHVjdCB9IGZyb20gJy4uL3R5cGVzJzsKaW1wb3J0IHsgU2VhcmNoLCBQbHVzLCBTaG9wcGluZ0JhZywgVHJ1Y2ssIERvbGxhclNpZ24sIFBhY2thZ2UgfSBmcm9tICdsdWNpZGUtcmVhY3QnOwppbXBvcnQgeyB1c2VBdXRoU3RvcmUgfSBmcm9tICcuLi9zdG9yZS9hdXRoU3RvcmUnOwoKZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gUHVyY2hhc2VzKCkgewogIGNvbnN0IFtwcm9kdWN0cywgc2V0UHJvZHVjdHNdID0gdXNlU3RhdGU8UHJvZHVjdFtdPihbXSk7CiAgY29uc3QgW3NlYXJjaFRlcm0sIHNldFNlYXJjaFRlcm1dID0gdXNlU3RhdGUoJycpOwogIGNvbnN0IFtjYXJ0LCBzZXRDYXJ0XSA9IHVzZVN0YXRlPHtwcm9kdWN0OiBQcm9kdWN0LCBxdWFudGl0eTogbnVtYmVyLCBjb3N0UHJpY2U6IG51bWJlcn1bXT4oW10pOwogIGNvbnN0IFtzdXBwbGllciwgc2V0U3VwcGxpZXJdID0gdXNlU3RhdGUoJycpOwogIGNvbnN0IFtwcm9jZXNzaW5nLCBzZXRQcm9jZXNzaW5nXSA9IHVzZVN0YXRlKGZhbHNlKTsKICBjb25zdCB7IHVzZXIgfSA9IHVzZUF1dGhTdG9yZSgpOwoKICB1c2VFZmZlY3QoKCkgPT4gewogICAgY29uc3QgcSA9IHF1ZXJ5KGNvbGxlY3Rpb24oZGIsICdwcm9kdWN0cycpLCBvcmRlckJ5KCduYW1lJykpOwogICAgY29uc3QgdW5zdWJzY3JpYmUgPSBvblNuYXBzaG90KHEsIChzbmFwc2hvdCkgPT4gewogICAgICBjb25zdCBwcm9kdWN0c0RhdGEgPSBzbmFwc2hvdC5kb2NzLm1hcChkb2MgPT4gKHsKICAgICAgICBpZDogZG9jLmlkLAogICAgICAgIC4uLmRvYy5kYXRhKCkKICAgICAgfSkpIGFzIFByb2R1Y3RbXTsKICAgICAgc2V0UHJvZHVjdHMocHJvZHVjdHNEYXRhKTsKICAgIH0pOwogICAgcmV0dXJuICgpID0+IHVuc3Vic2NyaWJlKCk7CiAgfSwgW10pOwoKICBjb25zdCBhZGRUb1B1cmNoYXNlID0gKHByb2R1Y3Q6IFByb2R1Y3QpID0+IHsKICAgIGNvbnN0IGV4aXN0aW5nID0gY2FydC5maW5kKGl0ZW0gPT4gaXRlbS5wcm9kdWN0LmlkID09PSBwcm9kdWN0LmlkKTsKICAgIGlmIChleGlzdGluZykgewogICAgICBzZXRDYXJ0KGNhcnQubWFwKGl0ZW0gPT4gCiAgICAgICAgaXRlbS5wcm9kdWN0LmlkID09PSBwcm9kdWN0LmlkIAogICAgICAgICAgPyB7IC4uLml0ZW0sIHF1YW50aXR5OiBpdGVtLnF1YW50aXR5ICsgMSB9IAogICAgICAgICAgOiBpdGVtCiAgICAgICkpOwogICAgfSBlbHNlIHsKICAgICAgc2V0Q2FydChbLi4uY2FydCwgeyBwcm9kdWN0LCBxdWFudGl0eTogMSwgY29zdFByaWNlOiBwcm9kdWN0LmNvc3RQcmljZSB8fCAwIH1dKTsKICAgIH0KICB9OwoKICBjb25zdCB1cGRhdGVJdGVtID0gKHByb2R1Y3RJZDogc3RyaW5nLCBmaWVsZDogJ3F1YW50aXR5JyB8ICdjb3N0UHJpY2UnLCB2YWx1ZTogbnVtYmVyKSA9PiB7CiAgICBzZXRDYXJ0KGNhcnQubWFwKGl0ZW0gPT4gCiAgICAgIGl0ZW0ucHJvZHVjdC5pZCA9PT0gcHJvZHVjdElkIAogICAgICAgID8geyAuLi5pdGVtLCBbZmllbGRdOiB2YWx1ZSB9IAogICAgICAgIDogaXRlbQogICAgKSk7CiAgfTsKCiAgY29uc3QgcmVtb3ZlRnJvbVB1cmNoYXNlID0gKHByb2R1Y3RJZDogc3RyaW5nKSA9PiB7CiAgICBzZXRDYXJ0KGNhcnQuZmlsdGVyKGl0ZW0gPT4gaXRlbS5wcm9kdWN0LmlkICE9PSBwcm9kdWN0SWQpKTsKICB9OwoKICBjb25zdCBoYW5kbGVQdXJjaGFzZSA9IGFzeW5jICgpID0+IHsKICAgIGlmIChjYXJ0Lmxlbmd0aCA9PT0gMCkgcmV0dXJuOwogICAgaWYgKCFzdXBwbGllci50cmltKCkpIHsKICAgICAgYWxlcnQoJ01vaG9uIGlzaSBuYW1hIHN1cHBsaWVyJyk7CiAgICAgIHJldHVybjsKICAgIH0KICAgIHNldFByb2Nlc3NpbmcodHJ1ZSk7CgogICAgdHJ5IHsKICAgICAgY29uc3QgYmF0Y2ggPSB3cml0ZUJhdGNoKGRiKTsKICAgICAgCiAgICAgIC8vIDEuIENyZWF0ZSBQdXJjaGFzZSBSZWNvcmQgKE9wdGlvbmFsLCBzZXBhcmF0ZSBjb2xsZWN0aW9uKQogICAgICBjb25zdCBwdXJjaGFzZVJlZiA9IGRvYyhjb2xsZWN0aW9uKGRiLCAncHVyY2hhc2VzJykpOwogICAgICBiYXRjaC5zZXQocHVyY2hhc2VSZWYsIHsKICAgICAgICBzdXBwbGllciwKICAgICAgICBpdGVtczogY2FydC5tYXAoaXRlbSA9PiAoewogICAgICAgICAgcHJvZHVjdElkOiBpdGVtLnByb2R1Y3QuaWQsCiAgICAgICAgICBuYW1lOiBpdGVtLnByb2R1Y3QubmFtZSwKICAgICAgICAgIHF1YW50aXR5OiBpdGVtLnF1YW50aXR5LAogICAgICAgICAgY29zdFByaWNlOiBpdGVtLmNvc3RQcmljZSwKICAgICAgICAgIHRvdGFsOiBpdGVtLnF1YW50aXR5ICogaXRlbS5jb3N0UHJpY2UKICAgICAgICB9KSksCiAgICAgICAgdG90YWxBbW91bnQ6IGNhcnQucmVkdWNlKChhY2MsIGl0ZW0pID0+IGFjYyArIChpdGVtLnF1YW50aXR5ICogaXRlbS5jb3N0UHJpY2UpLCAwKSwKICAgICAgICB1c2VySWQ6IHVzZXI/LnVpZCwKICAgICAgICBjcmVhdGVkQXQ6IHNlcnZlclRpbWVzdGFtcCgpCiAgICAgIH0pOwoKICAgICAgLy8gMi4gVXBkYXRlIFN0b2NrICYgQ29zdCBQcmljZQogICAgICBjYXJ0LmZvckVhY2goaXRlbSA9PiB7CiAgICAgICAgY29uc3QgcHJvZHVjdFJlZiA9IGRvYyhkYiwgJ3Byb2R1Y3RzJywgaXRlbS5wcm9kdWN0LmlkKTsKICAgICAgICBiYXRjaC51cGRhdGUocHJvZHVjdFJlZiwgewogICAgICAgICAgc3RvY2s6IGluY3JlbWVudChpdGVtLnF1YW50aXR5KSwKICAgICAgICAgIGNvc3RQcmljZTogaXRlbS5jb3N0UHJpY2UsIC8vIFVwZGF0ZSBjb3N0IHByaWNlIHRvIGxhdGVzdCBwdXJjaGFzZSBwcmljZQogICAgICAgICAgdXBkYXRlZEF0OiBzZXJ2ZXJUaW1lc3RhbXAoKQogICAgICAgIH0pOwoKICAgICAgICAvLyAzLiBJbnZlbnRvcnkgTG9nCiAgICAgICAgY29uc3QgbG9nUmVmID0gZG9jKGNvbGxlY3Rpb24oZGIsICdpbnZlbnRvcnlfbG9ncycpKTsKICAgICAgICBiYXRjaC5zZXQobG9nUmVmLCB7CiAgICAgICAgICBwcm9kdWN0SWQ6IGl0ZW0ucHJvZHVjdC5pZCwKICAgICAgICAgIHByb2R1Y3ROYW1lOiBpdGVtLnByb2R1Y3QubmFtZSwKICAgICAgICAgIHR5cGU6ICdpbicsCiAgICAgICAgICBxdWFudGl0eTogaXRlbS5xdWFudGl0eSwKICAgICAgICAgIHJlYXNvbjogYFBlbWJlbGlhbiBkYXJpICR7c3VwcGxpZXJ9YCwKICAgICAgICAgIHVzZXJJZDogdXNlcj8udWlkLAogICAgICAgICAgY3JlYXRlZEF0OiBzZXJ2ZXJUaW1lc3RhbXAoKQogICAgICAgIH0pOwogICAgICB9KTsKCiAgICAgIGF3YWl0IGJhdGNoLmNvbW1pdCgpOwogICAgICAKICAgICAgc2V0Q2FydChbXSk7CiAgICAgIHNldFN1cHBsaWVyKCcnKTsKICAgICAgYWxlcnQoJ1BlbWJlbGlhbiBiZXJoYXNpbCBkaXNpbXBhbiEgU3RvayB0ZWxhaCBiZXJ0YW1iYWguJyk7CiAgICB9IGNhdGNoIChlcnJvcikgewogICAgICBjb25zb2xlLmVycm9yKCdFcnJvciBwcm9jZXNzaW5nIHB1cmNoYXNlOicsIGVycm9yKTsKICAgICAgYWxlcnQoJ0dhZ2FsIG1lbnlpbXBhbiBwZW1iZWxpYW4nKTsKICAgIH0gZmluYWxseSB7CiAgICAgIHNldFByb2Nlc3NpbmcoZmFsc2UpOwogICAgfQogIH07CgogIGNvbnN0IGZpbHRlcmVkUHJvZHVjdHMgPSBwcm9kdWN0cy5maWx0ZXIocHJvZHVjdCA9PiAKICAgIHByb2R1Y3QubmFtZS50b0xvd2VyQ2FzZSgpLmluY2x1ZGVzKHNlYXJjaFRlcm0udG9Mb3dlckNhc2UoKSkKICApOwoKICBjb25zdCB0b3RhbFB1cmNoYXNlID0gY2FydC5yZWR1Y2UoKGFjYywgaXRlbSkgPT4gYWNjICsgKGl0ZW0ucXVhbnRpdHkgKiBpdGVtLmNvc3RQcmljZSksIDApOwoKICByZXR1cm4gKAogICAgPGRpdiBjbGFzc05hbWU9ImZsZXggaC1bY2FsYygxMDB2aC10aGVtZShzcGFjaW5nLjI0KSldIGdhcC02Ij4KICAgICAgey8qIFByb2R1Y3QgU2VsZWN0aW9uICovfQogICAgICA8ZGl2IGNsYXNzTmFtZT0iZmxleC0xIGZsZXggZmxleC1jb2wgbWluLXctMCI+CiAgICAgICAgPGgxIGNsYXNzTmFtZT0idGV4dC0yeGwgZm9udC1ib2xkIHRleHQtc2xhdGUtODAwIG1iLTQiPlBlbWJlbGlhbiBTdG9rIChSZXN0b2NrKTwvaDE+CiAgICAgICAgCiAgICAgICAgPGRpdiBjbGFzc05hbWU9Im1iLTQgcmVsYXRpdmUiPgogICAgICAgICAgPFNlYXJjaCBjbGFzc05hbWU9ImFic29sdXRlIGxlZnQtNCB0b3AtMS8yIC10cmFuc2xhdGUteS0xLzIgdy01IGgtNSB0ZXh0LXNsYXRlLTQwMCIgLz4KICAgICAgICAgIDxpbnB1dAogICAgICAgICAgICB0eXBlPSJ0ZXh0IgogICAgICAgICAgICBwbGFjZWhvbGRlcj0iQ2FyaSBwcm9kdWsgdW50dWsgZGliZWxpLi4uIgogICAgICAgICAgICB2YWx1ZT17c2VhcmNoVGVybX0KICAgICAgICAgICAgb25DaGFuZ2U9eyhlKSA9PiBzZXRTZWFyY2hUZXJtKGUudGFyZ2V0LnZhbHVlKX0KICAgICAgICAgICAgY2xhc3NOYW1lPSJ3LWZ1bGwgcGwtMTIgcHItNCBweS0zIGJnLXdoaXRlIGJvcmRlciBib3JkZXItc2xhdGUtMjAwIHJvdW5kZWQteGwgc2hhZG93LXNtIGZvY3VzOm91dGxpbmUtbm9uZSBmb2N1czpyaW5nLTIgZm9jdXM6cmluZy1lbWVyYWxkLTUwMCIKICAgICAgICAgIC8+CiAgICAgICAgPC9kaXY+CgogICAgICAgIDxkaXYgY2xhc3NOYW1lPSJmbGV4LTEgb3ZlcmZsb3cteS1hdXRvIHByLTIiPgogICAgICAgICAgPGRpdiBjbGFzc05hbWU9ImdyaWQgZ3JpZC1jb2xzLTIgbWQ6Z3JpZC1jb2xzLTMgZ2FwLTQiPgogICAgICAgICAgICB7ZmlsdGVyZWRQcm9kdWN0cy5tYXAocHJvZHVjdCA9PiAoCiAgICAgICAgICAgICAgPGJ1dHRvbgogICAgICAgICAgICAgICAga2V5PXtwcm9kdWN0LmlkfQogICAgICAgICAgICAgICAgb25DbGljaz17KCkgPT4gYWRkVG9QdXJjaGFzZShwcm9kdWN0KX0KICAgICAgICAgICAgICAgIGNsYXNzTmFtZT0iYmctd2hpdGUgcC00IHJvdW5kZWQteGwgYm9yZGVyIGJvcmRlci1zbGF0ZS0xMDAgc2hhZG93LXNtIGhvdmVyOnNoYWRvdy1tZCB0cmFuc2l0aW9uLWFsbCB0ZXh0LWxlZnQgZ3JvdXAiCiAgICAgICAgICAgICAgPgogICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9ImZsZXgganVzdGlmeS1iZXR3ZWVuIGl0ZW1zLXN0YXJ0IG1iLTIiPgogICAgICAgICAgICAgICAgICA8aDMgY2xhc3NOYW1lPSJmb250LW1lZGl1bSB0ZXh0LXNsYXRlLTgwMCBsaW5lLWNsYW1wLTEiPntwcm9kdWN0Lm5hbWV9PC9oMz4KICAgICAgICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPSJ0ZXh0LXhzIGJnLXNsYXRlLTEwMCBweC0yIHB5LTEgcm91bmRlZCB0ZXh0LXNsYXRlLTUwMCI+CiAgICAgICAgICAgICAgICAgICAgU3Rvazoge3Byb2R1Y3Quc3RvY2sgfHwgMH0KICAgICAgICAgICAgICAgICAgPC9zcGFuPgogICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9InRleHQtc20gdGV4dC1zbGF0ZS01MDAgbWItMiB0cnVuY2F0ZSI+SUQ6IHtwcm9kdWN0LmlkLnNsaWNlKDAsNSl9PC9wPgogICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9InRleHQtZW1lcmFsZC02MDAgZm9udC1tZWRpdW0gdGV4dC1zbSI+CiAgICAgICAgICAgICAgICAgIEJlbGkgVGVyYWtoaXI6IFJwIHsocHJvZHVjdC5jb3N0UHJpY2UgfHwgMCkudG9Mb2NhbGVTdHJpbmcoKX0KICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgIDwvYnV0dG9uPgogICAgICAgICAgICApKX0KICAgICAgICAgIDwvZGl2PgogICAgICAgIDwvZGl2PgogICAgICA8L2Rpdj4KCiAgICAgIHsvKiBQdXJjaGFzZSBGb3JtICovfQogICAgICA8ZGl2IGNsYXNzTmFtZT0idy05NiBiZy13aGl0ZSByb3VuZGVkLTJ4bCBzaGFkb3ctbGcgYm9yZGVyIGJvcmRlci1zbGF0ZS0xMDAgZmxleCBmbGV4LWNvbCBoLWZ1bGwiPgogICAgICAgIDxkaXYgY2xhc3NOYW1lPSJwLTYgYm9yZGVyLWIgYm9yZGVyLXNsYXRlLTEwMCBiZy1zbGF0ZS01MCI+CiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT0iZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTMgbWItNCI+CiAgICAgICAgICAgIDxUcnVjayBjbGFzc05hbWU9InctNiBoLTYgdGV4dC1lbWVyYWxkLTYwMCIgLz4KICAgICAgICAgICAgPGgyIGNsYXNzTmFtZT0idGV4dC14bCBmb250LWJvbGQgdGV4dC1zbGF0ZS04MDAiPkRyYWZ0IFBlbWJlbGlhbjwvaDI+CiAgICAgICAgICA8L2Rpdj4KICAgICAgICAgIAogICAgICAgICAgPGRpdj4KICAgICAgICAgICAgPGxhYmVsIGNsYXNzTmFtZT0idGV4dC1zbSBmb250LW1lZGl1bSB0ZXh0LXNsYXRlLTcwMCBibG9jayBtYi0xIj5TdXBwbGllcjwvbGFiZWw+CiAgICAgICAgICAgIDxpbnB1dAogICAgICAgICAgICAgIHR5cGU9InRleHQiCiAgICAgICAgICAgICAgdmFsdWU9e3N1cHBsaWVyfQogICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gc2V0U3VwcGxpZXIoZS50YXJnZXQudmFsdWUpfQogICAgICAgICAgICAgIHBsYWNlaG9sZGVyPSJOYW1hIFN1cHBsaWVyLi4uIgogICAgICAgICAgICAgIGNsYXNzTmFtZT0idy1mdWxsIHB4LTMgcHktMiBib3JkZXIgYm9yZGVyLXNsYXRlLTIwMCByb3VuZGVkLWxnIGZvY3VzOm91dGxpbmUtbm9uZSBmb2N1czpyaW5nLTIgZm9jdXM6cmluZy1lbWVyYWxkLTUwMCIKICAgICAgICAgICAgLz4KICAgICAgICAgIDwvZGl2PgogICAgICAgIDwvZGl2PgoKICAgICAgICA8ZGl2IGNsYXNzTmFtZT0iZmxleC0xIG92ZXJmbG93LXktYXV0byBwLTQgc3BhY2UteS00Ij4KICAgICAgICAgIHtjYXJ0Lmxlbmd0aCA9PT0gMCA/ICgKICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9ImgtZnVsbCBmbGV4IGZsZXgtY29sIGl0ZW1zLWNlbnRlciBqdXN0aWZ5LWNlbnRlciB0ZXh0LXNsYXRlLTQwMCBzcGFjZS15LTQgb3BhY2l0eS01MCI+CiAgICAgICAgICAgICAgPFNob3BwaW5nQmFnIGNsYXNzTmFtZT0idy0xNiBoLTE2IiAvPgogICAgICAgICAgICAgIDxwPkJlbHVtIGFkYSBiYXJhbmcgZGlwaWxpaDwvcD4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICApIDogKAogICAgICAgICAgICBjYXJ0Lm1hcChpdGVtID0+ICgKICAgICAgICAgICAgICA8ZGl2IGtleT17aXRlbS5wcm9kdWN0LmlkfSBjbGFzc05hbWU9ImJnLXNsYXRlLTUwIHAtMyByb3VuZGVkLWxnIGJvcmRlciBib3JkZXItc2xhdGUtMTAwIj4KICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPSJmbGV4IGp1c3RpZnktYmV0d2VlbiBpdGVtcy1zdGFydCBtYi0yIj4KICAgICAgICAgICAgICAgICAgPGg0IGNsYXNzTmFtZT0iZm9udC1tZWRpdW0gdGV4dC1zbGF0ZS04MDAgbGluZS1jbGFtcC0xIj57aXRlbS5wcm9kdWN0Lm5hbWV9PC9oND4KICAgICAgICAgICAgICAgICAgPGJ1dHRvbiBvbkNsaWNrPXsoKSA9PiByZW1vdmVGcm9tUHVyY2hhc2UoaXRlbS5wcm9kdWN0LmlkKX0gY2xhc3NOYW1lPSJ0ZXh0LXNsYXRlLTQwMCBob3Zlcjp0ZXh0LXJlZC01MDAiPgogICAgICAgICAgICAgICAgICAgIDxQbHVzIGNsYXNzTmFtZT0idy00IGgtNCByb3RhdGUtNDUiIC8+CiAgICAgICAgICAgICAgICAgIDwvYnV0dG9uPgogICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPSJncmlkIGdyaWQtY29scy0yIGdhcC0zIj4KICAgICAgICAgICAgICAgICAgPGRpdj4KICAgICAgICAgICAgICAgICAgICA8bGFiZWwgY2xhc3NOYW1lPSJ0ZXh0LXhzIHRleHQtc2xhdGUtNTAwIGJsb2NrIG1iLTEiPkp1bWxhaDwvbGFiZWw+CiAgICAgICAgICAgICAgICAgICAgPGlucHV0CiAgICAgICAgICAgICAgICAgICAgICB0eXBlPSJudW1iZXIiCiAgICAgICAgICAgICAgICAgICAgICBtaW49IjEiCiAgICAgICAgICAgICAgICAgICAgICB2YWx1ZT17aXRlbS5xdWFudGl0eX0KICAgICAgICAgICAgICAgICAgICAgIG9uQ2hhbmdlPXsoZSkgPT4gdXBkYXRlSXRlbShpdGVtLnByb2R1Y3QuaWQsICdxdWFudGl0eScsIHBhcnNlSW50KGUudGFyZ2V0LnZhbHVlKSB8fCAwKX0KICAgICAgICAgICAgICAgICAgICAgIGNsYXNzTmFtZT0idy1mdWxsIHB4LTIgcHktMSB0ZXh0LXNtIGJvcmRlciBib3JkZXItc2xhdGUtMjAwIHJvdW5kZWQgZm9jdXM6b3V0bGluZS1ub25lIGZvY3VzOmJvcmRlci1lbWVyYWxkLTUwMCIKICAgICAgICAgICAgICAgICAgICAvPgogICAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICAgICAgPGRpdj4KICAgICAgICAgICAgICAgICAgICA8bGFiZWwgY2xhc3NOYW1lPSJ0ZXh0LXhzIHRleHQtc2xhdGUtNTAwIGJsb2NrIG1iLTEiPkhhcmdhIEJlbGkgKFNhdHVhbik8L2xhYmVsPgogICAgICAgICAgICAgICAgICAgIDxpbnB1dAogICAgICAgICAgICAgICAgICAgICAgdHlwZT0ibnVtYmVyIgogICAgICAgICAgICAgICAgICAgICAgbWluPSIwIgogICAgICAgICAgICAgICAgICAgICAgdmFsdWU9e2l0ZW0uY29zdFByaWNlfQogICAgICAgICAgICAgICAgICAgICAgb25DaGFuZ2U9eyhlKSA9PiB1cGRhdGVJdGVtKGl0ZW0ucHJvZHVjdC5pZCwgJ2Nvc3RQcmljZScsIHBhcnNlSW50KGUudGFyZ2V0LnZhbHVlKSB8fCAwKX0KICAgICAgICAgICAgICAgICAgICAgIGNsYXNzTmFtZT0idy1mdWxsIHB4LTIgcHktMSB0ZXh0LXNtIGJvcmRlciBib3JkZXItc2xhdGUtMjAwIHJvdW5kZWQgZm9jdXM6b3V0bGluZS1ub25lIGZvY3VzOmJvcmRlci1lbWVyYWxkLTUwMCIKICAgICAgICAgICAgICAgICAgICAvPgogICAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9Im10LTIgdGV4dC1yaWdodCB0ZXh0LXNtIGZvbnQtbWVkaXVtIHRleHQtc2xhdGUtNjAwIj4KICAgICAgICAgICAgICAgICAgU3VidG90YWw6IFJwIHsoaXRlbS5xdWFudGl0eSAqIGl0ZW0uY29zdFByaWNlKS50b0xvY2FsZVN0cmluZygpfQogICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICkpCiAgICAgICAgICApfQogICAgICAgIDwvZGl2PgoKICAgICAgICA8ZGl2IGNsYXNzTmFtZT0icC02IGJvcmRlci10IGJvcmRlci1zbGF0ZS0xMDAgYmctc2xhdGUtNTAiPgogICAgICAgICAgPGRpdiBjbGFzc05hbWU9ImZsZXgganVzdGlmeS1iZXR3ZWVuIGl0ZW1zLWNlbnRlciBtYi00Ij4KICAgICAgICAgICAgPHNwYW4gY2xhc3NOYW1lPSJ0ZXh0LXNsYXRlLTYwMCBmb250LW1lZGl1bSI+VG90YWwgUGVtYmVsaWFuPC9zcGFuPgogICAgICAgICAgICA8c3BhbiBjbGFzc05hbWU9InRleHQteGwgZm9udC1ib2xkIHRleHQtZW1lcmFsZC02MDAiPlJwIHt0b3RhbFB1cmNoYXNlLnRvTG9jYWxlU3RyaW5nKCl9PC9zcGFuPgogICAgICAgICAgPC9kaXY+CgogICAgICAgICAgPGJ1dHRvbgogICAgICAgICAgICBvbkNsaWNrPXtoYW5kbGVQdXJjaGFzZX0KICAgICAgICAgICAgZGlzYWJsZWQ9e2NhcnQubGVuZ3RoID09PSAwIHx8IHByb2Nlc3Npbmd9CiAgICAgICAgICAgIGNsYXNzTmFtZT0idy1mdWxsIGJnLWVtZXJhbGQtNjAwIGhvdmVyOmJnLWVtZXJhbGQtNzAwIHRleHQtd2hpdGUgZm9udC1ib2xkIHB5LTMgcm91bmRlZC14bCBzaGFkb3ctbGcgc2hhZG93LWVtZXJhbGQtMjAwIHRyYW5zaXRpb24tYWxsIGRpc2FibGVkOm9wYWNpdHktNTAgZGlzYWJsZWQ6c2hhZG93LW5vbmUgZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIgZ2FwLTIiCiAgICAgICAgICA+CiAgICAgICAgICAgIHtwcm9jZXNzaW5nID8gKAogICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPSJ3LTUgaC01IGJvcmRlci0yIGJvcmRlci13aGl0ZSBib3JkZXItdC10cmFuc3BhcmVudCByb3VuZGVkLWZ1bGwgYW5pbWF0ZS1zcGluIiAvPgogICAgICAgICAgICApIDogKAogICAgICAgICAgICAgIDw+CiAgICAgICAgICAgICAgICA8VHJ1Y2sgY2xhc3NOYW1lPSJ3LTUgaC01IiAvPgogICAgICAgICAgICAgICAgPHNwYW4+UHJvc2VzIFJlc3RvY2s8L3NwYW4+CiAgICAgICAgICAgICAgPC8+CiAgICAgICAgICAgICl9CiAgICAgICAgICA8L2J1dHRvbj4KICAgICAgICA8L2Rpdj4KICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KICApOwp9Cg=="}
+import { useState, useEffect } from 'react';
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, writeBatch, doc, increment } from 'firebase/firestore';
+import { db } from '../api/firebase';
+import { Product } from '../types';
+import { Search, Plus, ShoppingBag, Truck, DollarSign, Package } from 'lucide-react';
+import { useAuthStore } from '../store/authStore';
+
+export default function Purchases() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [cart, setCart] = useState<{product: Product, quantity: number, costPrice: number}[]>([]);
+  const [supplier, setSupplier] = useState('');
+  const [processing, setProcessing] = useState(false);
+  const { user } = useAuthStore();
+
+  useEffect(() => {
+    const q = query(collection(db, 'products'), orderBy('name'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const productsData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Product[];
+      setProducts(productsData);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const addToPurchase = (product: Product) => {
+    const existing = cart.find(item => item.product.id === product.id);
+    if (existing) {
+      setCart(cart.map(item => 
+        item.product.id === product.id 
+          ? { ...item, quantity: item.quantity + 1 } 
+          : item
+      ));
+    } else {
+      setCart([...cart, { product, quantity: 1, costPrice: product.costPrice || 0 }]);
+    }
+  };
+
+  const updateItem = (productId: string, field: 'quantity' | 'costPrice', value: number) => {
+    setCart(cart.map(item => 
+      item.product.id === productId 
+        ? { ...item, [field]: value } 
+        : item
+    ));
+  };
+
+  const removeFromPurchase = (productId: string) => {
+    setCart(cart.filter(item => item.product.id !== productId));
+  };
+
+  const handlePurchase = async () => {
+    if (cart.length === 0) return;
+    if (!supplier.trim()) {
+      alert('Mohon isi nama supplier');
+      return;
+    }
+    setProcessing(true);
+
+    try {
+      const batch = writeBatch(db);
+      
+      // 1. Create Purchase Record (Optional, separate collection)
+      const purchaseRef = doc(collection(db, 'purchases'));
+      batch.set(purchaseRef, {
+        supplier,
+        items: cart.map(item => ({
+          productId: item.product.id,
+          name: item.product.name,
+          quantity: item.quantity,
+          costPrice: item.costPrice,
+          total: item.quantity * item.costPrice
+        })),
+        totalAmount: cart.reduce((acc, item) => acc + (item.quantity * item.costPrice), 0),
+        userId: user?.uid,
+        createdAt: serverTimestamp()
+      });
+
+      // 2. Update Stock & Cost Price
+      cart.forEach(item => {
+        const productRef = doc(db, 'products', item.product.id);
+        batch.update(productRef, {
+          stock: increment(item.quantity),
+          costPrice: item.costPrice, // Update cost price to latest purchase price
+          updatedAt: serverTimestamp()
+        });
+
+        // 3. Inventory Log
+        const logRef = doc(collection(db, 'inventory_logs'));
+        batch.set(logRef, {
+          productId: item.product.id,
+          productName: item.product.name,
+          type: 'in',
+          quantity: item.quantity,
+          reason: `Pembelian dari ${supplier}`,
+          userId: user?.uid,
+          createdAt: serverTimestamp()
+        });
+      });
+
+      await batch.commit();
+      
+      setCart([]);
+      setSupplier('');
+      alert('Pembelian berhasil disimpan! Stok telah bertambah.');
+    } catch (error) {
+      console.error('Error processing purchase:', error);
+      alert('Gagal menyimpan pembelian');
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const filteredProducts = products.filter(product => 
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPurchase = cart.reduce((acc, item) => acc + (item.quantity * item.costPrice), 0);
+
+  return (
+    <div className="flex h-[calc(100vh-theme(spacing.24))] gap-6">
+      {/* Product Selection */}
+      <div className="flex-1 flex flex-col min-w-0">
+        <h1 className="text-2xl font-bold text-slate-800 mb-4">Pembelian Stok (Restock)</h1>
+        
+        <div className="mb-4 relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <input
+            type="text"
+            placeholder="Cari produk untuk dibeli..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          />
+        </div>
+
+        <div className="flex-1 overflow-y-auto pr-2">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {filteredProducts.map(product => (
+              <button
+                key={product.id}
+                onClick={() => addToPurchase(product)}
+                className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-all text-left group"
+              >
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-medium text-slate-800 line-clamp-1">{product.name}</h3>
+                  <span className="text-xs bg-slate-100 px-2 py-1 rounded text-slate-500">
+                    Stok: {product.stock || 0}
+                  </span>
+                </div>
+                <p className="text-sm text-slate-500 mb-2 truncate">ID: {product.id.slice(0,5)}</p>
+                <div className="text-emerald-600 font-medium text-sm">
+                  Beli Terakhir: Rp {(product.costPrice || 0).toLocaleString()}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Purchase Form */}
+      <div className="w-96 bg-white rounded-2xl shadow-lg border border-slate-100 flex flex-col h-full">
+        <div className="p-6 border-b border-slate-100 bg-slate-50">
+          <div className="flex items-center gap-3 mb-4">
+            <Truck className="w-6 h-6 text-emerald-600" />
+            <h2 className="text-xl font-bold text-slate-800">Draft Pembelian</h2>
+          </div>
+          
+          <div>
+            <label className="text-sm font-medium text-slate-700 block mb-1">Supplier</label>
+            <input
+              type="text"
+              value={supplier}
+              onChange={(e) => setSupplier(e.target.value)}
+              placeholder="Nama Supplier..."
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {cart.length === 0 ? (
+            <div className="h-full flex flex-col items-center justify-center text-slate-400 space-y-4 opacity-50">
+              <ShoppingBag className="w-16 h-16" />
+              <p>Belum ada barang dipilih</p>
+            </div>
+          ) : (
+            cart.map(item => (
+              <div key={item.product.id} className="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                <div className="flex justify-between items-start mb-2">
+                  <h4 className="font-medium text-slate-800 line-clamp-1">{item.product.name}</h4>
+                  <button onClick={() => removeFromPurchase(item.product.id)} className="text-slate-400 hover:text-red-500">
+                    <Plus className="w-4 h-4 rotate-45" />
+                  </button>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs text-slate-500 block mb-1">Jumlah</label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={item.quantity}
+                      onChange={(e) => updateItem(item.product.id, 'quantity', parseInt(e.target.value) || 0)}
+                      className="w-full px-2 py-1 text-sm border border-slate-200 rounded focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-slate-500 block mb-1">Harga Beli (Satuan)</label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={item.costPrice}
+                      onChange={(e) => updateItem(item.product.id, 'costPrice', parseInt(e.target.value) || 0)}
+                      className="w-full px-2 py-1 text-sm border border-slate-200 rounded focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+                </div>
+                <div className="mt-2 text-right text-sm font-medium text-slate-600">
+                  Subtotal: Rp {(item.quantity * item.costPrice).toLocaleString()}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        <div className="p-6 border-t border-slate-100 bg-slate-50">
+          <div className="flex justify-between items-center mb-4">
+            <span className="text-slate-600 font-medium">Total Pembelian</span>
+            <span className="text-xl font-bold text-emerald-600">Rp {totalPurchase.toLocaleString()}</span>
+          </div>
+
+          <button
+            onClick={handlePurchase}
+            disabled={cart.length === 0 || processing}
+            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-emerald-200 transition-all disabled:opacity-50 disabled:shadow-none flex items-center justify-center gap-2"
+          >
+            {processing ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <>
+                <Truck className="w-5 h-5" />
+                <span>Proses Restock</span>
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
