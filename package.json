@@ -1,1 +1,50 @@
-{"data":"ewogICJuYW1lIjogInRyYWUtcHJvamVjdCIsCiAgInByaXZhdGUiOiB0cnVlLAogICJ2ZXJzaW9uIjogIjAuMC4wIiwKICAidHlwZSI6ICJtb2R1bGUiLAogICJzY3JpcHRzIjogewogICAgImRldiI6ICJ2aXRlIiwKICAgICJidWlsZCI6ICJ0c2MgLWIgJiYgdml0ZSBidWlsZCIsCiAgICAibGludCI6ICJlc2xpbnQgLiIsCiAgICAicHJldmlldyI6ICJ2aXRlIHByZXZpZXciLAogICAgImNoZWNrIjogInRzYyAtYiAtLW5vRW1pdCIKICB9LAogICJkZXBlbmRlbmNpZXMiOiB7CiAgICAiQGNhcGFjaXRvci9hbmRyb2lkIjogIl44LjEuMCIsCiAgICAiQGNhcGFjaXRvci9jbGkiOiAiXjguMS4wIiwKICAgICJAY2FwYWNpdG9yL2NvcmUiOiAiXjguMS4wIiwKICAgICJjYW5pdXNlLWxpdGUiOiAiXjEuMC4zMDAwMTc3MCIsCiAgICAiY2xzeCI6ICJeMi4xLjEiLAogICAgImZpcmViYXNlIjogIl4xMi45LjAiLAogICAgImx1Y2lkZS1yZWFjdCI6ICJeMC41MTEuMCIsCiAgICAicmVhY3QiOiAiXjE4LjMuMSIsCiAgICAicmVhY3QtZG9tIjogIl4xOC4zLjEiLAogICAgInJlYWN0LXJvdXRlci1kb20iOiAiXjcuMy4wIiwKICAgICJyZWFjdC16eGluZyI6ICJeMS4xLjMiLAogICAgInJlY2hhcnRzIjogIl4zLjcuMCIsCiAgICAidGFpbHdpbmQtbWVyZ2UiOiAiXjMuNS4wIiwKICAgICJ4bHN4IjogIl4wLjE4LjUiLAogICAgInp1c3RhbmQiOiAiXjUuMC4zIgogIH0sCiAgImRldkRlcGVuZGVuY2llcyI6IHsKICAgICJAZXNsaW50L2pzIjogIl45LjI1LjAiLAogICAgIkB0eXBlcy9ub2RlIjogIl4yMi4xNS4zMCIsCiAgICAiQHR5cGVzL3JlYWN0IjogIl4xOC4zLjEyIiwKICAgICJAdHlwZXMvcmVhY3QtZG9tIjogIl4xOC4zLjEiLAogICAgIkB2aXRlanMvcGx1Z2luLXJlYWN0IjogIl40LjQuMSIsCiAgICAiYXV0b3ByZWZpeGVyIjogIl4xMC40LjIxIiwKICAgICJiYWJlbC1wbHVnaW4tcmVhY3QtZGV2LWxvY2F0b3IiOiAiXjEuMC4wIiwKICAgICJlc2xpbnQiOiAiXjkuMjUuMCIsCiAgICAiZXNsaW50LXBsdWdpbi1yZWFjdC1ob29rcyI6ICJeNS4yLjAiLAogICAgImVzbGludC1wbHVnaW4tcmVhY3QtcmVmcmVzaCI6ICJeMC40LjE5IiwKICAgICJnbG9iYWxzIjogIl4xNi4wLjAiLAogICAgInBvc3Rjc3MiOiAiXjguNS4zIiwKICAgICJ0YWlsd2luZGNzcyI6ICJeMy40LjE3IiwKICAgICJ0eXBlc2NyaXB0IjogIn41LjguMyIsCiAgICAidHlwZXNjcmlwdC1lc2xpbnQiOiAiXjguMzAuMSIsCiAgICAidml0ZSI6ICJeNi4zLjUiLAogICAgInZpdGUtcGx1Z2luLXRyYWUtc29sby1iYWRnZSI6ICJeMS4wLjAiLAogICAgInZpdGUtdHNjb25maWctcGF0aHMiOiAiXjUuMS40IgogIH0KfQo="}
+{
+  "name": "trae-project",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "check": "tsc -b --noEmit"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.1.0",
+    "@capacitor/cli": "^8.1.0",
+    "@capacitor/core": "^8.1.0",
+    "caniuse-lite": "^1.0.30001770",
+    "clsx": "^2.1.1",
+    "firebase": "^12.9.0",
+    "lucide-react": "^0.511.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.3.0",
+    "react-zxing": "^1.1.3",
+    "recharts": "^3.7.0",
+    "tailwind-merge": "^3.5.0",
+    "xlsx": "^0.18.5",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.25.0",
+    "@types/node": "^22.15.30",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.4.1",
+    "autoprefixer": "^10.4.21",
+    "babel-plugin-react-dev-locator": "^1.0.0",
+    "eslint": "^9.25.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.30.1",
+    "vite": "^6.3.5",
+    "vite-plugin-trae-solo-badge": "^1.0.0",
+    "vite-tsconfig-paths": "^5.1.4"
+  }
+}
