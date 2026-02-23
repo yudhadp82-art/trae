@@ -89,6 +89,8 @@ export default function POS() {
     c.memberId.toLowerCase().includes(customerSearch.toLowerCase())
   );
 
+  const productNameOptions = Array.from(new Set(products.map(p => p.name).filter(Boolean))).slice(0, 200);
+
   const handleCheckout = async () => {
     if (items.length === 0) return;
     if (paymentMethod === 'debt' && !selectedCustomer) {
@@ -165,25 +167,6 @@ export default function POS() {
       {/* Product Grid Section */}
       <div className="flex-1 flex flex-col min-w-0">
         <div className="mb-6 space-y-4">
-          <div className="flex gap-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Cari produk..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              />
-            </div>
-            <button
-              onClick={() => setIsScanning(true)}
-              className="bg-emerald-600 text-white p-3 rounded-xl hover:bg-emerald-700 transition-colors shadow-sm"
-              title="Scan Barcode"
-            >
-              <ScanBarcode className="w-6 h-6" />
-            </button>
-          </div>
           
           {/* Scanner Modal */}
           {isScanning && (
@@ -266,6 +249,57 @@ export default function POS() {
             <h2 className="text-xl font-bold text-slate-800">Pesanan Saat Ini</h2>
           </div>
           <p className="text-slate-500 text-sm">{items.length} item dipilih</p>
+
+          {/* Search / Add Product (moved here) */}
+          <div className="mt-4 flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input
+                type="text"
+                list="pos-product-options"
+                placeholder="Cari / pilih barang…"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const p = products.find(pr => pr.name.toLowerCase() === searchTerm.toLowerCase());
+                    if (p) {
+                      addToCart(p);
+                      setSearchTerm('');
+                    }
+                  }
+                }}
+                className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+              <datalist id="pos-product-options">
+                {productNameOptions.map((n) => (
+                  <option key={n} value={n} />
+                ))}
+              </datalist>
+            </div>
+            <button
+              onClick={() => {
+                const p = products.find(pr => pr.name.toLowerCase() === searchTerm.toLowerCase());
+                if (p) {
+                  addToCart(p);
+                  setSearchTerm('');
+                } else {
+                  alert('Produk tidak ditemukan');
+                }
+              }}
+              className="px-3 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
+              title="Tambah ke keranjang"
+            >
+              <Plus className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setIsScanning(true)}
+              className="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200"
+              title="Scan Barcode"
+            >
+              <ScanBarcode className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
