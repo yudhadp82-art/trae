@@ -2,7 +2,6 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -12,8 +11,12 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const hasMissing = Object.values(firebaseConfig).some((v) => !v || typeof v !== 'string' || v.length === 0);
+if (hasMissing) {
+  throw new Error('Missing Firebase environment variables');
+}
+
+const app = initializeApp(firebaseConfig as Record<string, string>);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export default app;
