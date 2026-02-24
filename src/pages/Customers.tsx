@@ -255,9 +255,34 @@ export default function Customers() {
           // Parse Join Date if exists, otherwise use today
           let joinDate = new Date();
           if (row['Join Date']) {
-            const parsedDate = new Date(row['Join Date']);
-            if (!isNaN(parsedDate.getTime())) {
-              joinDate = parsedDate;
+            const rawDate = row['Join Date'];
+            // Check if date is in serial number format (Excel date)
+            if (typeof rawDate === 'number') {
+              // Convert Excel serial date to JS Date
+              // Excel starts from 1900-01-01, JS from 1970-01-01
+              // Adjust for leap year bug in Excel 1900
+              const excelEpoch = new Date(1899, 11, 30);
+              joinDate = new Date(excelEpoch.getTime() + rawDate * 86400000);
+            } 
+            // Check if date is in DD/MM/YYYY format (String)
+            else if (typeof rawDate === 'string' && rawDate.includes('/')) {
+              const parts = rawDate.split('/');
+              if (parts.length === 3) {
+                const day = parseInt(parts[0], 10);
+                const month = parseInt(parts[1], 10) - 1; // Months are 0-indexed
+                const year = parseInt(parts[2], 10);
+                const parsedDate = new Date(year, month, day);
+                if (!isNaN(parsedDate.getTime())) {
+                  joinDate = parsedDate;
+                }
+              }
+            }
+            // Fallback to standard date parsing
+            else {
+              const parsedDate = new Date(rawDate);
+              if (!isNaN(parsedDate.getTime())) {
+                joinDate = parsedDate;
+              }
             }
           }
 
