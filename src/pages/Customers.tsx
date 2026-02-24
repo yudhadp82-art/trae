@@ -290,11 +290,14 @@ export default function Customers() {
     reader.readAsBinaryString(file);
   };
 
-  const filteredCustomers = customers.filter(customer =>
-    customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    customer.memberId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (customer.phone && customer.phone.includes(searchTerm))
-  );
+  const filteredCustomers = customers.filter(customer => {
+    const search = searchTerm.toLowerCase();
+    return (
+      (customer.name && customer.name.toLowerCase().includes(search)) ||
+      (customer.memberId && customer.memberId.toLowerCase().includes(search)) ||
+      (customer.phone && customer.phone.includes(search))
+    );
+  });
 
   return (
     <div className="space-y-6">
