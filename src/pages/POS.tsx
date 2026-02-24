@@ -1,11 +1,82 @@
-import { useState, useEffect } from 'react';
-import { Search, ShoppingCart, Minus, Plus, Trash2, CreditCard, Banknote, Package, User, ScanBarcode, X } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Search, ShoppingCart, Minus, Plus, Trash2, CreditCard, Banknote, Package, User, ScanBarcode, X, Printer } from 'lucide-react';
 import { collection, onSnapshot, query, orderBy, serverTimestamp, writeBatch, doc, increment } from 'firebase/firestore';
 import { db } from '../api/firebase';
-import { Product, Customer } from '../types';
+import { Product, Customer, CartItem } from '../types';
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
 import { useZxing } from "react-zxing";
+
+// Receipt Component for Printing
+const PrintableReceipt = ({ 
+  items, 
+  total, 
+  user, 
+  customer, 
+  paymentMethod, 
+  date 
+}: { 
+  items: CartItem[], 
+  total: number, 
+  user: any, 
+  customer: Customer | null | string, 
+  paymentMethod: string, 
+  date: Date 
+}) => {
+  return (
+    <div className="hidden print:block p-4 font-mono text-xs w-[80mm] mx-auto">
+      <div className="text-center mb-4">
+        <h2 className="text-lg font-bold">TOKO RETAIL</h2>
+        <p>Jl. Contoh No. 123</p>
+        <p>Telp: 0812-3456-7890</p>
+      </div>
+      
+      <div className="border-b border-dashed border-black mb-2 pb-2">
+        <div className="flex justify-between">
+          <span>Tgl:</span>
+          <span>{date.toLocaleDateString('id-ID')} {date.toLocaleTimeString('id-ID')}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Kasir:</span>
+          <span>{user?.email?.split('@')[0] || 'Admin'}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Plg:</span>
+          <span className="truncate max-w-[100px]">{typeof customer === 'object' && customer ? customer.name : (customer || 'Umum')}</span>
+        </div>
+      </div>
+
+      <div className="mb-2 border-b border-dashed border-black pb-2">
+        {items.map((item, idx) => (
+          <div key={idx} className="mb-1">
+            <div className="font-bold">{item.name}</div>
+            <div className="flex justify-between">
+              <span>{item.quantity} x {item.price.toLocaleString()}</span>
+              <span>{(item.quantity * item.price).toLocaleString()}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex justify-between font-bold text-sm mb-4">
+        <span>TOTAL</span>
+        <span>Rp {total.toLocaleString()}</span>
+      </div>
+
+      <div className="text-center text-xs mb-4">
+        <p>Metode: {paymentMethod === 'debt' ? 'HUTANG' : 'CASH'}</p>
+        {paymentMethod === 'debt' && <p className="font-bold mt-1">*** BELUM LUNAS ***</p>}
+      </div>
+
+      <div className="text-center">
+        <p>Terima Kasih</p>
+        <p>Barang yang sudah dibeli</p>
+        <p>tidak dapat ditukar/dikembalikan</p>
+      </div>
+    </div>
+    </>
+  );
+};
 
 export default function POS() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -19,6 +90,15 @@ export default function POS() {
   const [showCustomerDropdown, setShowCustomerDropdown] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   
+  // State for last transaction receipt
+  const [lastTransaction, setLastTransaction] = useState<{
+    items: CartItem[],
+    total: number,
+    customer: Customer | null | string,
+    paymentMethod: string,
+    date: Date
+  } | null>(null);
+
   const { items, addToCart, removeFromCart, updateQuantity, getTotal, clearCart } = useCartStore();
   const { user } = useAuthStore();
 
@@ -149,12 +229,25 @@ export default function POS() {
 
       await batch.commit();
       
+      // Save last transaction data for printing
+      const transactionData = {
+        items: [...items],
+        total: getTotal(),
+        customer: selectedCustomer || customerSearch,
+        paymentMethod,
+        date: new Date()
+      };
+      setLastTransaction(transactionData);
+
       clearCart();
       setSelectedCustomer(null);
       setCustomerSearch('');
       setPaymentMethod('cash');
       
-      alert('Transaksi berhasil!');
+      // Auto print prompt
+      if (confirm('Transaksi berhasil! Cetak struk?')) {
+        setTimeout(() => window.print(), 100);
+      }
     } catch (error) {
       console.error('Error processing sale:', error);
       alert('Gagal memproses transaksi');
@@ -164,8 +257,22 @@ export default function POS() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-theme(spacing.24))] gap-6">
-      {/* Product Grid Section */}
+    <>
+      {/* Hidden Receipt for Printing */}
+      {lastTransaction && (
+        <PrintableReceipt 
+          items={lastTransaction.items}
+          total={lastTransaction.total}
+          user={user}
+          customer={lastTransaction.customer}
+          paymentMethod={lastTransaction.paymentMethod}
+          date={lastTransaction.date}
+        />
+      )}
+
+      {/* Main POS Interface - Hidden when printing */}
+      <div className="flex h-[calc(100vh-theme(spacing.24))] gap-6 print:hidden">
+        {/* Product Grid Section */}
       <div className="flex-1 flex flex-col min-w-0">
         <div className="mb-6 space-y-4">
           
@@ -248,6 +355,15 @@ export default function POS() {
           <div className="flex items-center gap-3 mb-1">
             <ShoppingCart className="w-6 h-6 text-emerald-600" />
             <h2 className="text-xl font-bold text-slate-800">Pesanan Saat Ini</h2>
+            {lastTransaction && (
+              <button
+                onClick={() => window.print()}
+                className="ml-auto p-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+                title="Cetak Ulang Nota Terakhir"
+              >
+                <Printer className="w-5 h-5" />
+              </button>
+            )}
           </div>
           <p className="text-slate-500 text-sm">{items.length} item dipilih</p>
 
