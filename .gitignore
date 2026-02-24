@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+
+# Local env files
+.env
+import.env
+.env.local
+.env.development
+.env.production
