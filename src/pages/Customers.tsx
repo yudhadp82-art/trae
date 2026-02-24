@@ -446,7 +446,11 @@ export default function Customers() {
                       )}
                     </td>
                     <td className="px-6 py-4 text-slate-600">
-                      {customer.joinDate ? new Date(customer.joinDate).toLocaleDateString('id-ID') : '-'}
+                      {customer.joinDate ? new Date(customer.joinDate).toLocaleDateString('id-ID', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                      }).replace(/\//g, '-') : '-'}
                     </td>
                     <td className="px-6 py-4 text-slate-600 max-w-xs truncate">
                       {customer.address || '-'}
