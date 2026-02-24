@@ -144,24 +144,43 @@ export default function Purchases() {
 
         <div className="flex-1 overflow-y-auto pr-2">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {filteredProducts.map(product => (
-              <button
-                key={product.id}
-                onClick={() => addToPurchase(product)}
-                className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-all text-left group"
-              >
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-medium text-slate-800 line-clamp-1">{product.name}</h3>
-                  <span className="text-xs bg-slate-100 px-2 py-1 rounded text-slate-500">
-                    Stok: {product.stock || 0}
-                  </span>
-                </div>
-                <p className="text-sm text-slate-500 mb-2 truncate">ID: {product.id.slice(0,5)}</p>
-                <div className="text-emerald-600 font-medium text-sm">
-                  Beli Terakhir: Rp {(product.costPrice || 0).toLocaleString()}
-                </div>
-              </button>
-            ))}
+            {filteredProducts.map(product => {
+              const margin = product.price - (product.costPrice || 0);
+              const marginPercent = product.price > 0 ? (margin / product.price) * 100 : 0;
+
+              return (
+                <button
+                  key={product.id}
+                  onClick={() => addToPurchase(product)}
+                  className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-all text-left group h-full flex flex-col"
+                >
+                  <div className="flex justify-between items-start mb-2 w-full">
+                    <h3 className="font-medium text-slate-800 line-clamp-1">{product.name}</h3>
+                    <span className="text-xs bg-slate-100 px-2 py-1 rounded text-slate-500 shrink-0 ml-2">
+                      Stok: {product.stock || 0}
+                    </span>
+                  </div>
+                  <p className="text-sm text-slate-500 mb-3 truncate">ID: {product.id.slice(0,5)}</p>
+                  
+                  <div className="mt-auto space-y-1.5 bg-slate-50 p-2.5 rounded-lg text-sm">
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-500 text-xs">Modal:</span>
+                      <span className="font-medium text-slate-700">Rp {(product.costPrice || 0).toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-500 text-xs">Jual:</span>
+                      <span className="font-medium text-slate-700">Rp {product.price.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between items-center pt-1.5 border-t border-slate-200">
+                      <span className="text-slate-500 text-xs">Margin:</span>
+                      <span className={`font-bold text-xs ${margin >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                        Rp {margin.toLocaleString()} ({Math.round(marginPercent)}%)
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
