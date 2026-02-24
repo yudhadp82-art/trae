@@ -74,7 +74,6 @@ const PrintableReceipt = ({
         <p>tidak dapat ditukar/dikembalikan</p>
       </div>
     </div>
-    </>
   );
 };
 
@@ -577,5 +576,6 @@ export default function POS() {
         </div>
       </div>
     </div>
+    </>
   );
 }
