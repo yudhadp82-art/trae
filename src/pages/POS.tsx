@@ -122,6 +122,18 @@ export default function POS() {
   const { items, addToCart, removeFromCart, updateQuantity, getTotal, clearCart } = useCartStore();
   const { user } = useAuthStore();
 
+  const addToCartWithStockCheck = (product: Product) => {
+    const existingItem = items.find(i => i.productId === product.id);
+    const currentQty = existingItem ? existingItem.quantity : 0;
+    
+    if (currentQty + 1 > (product.stock || 0)) {
+      alert(`Stok ${product.name} habis atau tidak cukup!`);
+      return;
+    }
+    
+    addToCart(product);
+  };
+
   const { ref } = useZxing({
     onDecodeResult(result) {
       const code = result.getText();
@@ -130,7 +142,7 @@ export default function POS() {
       const product = products.find(p => p.id === code || p.name.toLowerCase() === code.toLowerCase());
       
       if (product) {
-        addToCart(product);
+        addToCartWithStockCheck(product);
         // Play beep sound (optional)
         const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
         audio.play().catch(() => {});
@@ -194,6 +206,17 @@ export default function POS() {
   const handleCheckout = async () => {
     if (items.length === 0) return;
     const total = getTotal();
+    
+    // Check for stock availability
+    const outOfStockItems = items.filter(item => {
+      const product = products.find(p => p.id === item.productId);
+      return !product || (product.stock || 0) < item.quantity;
+    });
+
+    if (outOfStockItems.length > 0) {
+      alert(`Stok tidak cukup untuk produk: ${outOfStockItems.map(i => i.name).join(', ')}`);
+      return;
+    }
     
     if (paymentMethod === 'debt' && !selectedCustomer) {
       alert('Mohon pilih pelanggan untuk pembayaran hutang');
@@ -364,14 +387,22 @@ export default function POS() {
             {filteredProducts.map(product => (
               <button
                 key={product.id}
-                onClick={() => addToCart(product)}
-                className="bg-white p-3 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-all text-left group flex flex-col h-full"
+                onClick={() => addToCartWithStockCheck(product)}
+                disabled={(product.stock || 0) <= 0}
+                className={`bg-white p-3 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-all text-left group flex flex-col h-full ${
+                  (product.stock || 0) <= 0 ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
               >
                 <div className="h-32 w-full bg-slate-100 rounded-lg mb-3 overflow-hidden flex items-center justify-center relative">
                   {product.imageUrl ? (
                     <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   ) : (
                     <Package className="w-8 h-8 text-slate-300" />
+                  )}
+                  {(product.stock || 0) <= 0 && (
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                      <span className="text-white font-bold text-sm bg-red-600 px-2 py-1 rounded">Stok Habis</span>
+                    </div>
                   )}
                 </div>
                 <h3 className="font-medium text-slate-800 line-clamp-1 mb-0 text-sm">{product.name}</h3>
@@ -426,7 +457,7 @@ export default function POS() {
                   if (e.key === 'Enter') {
                     const p = products.find(pr => pr.name.toLowerCase() === searchTerm.toLowerCase());
                     if (p) {
-                      addToCart(p);
+                      addToCartWithStockCheck(p);
                       setSearchTerm('');
                     }
                   }
@@ -443,7 +474,7 @@ export default function POS() {
               onClick={() => {
                 const p = products.find(pr => pr.name.toLowerCase() === searchTerm.toLowerCase());
                 if (p) {
-                  addToCart(p);
+                  addToCartWithStockCheck(p);
                   setSearchTerm('');
                 } else {
                   alert('Produk tidak ditemukan');
