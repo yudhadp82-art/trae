@@ -152,6 +152,7 @@ export default function POS() {
       // Use acceptAllDevices to broaden compatibility
       const device = await navigator.bluetooth.requestDevice({
         acceptAllDevices: true,
+        // optionalServices must be present when acceptAllDevices is true
         optionalServices: [
           '000018f0-0000-1000-8000-00805f9b34fb', // Standard Thermal Printer
           'e7810a71-73ae-499d-8c15-faa9aef0c3f2', // Some generic Chinese printers
@@ -163,6 +164,11 @@ export default function POS() {
       setPrinterDevice(device);
       alert(`Terhubung ke printer: ${device.name}`);
     } catch (error: any) {
+      // Ignore user cancellation error to avoid annoying alerts
+      if (error.name === 'NotFoundError' || error.message?.includes('cancelled')) {
+        console.log('User cancelled bluetooth selection');
+        return;
+      }
       console.error('Bluetooth error:', error);
       alert(`Gagal menghubungkan: ${error.message || error}. \nTips: Pastikan Bluetooth aktif, dan UNPAIR printer dari pengaturan Bluetooth HP/Laptop jika sebelumnya sudah terhubung.`);
     }
