@@ -245,9 +245,12 @@ export default function POS() {
       setPaymentMethod('cash');
       
       // Auto print prompt
-      if (confirm('Transaksi berhasil! Cetak struk?')) {
-        setTimeout(() => window.print(), 100);
-      }
+      // We need to wait for state update to reflect in DOM before printing
+      setTimeout(() => {
+        if (confirm('Transaksi berhasil! Cetak struk?')) {
+          window.print();
+        }
+      }, 500);
     } catch (error) {
       console.error('Error processing sale:', error);
       alert('Gagal memproses transaksi');
