@@ -144,18 +144,27 @@ export default function POS() {
 
   const connectPrinter = async () => {
     try {
+      if (!navigator.bluetooth) {
+        alert('Browser ini tidak mendukung Web Bluetooth. Gunakan Chrome di Android/Desktop.');
+        return;
+      }
+
       // Use acceptAllDevices to broaden compatibility
       const device = await navigator.bluetooth.requestDevice({
         acceptAllDevices: true,
-        optionalServices: ['000018f0-0000-1000-8000-00805f9b34fb'] // Generic printer service
+        optionalServices: [
+          '000018f0-0000-1000-8000-00805f9b34fb', // Standard Thermal Printer
+          'e7810a71-73ae-499d-8c15-faa9aef0c3f2', // Some generic Chinese printers
+          '49535343-fe7d-4ae5-8fa9-9fafd205e455'  // ISSC / POS-58
+        ]
       });
       
       const server = await device.gatt?.connect();
       setPrinterDevice(device);
       alert(`Terhubung ke printer: ${device.name}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Bluetooth error:', error);
-      alert('Gagal menghubungkan printer. Pastikan Bluetooth aktif dan pilih perangkat yang sesuai.');
+      alert(`Gagal menghubungkan: ${error.message || error}. \nTips: Pastikan Bluetooth aktif, dan UNPAIR printer dari pengaturan Bluetooth HP/Laptop jika sebelumnya sudah terhubung.`);
     }
   };
 
@@ -166,8 +175,29 @@ export default function POS() {
     
     if (printerDevice && printerDevice.gatt?.connected) {
       try {
-        const service = await printerDevice.gatt.getPrimaryService('000018f0-0000-1000-8000-00805f9b34fb');
-        const characteristic = await service.getCharacteristic('00002af1-0000-1000-8000-00805f9b34fb');
+        const server = printerDevice.gatt;
+        let characteristic: BluetoothRemoteGATTCharacteristic | null = null;
+        
+        // Try to find the write characteristic in known services
+        const candidates = [
+            { s: '000018f0-0000-1000-8000-00805f9b34fb', c: '00002af1-0000-1000-8000-00805f9b34fb' },
+            { s: 'e7810a71-73ae-499d-8c15-faa9aef0c3f2', c: 'bef8d6c9-9c21-4c9e-b632-bd58c1009f9f' },
+            { s: '49535343-fe7d-4ae5-8fa9-9fafd205e455', c: '49535343-8841-43f4-a8d4-ecbe34729bb3' }
+        ];
+
+        for (const cand of candidates) {
+            try {
+                const service = await server?.getPrimaryService(cand.s);
+                characteristic = await service?.getCharacteristic(cand.c) || null;
+                if (characteristic) break;
+            } catch (e) {
+                // Ignore and try next
+            }
+        }
+
+        if (!characteristic) {
+            throw new Error('Service printer tidak didukung/ditemukan.');
+        }
         
         const receiptText = formatReceipt(saleData, user);
         const encoder = new TextEncoder();
@@ -181,7 +211,7 @@ export default function POS() {
         }
       } catch (error) {
         console.error('Print error:', error);
-        alert('Gagal mencetak struk');
+        alert('Gagal mencetak struk: ' + (error instanceof Error ? error.message : String(error)));
       }
     }
   };
