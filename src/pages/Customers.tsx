@@ -291,13 +291,19 @@ export default function Customers() {
   };
 
   const filteredCustomers = customers.filter(customer => {
+    if (!searchTerm) return true;
     const search = searchTerm.toLowerCase();
-    return (
-      (customer.name && customer.name.toLowerCase().includes(search)) ||
-      (customer.memberId && customer.memberId.toLowerCase().includes(search)) ||
-      (customer.phone && customer.phone.includes(search))
-    );
+    
+    // Safely check each field
+    const nameMatch = customer.name ? customer.name.toLowerCase().includes(search) : false;
+    const memberIdMatch = customer.memberId ? customer.memberId.toLowerCase().includes(search) : false;
+    const phoneMatch = customer.phone ? customer.phone.includes(search) : false;
+    
+    return nameMatch || memberIdMatch || phoneMatch;
   });
+
+  // Unique names for datalist
+  const customerNames = Array.from(new Set(customers.map(c => c.name).filter(Boolean))).slice(0, 100);
 
   return (
     <div className="space-y-6">
@@ -363,8 +369,14 @@ export default function Customers() {
               placeholder="Cari nama, nomor anggota..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              list="customer-suggestions"
               className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
+            <datalist id="customer-suggestions">
+              {customerNames.map((name, index) => (
+                <option key={index} value={name} />
+              ))}
+            </datalist>
           </div>
         </div>
 
