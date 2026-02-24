@@ -12,7 +12,7 @@ import {
   serverTimestamp
 } from 'firebase/firestore';
 import { db } from '../api/firebase';
-import { Customer } from '../types';
+import { Customer, Sale } from '../types';
 import * as XLSX from 'xlsx';
 import { 
   Search, 
@@ -27,13 +27,19 @@ import {
   Download,
   Upload,
   Loader,
-  FileSpreadsheet
+  FileSpreadsheet,
+  History,
+  TrendingUp,
+  Package
 } from 'lucide-react';
 
 export default function Customers() {
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [sales, setSales] = useState<Sale[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
+  const [selectedHistoryCustomer, setSelectedHistoryCustomer] = useState<Customer | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [importing, setImporting] = useState(false);
@@ -63,6 +69,67 @@ export default function Customers() {
 
     return () => unsubscribe();
   }, []);
+
+  // Fetch Sales
+  useEffect(() => {
+    const q = query(collection(db, 'sales'), orderBy('createdAt', 'desc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const salesData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: doc.data().createdAt?.toDate()
+      })) as Sale[];
+      setSales(salesData);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const getCustomerStats = (customerId: string) => {
+    const customerSales = sales.filter(s => s.customerId === customerId);
+    let totalProfit = 0;
+    
+    customerSales.forEach(sale => {
+      sale.items.forEach(item => {
+        const profit = (item.price - item.costPrice) * item.quantity;
+        totalProfit += profit;
+      });
+    });
+
+    return { totalProfit };
+  };
+
+  const getHistoryData = (customerId: string) => {
+    const customerSales = sales.filter(s => s.customerId === customerId);
+    const itemMap = new Map<string, { 
+      name: string; 
+      quantity: number; 
+      totalSpent: number; 
+      totalProfit: number 
+    }>();
+
+    customerSales.forEach(sale => {
+      sale.items.forEach(item => {
+        const current = itemMap.get(item.productId) || { 
+          name: item.name, 
+          quantity: 0, 
+          totalSpent: 0, 
+          totalProfit: 0 
+        };
+        
+        const profit = (item.price - item.costPrice) * item.quantity;
+        
+        itemMap.set(item.productId, {
+          name: item.name,
+          quantity: current.quantity + item.quantity,
+          totalSpent: current.totalSpent + (item.price * item.quantity),
+          totalProfit: current.totalProfit + profit
+        });
+      });
+    });
+
+    return Array.from(itemMap.values()).sort((a, b) => b.quantity - a.quantity);
+  };
 
   const handleOpenModal = (customer?: Customer) => {
     if (customer) {
@@ -307,6 +374,7 @@ export default function Customers() {
                 <th className="px-6 py-4">Tanggal Bergabung</th>
                 <th className="px-6 py-4">Alamat</th>
                 <th className="px-6 py-4">Total Belanja</th>
+                <th className="px-6 py-4">Total Profit</th>
                 <th className="px-6 py-4 text-right">Aksi</th>
               </tr>
             </thead>
@@ -350,8 +418,21 @@ export default function Customers() {
                     <td className="px-6 py-4 font-medium text-slate-800">
                       Rp {(customer.totalSpent || 0).toLocaleString()}
                     </td>
+                    <td className="px-6 py-4 font-medium text-emerald-600">
+                      Rp {getCustomerStats(customer.id).totalProfit.toLocaleString()}
+                    </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-2">
+                        <button
+                          onClick={() => {
+                            setSelectedHistoryCustomer(customer);
+                            setIsHistoryModalOpen(true);
+                          }}
+                          className="p-2 hover:bg-slate-100 rounded-lg text-slate-600 hover:text-blue-600 transition-colors"
+                          title="Riwayat Pembelian"
+                        >
+                          <History className="w-4 h-4" />
+                        </button>
                         <button
                           onClick={() => handleOpenModal(customer)}
                           className="p-2 hover:bg-slate-100 rounded-lg text-slate-600 hover:text-emerald-600 transition-colors"
@@ -477,6 +558,68 @@ export default function Customers() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* History Modal */}
+      {isHistoryModalOpen && selectedHistoryCustomer && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl overflow-hidden animate-in fade-in zoom-in duration-200 max-h-[90vh] flex flex-col">
+            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+              <div>
+                <h2 className="text-lg font-bold text-slate-800">
+                  Riwayat Pembelian - {selectedHistoryCustomer.name}
+                </h2>
+                <p className="text-sm text-slate-500">
+                  Total Profit: <span className="font-medium text-emerald-600">Rp {getCustomerStats(selectedHistoryCustomer.id).totalProfit.toLocaleString()}</span>
+                </p>
+              </div>
+              <button onClick={() => setIsHistoryModalOpen(false)} className="text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-slate-50 text-slate-600 font-medium">
+                  <tr>
+                    <th className="px-4 py-3">Nama Produk</th>
+                    <th className="px-4 py-3 text-center">Jumlah Dibeli</th>
+                    <th className="px-4 py-3 text-right">Total Belanja</th>
+                    <th className="px-4 py-3 text-right">Profit Dihasilkan</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {getHistoryData(selectedHistoryCustomer.id).length === 0 ? (
+                    <tr>
+                      <td colSpan={4} className="px-4 py-8 text-center text-slate-500">
+                        Belum ada riwayat pembelian
+                      </td>
+                    </tr>
+                  ) : (
+                    getHistoryData(selectedHistoryCustomer.id).map((item, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50">
+                        <td className="px-4 py-3 font-medium text-slate-800">
+                          {item.name}
+                        </td>
+                        <td className="px-4 py-3 text-center">
+                          <span className="bg-slate-100 px-2 py-1 rounded text-xs font-medium text-slate-600">
+                            {item.quantity}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-right text-slate-600">
+                          Rp {item.totalSpent.toLocaleString()}
+                        </td>
+                        <td className="px-4 py-3 text-right font-medium text-emerald-600">
+                          Rp {item.totalProfit.toLocaleString()}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
