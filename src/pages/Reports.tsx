@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { collection, query, orderBy, onSnapshot, where, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, where, doc, updateDoc, serverTimestamp, increment, addDoc } from 'firebase/firestore';
 import { db } from '../api/firebase';
 import { Sale, Customer, SavingsAccount } from '../types';
-import { Search, Calendar, CheckCircle, Clock, FileText, User, TrendingUp, Download, Wallet, ShoppingBag } from 'lucide-react';
+import { Search, Calendar, CheckCircle, Clock, FileText, User, TrendingUp, Download, Wallet, ShoppingBag, X } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
 export default function Reports() {
@@ -11,9 +11,15 @@ export default function Reports() {
   const [debts, setDebts] = useState<Sale[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [savingsAccounts, setSavingsAccounts] = useState<SavingsAccount[]>([]);
-  const [debtPayments, setDebtPayments] = useState<any[]>([]); // New state for debt payments
+  const [debtPayments, setDebtPayments] = useState<any[]>([]); 
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+
+  // Modal State for Partial Payment
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [selectedDebtSale, setSelectedDebtSale] = useState<Sale | null>(null);
+  const [paymentAmount, setPaymentAmount] = useState<string>('');
+  const [processingPayment, setProcessingPayment] = useState(false);
 
   // Fetch Data
   useEffect(() => {
@@ -69,49 +75,85 @@ export default function Reports() {
     };
   }, []);
 
-  // Update payment status (Lunasi) -> Now treated as debt payment
-  const handleMarkAsPaid = async (sale: Sale) => {
-    if (!confirm('Apakah Anda yakin ingin menandai hutang ini sebagai LUNAS?')) return;
-    
+  const openPaymentModal = (sale: Sale) => {
+    setSelectedDebtSale(sale);
+    // Suggest full remaining amount, or 0
+    // Since we don't track partial payment per transaction explicitly in sale object yet (we only have paymentStatus 'pending'/'paid'),
+    // we assume full amount is due. If you want to track partial, we need 'amountPaid' field in Sale.
+    // For now, let's assume 'totalAmount' is the debt.
+    // If we want to support partial payments that reduce the debt of a specific transaction, 
+    // we should ideally add 'amountPaid' to the sale document.
+    // Let's implement robust partial payment:
+    // 1. Check if sale has 'amountPaid'. If not, 0.
+    // 2. Remaining = totalAmount - amountPaid.
+    const paid = (sale as any).amountPaid || 0;
+    const remaining = (sale.totalAmount || 0) - paid;
+    setPaymentAmount(remaining.toString());
+    setIsPaymentModalOpen(true);
+  };
+
+  const handleDebtPaymentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedDebtSale || !paymentAmount) return;
+
+    const amount = Number(paymentAmount);
+    if (amount <= 0) {
+      alert('Jumlah pembayaran harus lebih dari 0');
+      return;
+    }
+
+    const currentPaid = (selectedDebtSale as any).amountPaid || 0;
+    const total = selectedDebtSale.totalAmount || 0;
+    const remaining = total - currentPaid;
+
+    if (amount > remaining) {
+      alert(`Pembayaran melebihi sisa hutang (Rp ${remaining.toLocaleString()})`);
+      return;
+    }
+
+    setProcessingPayment(true);
     try {
-        const batch = updateDoc(doc(db, 'sales', sale.id), {
-            paymentStatus: 'paid',
-            paymentMethod: 'cash',
-            updatedAt: serverTimestamp()
+      const saleRef = doc(db, 'sales', selectedDebtSale.id);
+      
+      // 1. Update Sale Document
+      const newPaid = currentPaid + amount;
+      const isPaidOff = newPaid >= total;
+      
+      await updateDoc(saleRef, {
+        amountPaid: newPaid,
+        paymentStatus: isPaidOff ? 'paid' : 'pending', // Only mark 'paid' if fully paid
+        updatedAt: serverTimestamp()
+      });
+
+      // 2. Update Customer Debt Balance (Global)
+      if (selectedDebtSale.customerId) {
+        const customerRef = doc(db, 'customers', selectedDebtSale.customerId);
+        await updateDoc(customerRef, {
+          debt: increment(-amount)
         });
+      }
 
-        // Add to debt_payments collection for history
-        // Note: This is a simplification. Ideally use a batch write.
-        // But since we are inside handleMarkAsPaid, we'll just add the doc.
-        // Also need to update customer debt balance if it exists
-        
-        if (sale.customerId && sale.totalAmount) {
-             // Update customer debt
-             const customerRef = doc(db, 'customers', sale.customerId);
-             // We can't use batch here easily because updateDoc is already called above without batch
-             // Let's just do it sequentially or use a real batch if we refactor.
-             // For safety, let's just update the customer debt.
-             await updateDoc(customerRef, {
-                 debt: increment(-sale.totalAmount)
-             });
+      // 3. Record Payment History
+      await addDoc(collection(db, 'debt_payments'), {
+        saleId: selectedDebtSale.id,
+        customerId: selectedDebtSale.customerId,
+        customerName: selectedDebtSale.customerName,
+        amount: amount,
+        remainingDebtOnTransaction: total - newPaid,
+        cashierId: 'admin', // Replace with auth user if available
+        createdAt: serverTimestamp(),
+        note: `Angsuran Transaksi #${selectedDebtSale.id.slice(0,8)}`
+      });
 
-             // Record payment
-             await addDoc(collection(db, 'debt_payments'), {
-                customerId: sale.customerId,
-                customerName: sale.customerName,
-                amount: sale.totalAmount,
-                remainingDebt: 0, // Assuming full payment clears specific transaction, but real debt is aggregate. 
-                                  // This simple action clears the transaction status.
-                cashierId: 'admin', // Or current user
-                createdAt: serverTimestamp(),
-                note: `Pelunasan Transaksi #${sale.id}`
-             });
-        }
-
-        alert('Status pembayaran berhasil diperbarui dan piutang dikurangi!');
+      alert('Pembayaran berhasil dicatat!');
+      setIsPaymentModalOpen(false);
+      setSelectedDebtSale(null);
+      setPaymentAmount('');
     } catch (error) {
-        console.error('Error updating payment status:', error);
-        alert('Gagal memperbarui status pembayaran.');
+      console.error('Error processing debt payment:', error);
+      alert('Gagal memproses pembayaran.');
+    } finally {
+      setProcessingPayment(false);
     }
   };
 
@@ -496,12 +538,17 @@ export default function Reports() {
                     )}
                     {activeTab === 'debts' && (
                       <td className="px-6 py-4 text-right">
-                        <button
-                          onClick={() => handleMarkAsPaid(sale)}
-                          className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors shadow-sm"
-                        >
-                          Lunasi
-                        </button>
+                        <div className="flex flex-col items-end gap-1">
+                          <span className="text-xs text-slate-500">
+                            Terbayar: Rp {((sale as any).amountPaid || 0).toLocaleString()}
+                          </span>
+                          <button
+                            onClick={() => openPaymentModal(sale)}
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors shadow-sm"
+                          >
+                            Bayar
+                          </button>
+                        </div>
                       </td>
                     )}
                   </tr>
@@ -518,6 +565,79 @@ export default function Reports() {
           </table>
         </div>
       </div>
+      {/* Debt Payment Modal */}
+      {isPaymentModalOpen && selectedDebtSale && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-xl">
+            <div className="p-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+              <h3 className="font-bold text-lg text-slate-800">Pembayaran Angsuran</h3>
+              <button 
+                onClick={() => setIsPaymentModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleDebtPaymentSubmit} className="p-6 space-y-4">
+              <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 mb-4">
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-slate-500">ID Transaksi</span>
+                  <span className="font-mono text-slate-700">#{selectedDebtSale.id.slice(0, 8)}</span>
+                </div>
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-slate-500">Pelanggan</span>
+                  <span className="font-medium text-slate-800">{selectedDebtSale.customerName}</span>
+                </div>
+                <div className="flex justify-between text-sm mb-1">
+                  <span className="text-slate-500">Total Tagihan</span>
+                  <span className="font-bold text-slate-800">Rp {(selectedDebtSale.totalAmount || 0).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm pt-2 border-t border-slate-200 mt-2">
+                  <span className="text-slate-500">Sisa Hutang</span>
+                  <span className="font-bold text-red-600">
+                    Rp {((selectedDebtSale.totalAmount || 0) - ((selectedDebtSale as any).amountPaid || 0)).toLocaleString()}
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Jumlah Pembayaran</label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Rp</span>
+                  <input
+                    type="number"
+                    required
+                    min="1"
+                    max={(selectedDebtSale.totalAmount || 0) - ((selectedDebtSale as any).amountPaid || 0)}
+                    value={paymentAmount}
+                    onChange={(e) => setPaymentAmount(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold text-lg"
+                    placeholder="0"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-4 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsPaymentModalOpen(false)}
+                  className="flex-1 py-2 px-4 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={processingPayment}
+                  className="flex-1 py-2 px-4 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50"
+                >
+                  {processingPayment ? 'Memproses...' : 'Simpan Pembayaran'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
