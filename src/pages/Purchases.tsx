@@ -10,6 +10,7 @@ export default function Purchases() {
   const [searchTerm, setSearchTerm] = useState('');
   const [cart, setCart] = useState<{product: Product, quantity: number, costPrice: number}[]>([]);
   const [supplier, setSupplier] = useState('');
+  const [shippingCost, setShippingCost] = useState(0);
   const [processing, setProcessing] = useState(false);
   const { user } = useAuthStore();
 
@@ -63,6 +64,8 @@ export default function Purchases() {
       
       // 1. Create Purchase Record (Optional, separate collection)
       const purchaseRef = doc(collection(db, 'purchases'));
+      const subtotal = cart.reduce((acc, item) => acc + (item.quantity * item.costPrice), 0);
+      
       batch.set(purchaseRef, {
         supplier,
         items: cart.map(item => ({
@@ -72,7 +75,9 @@ export default function Purchases() {
           costPrice: item.costPrice,
           total: item.quantity * item.costPrice
         })),
-        totalAmount: cart.reduce((acc, item) => acc + (item.quantity * item.costPrice), 0),
+        subtotal: subtotal,
+        shippingCost: shippingCost,
+        totalAmount: subtotal + shippingCost,
         userId: user?.uid,
         createdAt: serverTimestamp()
       });
@@ -103,6 +108,7 @@ export default function Purchases() {
       
       setCart([]);
       setSupplier('');
+      setShippingCost(0);
       alert('Pembelian berhasil disimpan! Stok telah bertambah.');
     } catch (error) {
       console.error('Error processing purchase:', error);
@@ -116,7 +122,8 @@ export default function Purchases() {
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const totalPurchase = cart.reduce((acc, item) => acc + (item.quantity * item.costPrice), 0);
+  const subtotal = cart.reduce((acc, item) => acc + (item.quantity * item.costPrice), 0);
+  const totalPurchase = subtotal + shippingCost;
 
   return (
     <div className="flex h-[calc(100vh-theme(spacing.24))] gap-6">
@@ -177,6 +184,19 @@ export default function Purchases() {
               className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
+          <div className="mt-4">
+            <label className="text-sm font-medium text-slate-700 block mb-1">Biaya Pengiriman</label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">Rp</span>
+              <input
+                type="number"
+                min="0"
+                value={shippingCost}
+                onChange={(e) => setShippingCost(parseInt(e.target.value) || 0)}
+                className="w-full pl-9 pr-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -226,9 +246,19 @@ export default function Purchases() {
         </div>
 
         <div className="p-6 border-t border-slate-100 bg-slate-50">
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-slate-600 font-medium">Total Pembelian</span>
-            <span className="text-xl font-bold text-emerald-600">Rp {totalPurchase.toLocaleString()}</span>
+          <div className="space-y-2 mb-4">
+            <div className="flex justify-between items-center text-sm text-slate-500">
+              <span>Subtotal</span>
+              <span>Rp {subtotal.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between items-center text-sm text-slate-500">
+              <span>Biaya Pengiriman</span>
+              <span>Rp {shippingCost.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between items-center pt-2 border-t border-slate-200">
+              <span className="text-slate-600 font-bold">Total Akhir</span>
+              <span className="text-xl font-bold text-emerald-600">Rp {totalPurchase.toLocaleString()}</span>
+            </div>
           </div>
 
           <button
