@@ -294,16 +294,20 @@ export default function Customers() {
     if (!searchTerm) return true;
     const search = searchTerm.toLowerCase();
     
-    // Safely check each field
-    const nameMatch = customer.name ? customer.name.toLowerCase().includes(search) : false;
-    const memberIdMatch = customer.memberId ? customer.memberId.toLowerCase().includes(search) : false;
-    const phoneMatch = customer.phone ? customer.phone.includes(search) : false;
+    // Safely check each field with explicit String conversion
+    const nameMatch = customer.name ? String(customer.name).toLowerCase().includes(search) : false;
+    const memberIdMatch = customer.memberId ? String(customer.memberId).toLowerCase().includes(search) : false;
+    const phoneMatch = customer.phone ? String(customer.phone).includes(search) : false;
     
     return nameMatch || memberIdMatch || phoneMatch;
   });
 
-  // Unique names for datalist
-  const customerNames = Array.from(new Set(customers.map(c => c.name).filter(Boolean))).slice(0, 100);
+  // Unique names for datalist with safe String conversion
+  const customerNames = Array.from(new Set(
+    customers
+      .map(c => c.name ? String(c.name) : '')
+      .filter(Boolean)
+  )).slice(0, 100);
 
   return (
     <div className="space-y-6">
