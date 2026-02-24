@@ -1,11 +1,61 @@
 import { useState, useEffect } from 'react';
-import { Search, ShoppingCart, Minus, Plus, Trash2, CreditCard, Banknote, Package, User, ScanBarcode, X } from 'lucide-react';
+import { Search, ShoppingCart, Minus, Plus, Trash2, CreditCard, Banknote, Package, User, ScanBarcode, X, Printer } from 'lucide-react';
 import { collection, onSnapshot, query, orderBy, serverTimestamp, writeBatch, doc, increment } from 'firebase/firestore';
 import { db } from '../api/firebase';
 import { Product, Customer } from '../types';
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
 import { useZxing } from "react-zxing";
+
+// Helper untuk format teks ke printer thermal
+const formatReceipt = (saleData: any, user: any) => {
+  const ESC = '\x1B';
+  const GS = '\x1D';
+  const NL = '\n';
+  const CENTER = ESC + 'a' + '\x01';
+  const LEFT = ESC + 'a' + '\x00';
+  const BOLD_ON = ESC + 'E' + '\x01';
+  const BOLD_OFF = ESC + 'E' + '\x00';
+  
+  let receipt = '';
+  
+  // Header
+  receipt += CENTER + BOLD_ON + "TOKO RETAIL" + NL + BOLD_OFF;
+  receipt += "Jl. Contoh No. 123" + NL;
+  receipt += "Telp: 0812-3456-7890" + NL;
+  receipt += "--------------------------------" + NL;
+  
+  // Info Transaksi
+  receipt += LEFT;
+  receipt += `Tgl: ${new Date().toLocaleString('id-ID')}` + NL;
+  receipt += `Kasir: ${user?.email || 'Admin'}` + NL;
+  receipt += `Pelanggan: ${saleData.customerName || 'Umum'}` + NL;
+  receipt += `Metode: ${saleData.paymentMethod === 'debt' ? 'HUTANG' : 'CASH'}` + NL;
+  receipt += "--------------------------------" + NL;
+  
+  // Items
+  saleData.items.forEach((item: any) => {
+    receipt += `${item.name}` + NL;
+    const qtyPrice = `${item.quantity} x ${item.price.toLocaleString()}`;
+    const total = (item.quantity * item.price).toLocaleString();
+    // Simple alignment logic (bisa diperbaiki untuk presisi)
+    receipt += `${qtyPrice.padEnd(20)} ${total.padStart(10)}` + NL;
+  });
+  
+  receipt += "--------------------------------" + NL;
+  
+  // Footer Totals
+  const totalStr = `Rp ${saleData.totalAmount.toLocaleString()}`;
+  receipt += BOLD_ON + `TOTAL:`.padEnd(15) + totalStr.padStart(17) + NL + BOLD_OFF;
+  
+  if (saleData.paymentMethod === 'debt') {
+     receipt += CENTER + NL + "*** BELUM LUNAS ***" + NL;
+  }
+  
+  receipt += NL + CENTER + "Terima Kasih" + NL + NL + NL;
+  
+  return receipt;
+};
 
 export default function POS() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -18,6 +68,7 @@ export default function POS() {
   const [processing, setProcessing] = useState(false);
   const [showCustomerDropdown, setShowCustomerDropdown] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
+  const [printerDevice, setPrinterDevice] = useState<BluetoothDevice | null>(null);
   
   const { items, addToCart, removeFromCart, updateQuantity, getTotal, clearCart } = useCartStore();
   const { user } = useAuthStore();
@@ -91,6 +142,51 @@ export default function POS() {
 
   const productNameOptions = Array.from(new Set(products.map(p => p.name).filter(Boolean))).slice(0, 200);
 
+  const connectPrinter = async () => {
+    try {
+      const device = await navigator.bluetooth.requestDevice({
+        filters: [
+          { services: ['000018f0-0000-1000-8000-00805f9b34fb'] } // Common thermal printer service
+        ],
+        optionalServices: ['000018f0-0000-1000-8000-00805f9b34fb']
+      });
+      
+      const server = await device.gatt?.connect();
+      setPrinterDevice(device);
+      alert(`Terhubung ke printer: ${device.name}`);
+    } catch (error) {
+      console.error('Bluetooth error:', error);
+      alert('Gagal menghubungkan printer. Pastikan Bluetooth aktif dan browser mendukung Web Bluetooth.');
+    }
+  };
+
+  const printReceipt = async (saleData: any) => {
+    if (!printerDevice || !printerDevice.gatt?.connected) {
+      await connectPrinter();
+    }
+    
+    if (printerDevice && printerDevice.gatt?.connected) {
+      try {
+        const service = await printerDevice.gatt.getPrimaryService('000018f0-0000-1000-8000-00805f9b34fb');
+        const characteristic = await service.getCharacteristic('00002af1-0000-1000-8000-00805f9b34fb');
+        
+        const receiptText = formatReceipt(saleData, user);
+        const encoder = new TextEncoder();
+        const data = encoder.encode(receiptText);
+        
+        // Split data into chunks if too large (Bluetooth limitation)
+        const chunkSize = 512;
+        for (let i = 0; i < data.length; i += chunkSize) {
+          const chunk = data.slice(i, i + chunkSize);
+          await characteristic.writeValue(chunk);
+        }
+      } catch (error) {
+        console.error('Print error:', error);
+        alert('Gagal mencetak struk');
+      }
+    }
+  };
+
   const handleCheckout = async () => {
     if (items.length === 0) return;
     if (paymentMethod === 'debt' && !selectedCustomer) {
@@ -153,7 +249,11 @@ export default function POS() {
       setSelectedCustomer(null);
       setCustomerSearch('');
       setPaymentMethod('cash');
-      alert('Transaksi berhasil!');
+      
+      // Prompt for printing
+      if (confirm('Transaksi berhasil! Cetak struk sekarang?')) {
+        await printReceipt(saleData);
+      }
     } catch (error) {
       console.error('Error processing sale:', error);
       alert('Gagal memproses transaksi');
@@ -247,6 +347,13 @@ export default function POS() {
           <div className="flex items-center gap-3 mb-1">
             <ShoppingCart className="w-6 h-6 text-emerald-600" />
             <h2 className="text-xl font-bold text-slate-800">Pesanan Saat Ini</h2>
+            <button
+              onClick={connectPrinter}
+              className={`ml-auto p-2 rounded-lg ${printerDevice ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
+              title={printerDevice ? "Printer Terhubung" : "Hubungkan Printer Bluetooth"}
+            >
+              <Printer className="w-5 h-5" />
+            </button>
           </div>
           <p className="text-slate-500 text-sm">{items.length} item dipilih</p>
 
