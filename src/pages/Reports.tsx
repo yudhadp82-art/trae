@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { collection, query, orderBy, onSnapshot, where, doc, updateDoc, serverTimestamp, increment, addDoc } from 'firebase/firestore';
 import { db } from '../api/firebase';
 import { Sale, Customer, SavingsAccount } from '../types';
-import { Search, Calendar, CheckCircle, Clock, FileText, User, TrendingUp, Download, Wallet, ShoppingBag, X } from 'lucide-react';
+import { Search, Calendar, CheckCircle, Clock, FileText, User, TrendingUp, Download, Wallet, ShoppingBag, X, ChevronDown, ChevronRight } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
 export default function Reports() {
@@ -14,6 +14,19 @@ export default function Reports() {
   const [debtPayments, setDebtPayments] = useState<any[]>([]); 
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  
+  // Expandable state for member purchases
+  const [expandedMembers, setExpandedMembers] = useState<Set<string>>(new Set());
+
+  const toggleMemberExpand = (memberId: string) => {
+    const newSet = new Set(expandedMembers);
+    if (newSet.has(memberId)) {
+      newSet.delete(memberId);
+    } else {
+      newSet.add(memberId);
+    }
+    setExpandedMembers(newSet);
+  };
 
   // Modal State for Partial Payment
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
@@ -181,8 +194,8 @@ export default function Reports() {
     data.memberId.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Prepare Member Purchases Data
-  const memberPurchasesData = sales
+  // Prepare Member Purchases Data (Aggregated)
+  const memberPurchasesRaw = sales
     .filter(sale => sale.customerId) // Only transactions with a customerId (members)
     .flatMap(sale => 
       (sale.items || []).map(item => ({
@@ -190,7 +203,7 @@ export default function Reports() {
         saleId: sale.id,
         date: sale.createdAt,
         memberName: sale.customerName || 'Unknown',
-        memberId: sale.customerId,
+        memberId: sale.customerId!,
         itemName: item.name,
         quantity: item.quantity,
         total: (item.price || 0) * (item.quantity || 0),
@@ -201,6 +214,23 @@ export default function Reports() {
       item.memberName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.itemName.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+  // Group by member
+  const memberPurchasesGrouped = memberPurchasesRaw.reduce((acc, curr) => {
+    if (!acc[curr.memberId]) {
+        acc[curr.memberId] = {
+            memberId: curr.memberId,
+            memberName: curr.memberName,
+            totalSpent: 0,
+            items: []
+        };
+    }
+    acc[curr.memberId].totalSpent += curr.total;
+    acc[curr.memberId].items.push(curr);
+    return acc;
+  }, {} as Record<string, { memberId: string, memberName: string, totalSpent: number, items: typeof memberPurchasesRaw }>);
+
+  const memberPurchasesList = Object.values(memberPurchasesGrouped);
 
   const totalRevenue = sales.filter(s => s.paymentStatus === 'paid').reduce((acc, sale) => acc + (sale.totalAmount || 0), 0) +
                        debtPayments.reduce((acc, p) => acc + (p.amount || 0), 0);
@@ -235,7 +265,8 @@ export default function Reports() {
       }));
       sheetName = "Laporan Simpanan";
     } else if (activeTab === 'member_purchases') {
-      dataToExport = memberPurchasesData.map(data => ({
+      // For Excel export, we can flatten the data or just show summary. Let's flatten.
+      dataToExport = memberPurchasesRaw.map(data => ({
         'Tanggal Pembelian': data.date ? new Date(data.date).toLocaleDateString() : '-',
         'Nama Anggota': data.memberName,
         'Nama Barang': data.itemName,
@@ -415,12 +446,11 @@ export default function Reports() {
                   </>
                 ) : activeTab === 'member_purchases' ? (
                   <>
-                    <th className="px-6 py-4">Tanggal Pembelian</th>
+                    <th className="px-6 py-4 w-10"></th>
+                    <th className="px-6 py-4">ID Anggota</th>
                     <th className="px-6 py-4">Nama Anggota</th>
-                    <th className="px-6 py-4">Nama Barang</th>
-                    <th className="px-6 py-4 text-right">Jumlah</th>
-                    <th className="px-6 py-4 text-right">Total</th>
-                    <th className="px-6 py-4 text-right">Margin</th>
+                    <th className="px-6 py-4 text-right">Total Belanja</th>
+                    <th className="px-6 py-4 text-right">Jumlah Transaksi</th>
                   </>
                 ) : (
                   <>
@@ -473,28 +503,61 @@ export default function Reports() {
                   ))
                 )
               ) : activeTab === 'member_purchases' ? (
-                memberPurchasesData.length === 0 ? (
+                memberPurchasesList.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
+                    <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
                       Tidak ada data pembelian anggota ditemukan.
                     </td>
                   </tr>
                 ) : (
-                  memberPurchasesData.map((data) => (
-                    <tr key={data.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-6 py-4 text-slate-600">
-                        {data.date ? new Date(data.date).toLocaleDateString() : '-'}
+                  memberPurchasesList.map((data) => (
+                    <>
+                    <tr key={data.memberId} className="hover:bg-slate-50 transition-colors cursor-pointer" onClick={() => toggleMemberExpand(data.memberId)}>
+                      <td className="px-6 py-4 text-slate-400">
+                        {expandedMembers.has(data.memberId) ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
                       </td>
+                      <td className="px-6 py-4 font-mono text-slate-500">{data.memberId}</td>
                       <td className="px-6 py-4 font-medium text-slate-800">{data.memberName}</td>
-                      <td className="px-6 py-4 text-slate-600">{data.itemName}</td>
-                      <td className="px-6 py-4 text-right text-slate-800">{data.quantity}</td>
-                      <td className="px-6 py-4 text-right font-medium text-slate-800">
-                        Rp {data.total.toLocaleString()}
+                      <td className="px-6 py-4 text-right font-bold text-emerald-600">
+                        Rp {data.totalSpent.toLocaleString()}
                       </td>
-                      <td className="px-6 py-4 text-right font-medium text-emerald-600">
-                        Rp {data.margin.toLocaleString()}
+                      <td className="px-6 py-4 text-right text-slate-600">
+                        {data.items.length} Item
                       </td>
                     </tr>
+                    {expandedMembers.has(data.memberId) && (
+                      <tr>
+                        <td colSpan={5} className="bg-slate-50 px-6 py-4">
+                          <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+                            <table className="w-full text-sm">
+                              <thead className="bg-slate-100 text-slate-600">
+                                <tr>
+                                  <th className="px-4 py-2 text-left">Tanggal</th>
+                                  <th className="px-4 py-2 text-left">Barang</th>
+                                  <th className="px-4 py-2 text-right">Qty</th>
+                                  <th className="px-4 py-2 text-right">Harga Total</th>
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-slate-100">
+                                {data.items.map((item, idx) => (
+                                  <tr key={`${item.id}-${idx}`}>
+                                    <td className="px-4 py-2 text-slate-500">
+                                      {item.date ? new Date(item.date).toLocaleDateString() : '-'}
+                                    </td>
+                                    <td className="px-4 py-2 text-slate-800">{item.itemName}</td>
+                                    <td className="px-4 py-2 text-right text-slate-600">{item.quantity}</td>
+                                    <td className="px-4 py-2 text-right font-medium text-emerald-600">
+                                      Rp {item.total.toLocaleString()}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                    </>
                   ))
                 )
               ) : (
