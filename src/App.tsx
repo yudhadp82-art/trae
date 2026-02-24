@@ -9,6 +9,7 @@ import Reports from './pages/Reports';
 import Purchases from './pages/Purchases';
 import Customers from './pages/Customers';
 import Savings from './pages/Savings';
+import Debts from './pages/Debts';
 import Settings from './pages/Settings';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
           <Route path="/reports" element={<Reports />} />
           <Route path="/customers" element={<Customers />} />
           <Route path="/savings" element={<Savings />} />
+          <Route path="/debts" element={<Debts />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
 

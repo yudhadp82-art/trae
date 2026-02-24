@@ -70,6 +70,7 @@ export interface Customer {
   phone?: string;
   address?: string;
   totalSpent: number;
+  debt?: number; // Total Hutang
   lastVisit?: Date;
   joinDate: Date;
   createdAt: Date;

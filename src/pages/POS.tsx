@@ -251,10 +251,17 @@ export default function POS() {
       // 3. Update Customer Total Spent
       if (selectedCustomer) {
         const customerRef = doc(db, 'customers', selectedCustomer.id);
-        batch.update(customerRef, {
+        const updates: any = {
           totalSpent: increment(getTotal()),
           lastVisit: serverTimestamp()
-        });
+        };
+        
+        // If payment is debt, increment debt amount
+        if (paymentMethod === 'debt') {
+          updates.debt = increment(getTotal());
+        }
+        
+        batch.update(customerRef, updates);
       }
 
       await batch.commit();
