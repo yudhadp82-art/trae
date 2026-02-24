@@ -252,8 +252,6 @@ export default function Customers() {
         data.forEach((row, index) => {
           if (!row.Name) return; // Skip invalid rows
           
-          const docRef = doc(collection(db, 'customers'));
-          
           // Parse Join Date if exists, otherwise use today
           let joinDate = new Date();
           if (row['Join Date']) {
@@ -263,15 +261,34 @@ export default function Customers() {
             }
           }
 
-          batch.set(docRef, {
-            memberId: row['Member ID'] || `M-${String(customers.length + index + 1).padStart(3, '0')}`,
-            name: row.Name,
-            phone: row.Phone || '',
-            address: row.Address || '',
+          const customerData = {
+            memberId: row['Member ID'] ? String(row['Member ID']) : `M-${String(customers.length + index + 1).padStart(3, '0')}`,
+            name: String(row.Name),
+            phone: row.Phone ? String(row.Phone) : '',
+            address: row.Address ? String(row.Address) : '',
             joinDate: joinDate,
-            totalSpent: 0,
-            createdAt: serverTimestamp()
-          });
+            updatedAt: serverTimestamp()
+          };
+
+          // Check if customer exists by Member ID or Name (case-insensitive)
+          const existingCustomer = customers.find(c => 
+            (c.memberId && String(c.memberId).toLowerCase() === String(customerData.memberId).toLowerCase()) ||
+            (c.name && String(c.name).toLowerCase() === String(customerData.name).toLowerCase())
+          );
+
+          if (existingCustomer) {
+            // Update existing customer
+            const docRef = doc(db, 'customers', existingCustomer.id);
+            batch.update(docRef, customerData);
+          } else {
+            // Create new customer
+            const docRef = doc(collection(db, 'customers'));
+            batch.set(docRef, {
+              ...customerData,
+              totalSpent: 0,
+              createdAt: serverTimestamp()
+            });
+          }
           count++;
         });
 
