@@ -14,8 +14,7 @@ import {
   Truck,
   Store,
   Wallet,
-  Send,
-  CreditCard
+  Send
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -33,7 +32,6 @@ export default function DashboardLayout() {
     { to: '/reports', icon: BarChart3, label: 'Reports' },
     { to: '/customers', icon: Users, label: 'Customers' },
     { to: '/savings', icon: Wallet, label: 'Savings' },
-    { to: '/debts', icon: CreditCard, label: 'Debts' },
     { to: '/settings', icon: Settings, label: 'Settings' },
   ];
 

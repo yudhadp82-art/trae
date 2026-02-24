@@ -11,6 +11,7 @@ export default function Reports() {
   const [debts, setDebts] = useState<Sale[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [savingsAccounts, setSavingsAccounts] = useState<SavingsAccount[]>([]);
+  const [debtPayments, setDebtPayments] = useState<any[]>([]); // New state for debt payments
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -27,6 +28,17 @@ export default function Reports() {
       setSales(salesData);
       setDebts(salesData.filter(sale => sale.paymentStatus === 'pending'));
       setLoading(false);
+    });
+
+    // Fetch Debt Payments
+    const qDebtPayments = query(collection(db, 'debt_payments'), orderBy('createdAt', 'desc'));
+    const unsubscribeDebtPayments = onSnapshot(qDebtPayments, (snapshot) => {
+      const payments = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: doc.data().createdAt?.toDate()
+      }));
+      setDebtPayments(payments);
     });
 
     const qCustomers = query(collection(db, 'customers'), orderBy('name'));
@@ -53,23 +65,53 @@ export default function Reports() {
       unsubscribeSales();
       unsubscribeCustomers();
       unsubscribeSavings();
+      unsubscribeDebtPayments();
     };
   }, []);
 
-  const handleMarkAsPaid = async (saleId: string) => {
+  // Update payment status (Lunasi) -> Now treated as debt payment
+  const handleMarkAsPaid = async (sale: Sale) => {
     if (!confirm('Apakah Anda yakin ingin menandai hutang ini sebagai LUNAS?')) return;
-
+    
     try {
-      const saleRef = doc(db, 'sales', saleId);
-      await updateDoc(saleRef, {
-        paymentStatus: 'paid',
-        paymentMethod: 'cash',
-        updatedAt: serverTimestamp()
-      });
-      alert('Status pembayaran berhasil diperbarui!');
+        const batch = updateDoc(doc(db, 'sales', sale.id), {
+            paymentStatus: 'paid',
+            paymentMethod: 'cash',
+            updatedAt: serverTimestamp()
+        });
+
+        // Add to debt_payments collection for history
+        // Note: This is a simplification. Ideally use a batch write.
+        // But since we are inside handleMarkAsPaid, we'll just add the doc.
+        // Also need to update customer debt balance if it exists
+        
+        if (sale.customerId && sale.totalAmount) {
+             // Update customer debt
+             const customerRef = doc(db, 'customers', sale.customerId);
+             // We can't use batch here easily because updateDoc is already called above without batch
+             // Let's just do it sequentially or use a real batch if we refactor.
+             // For safety, let's just update the customer debt.
+             await updateDoc(customerRef, {
+                 debt: increment(-sale.totalAmount)
+             });
+
+             // Record payment
+             await addDoc(collection(db, 'debt_payments'), {
+                customerId: sale.customerId,
+                customerName: sale.customerName,
+                amount: sale.totalAmount,
+                remainingDebt: 0, // Assuming full payment clears specific transaction, but real debt is aggregate. 
+                                  // This simple action clears the transaction status.
+                cashierId: 'admin', // Or current user
+                createdAt: serverTimestamp(),
+                note: `Pelunasan Transaksi #${sale.id}`
+             });
+        }
+
+        alert('Status pembayaran berhasil diperbarui dan piutang dikurangi!');
     } catch (error) {
-      console.error('Error updating payment status:', error);
-      alert('Gagal memperbarui status pembayaran.');
+        console.error('Error updating payment status:', error);
+        alert('Gagal memperbarui status pembayaran.');
     }
   };
 
@@ -118,8 +160,10 @@ export default function Reports() {
       item.itemName.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-  const totalRevenue = sales.reduce((acc, sale) => acc + (sale.paymentStatus === 'paid' ? (sale.totalAmount || 0) : 0), 0);
-  const totalDebt = debts.reduce((acc, sale) => acc + (sale.totalAmount || 0), 0);
+  const totalRevenue = sales.filter(s => s.paymentStatus === 'paid').reduce((acc, sale) => acc + (sale.totalAmount || 0), 0) +
+                       debtPayments.reduce((acc, p) => acc + (p.amount || 0), 0);
+  
+  const totalDebt = customers.reduce((acc, c) => acc + (c.debt || 0), 0);
   
   // Calculate Profit
   const calculateProfit = (sale: Sale) => {
@@ -453,7 +497,7 @@ export default function Reports() {
                     {activeTab === 'debts' && (
                       <td className="px-6 py-4 text-right">
                         <button
-                          onClick={() => handleMarkAsPaid(sale.id)}
+                          onClick={() => handleMarkAsPaid(sale)}
                           className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors shadow-sm"
                         >
                           Lunasi
