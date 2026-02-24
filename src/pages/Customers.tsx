@@ -265,13 +265,22 @@ export default function Customers() {
               joinDate = new Date(excelEpoch.getTime() + rawDate * 86400000);
             } 
             // Check if date is in DD/MM/YYYY format (String)
-            else if (typeof rawDate === 'string' && rawDate.includes('/')) {
-              const parts = rawDate.split('/');
-              if (parts.length === 3) {
-                const day = parseInt(parts[0], 10);
-                const month = parseInt(parts[1], 10) - 1; // Months are 0-indexed
-                const year = parseInt(parts[2], 10);
-                const parsedDate = new Date(year, month, day);
+            else if (typeof rawDate === 'string') {
+              const dateStr = rawDate.trim();
+              if (dateStr.includes('/')) {
+                const parts = dateStr.split('/');
+                if (parts.length === 3) {
+                  const day = parseInt(parts[0], 10);
+                  const month = parseInt(parts[1], 10) - 1; // Months are 0-indexed
+                  const year = parseInt(parts[2], 10);
+                  const parsedDate = new Date(year, month, day);
+                  if (!isNaN(parsedDate.getTime())) {
+                    joinDate = parsedDate;
+                  }
+                }
+              } else if (dateStr.includes('-')) {
+                // Try parsing YYYY-MM-DD or DD-MM-YYYY
+                const parsedDate = new Date(dateStr);
                 if (!isNaN(parsedDate.getTime())) {
                   joinDate = parsedDate;
                 }
