@@ -144,11 +144,10 @@ export default function POS() {
 
   const connectPrinter = async () => {
     try {
+      // Use acceptAllDevices to broaden compatibility
       const device = await navigator.bluetooth.requestDevice({
-        filters: [
-          { services: ['000018f0-0000-1000-8000-00805f9b34fb'] } // Common thermal printer service
-        ],
-        optionalServices: ['000018f0-0000-1000-8000-00805f9b34fb']
+        acceptAllDevices: true,
+        optionalServices: ['000018f0-0000-1000-8000-00805f9b34fb'] // Generic printer service
       });
       
       const server = await device.gatt?.connect();
@@ -156,7 +155,7 @@ export default function POS() {
       alert(`Terhubung ke printer: ${device.name}`);
     } catch (error) {
       console.error('Bluetooth error:', error);
-      alert('Gagal menghubungkan printer. Pastikan Bluetooth aktif dan browser mendukung Web Bluetooth.');
+      alert('Gagal menghubungkan printer. Pastikan Bluetooth aktif dan pilih perangkat yang sesuai.');
     }
   };
 
