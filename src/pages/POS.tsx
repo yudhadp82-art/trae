@@ -14,14 +14,18 @@ const PrintableReceipt = ({
   user, 
   customer, 
   paymentMethod, 
-  date 
+  date,
+  cashAmount,
+  change
 }: { 
   items: CartItem[], 
   total: number, 
   user: any, 
   customer: Customer | null | string, 
   paymentMethod: string, 
-  date: Date 
+  date: Date,
+  cashAmount: number,
+  change: number
 }) => {
   return (
     <div className="hidden print:block p-4 font-mono text-xs w-[80mm] mx-auto">
@@ -58,9 +62,23 @@ const PrintableReceipt = ({
         ))}
       </div>
 
-      <div className="flex justify-between font-bold text-sm mb-4">
-        <span>TOTAL</span>
-        <span>Rp {total.toLocaleString()}</span>
+      <div className="border-b border-dashed border-black pb-2 mb-2">
+        <div className="flex justify-between font-bold text-sm">
+          <span>TOTAL</span>
+          <span>Rp {total.toLocaleString()}</span>
+        </div>
+        {paymentMethod === 'cash' && (
+          <>
+            <div className="flex justify-between">
+              <span>Tunai</span>
+              <span>Rp {cashAmount.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Kembalian</span>
+              <span>Rp {change.toLocaleString()}</span>
+            </div>
+          </>
+        )}
       </div>
 
       <div className="text-center text-xs mb-4">
@@ -88,6 +106,7 @@ export default function POS() {
   const [processing, setProcessing] = useState(false);
   const [showCustomerDropdown, setShowCustomerDropdown] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
+  const [cashAmount, setCashAmount] = useState<number>(0);
   
   // State for last transaction receipt
   const [lastTransaction, setLastTransaction] = useState<{
@@ -95,7 +114,9 @@ export default function POS() {
     total: number,
     customer: Customer | null | string,
     paymentMethod: string,
-    date: Date
+    date: Date,
+    cashAmount: number,
+    change: number
   } | null>(null);
 
   const { items, addToCart, removeFromCart, updateQuantity, getTotal, clearCart } = useCartStore();
@@ -172,10 +193,18 @@ export default function POS() {
 
   const handleCheckout = async () => {
     if (items.length === 0) return;
+    const total = getTotal();
+    
     if (paymentMethod === 'debt' && !selectedCustomer) {
       alert('Mohon pilih pelanggan untuk pembayaran hutang');
       return;
     }
+
+    if (paymentMethod === 'cash' && cashAmount < total) {
+      alert('Uang tunai kurang!');
+      return;
+    }
+
     setProcessing(true);
 
     try {
@@ -185,7 +214,7 @@ export default function POS() {
       const saleRef = doc(collection(db, 'sales'));
       const saleData = {
         items,
-        totalAmount: getTotal(),
+        totalAmount: total,
         discount: 0,
         paymentMethod,
         paymentStatus: paymentMethod === 'cash' ? 'paid' : 'pending',
@@ -193,7 +222,9 @@ export default function POS() {
         customerId: selectedCustomer ? selectedCustomer.id : null,
         cashierId: user?.uid,
         status: 'completed',
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
+        cashAmount: paymentMethod === 'cash' ? cashAmount : 0,
+        change: paymentMethod === 'cash' ? cashAmount - total : 0
       };
       batch.set(saleRef, saleData);
 
@@ -231,10 +262,12 @@ export default function POS() {
       // Save last transaction data for printing
       const transactionData = {
         items: [...items],
-        total: getTotal(),
+        total: total,
         customer: selectedCustomer || customerSearch,
         paymentMethod,
-        date: new Date()
+        date: new Date(),
+        cashAmount: paymentMethod === 'cash' ? cashAmount : 0,
+        change: paymentMethod === 'cash' ? cashAmount - total : 0
       };
       setLastTransaction(transactionData);
 
@@ -242,6 +275,7 @@ export default function POS() {
       setSelectedCustomer(null);
       setCustomerSearch('');
       setPaymentMethod('cash');
+      setCashAmount(0);
       
       // Auto print prompt
       // We need to wait for state update to reflect in DOM before printing
@@ -269,6 +303,8 @@ export default function POS() {
           customer={lastTransaction.customer}
           paymentMethod={lastTransaction.paymentMethod}
           date={lastTransaction.date}
+          cashAmount={lastTransaction.cashAmount}
+          change={lastTransaction.change}
         />
       )}
 
@@ -499,6 +535,28 @@ export default function POS() {
               </button>
             ))}
           </div>
+
+          {paymentMethod === 'cash' && (
+            <div className="space-y-2 p-3 bg-slate-50 rounded-lg border border-slate-200">
+              <label className="text-sm font-medium text-slate-700 block">Bayar (Tunai)</label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-bold">Rp</span>
+                <input
+                  type="number"
+                  value={cashAmount || ''}
+                  onChange={(e) => setCashAmount(Number(e.target.value))}
+                  placeholder="0"
+                  className="w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold text-lg"
+                />
+              </div>
+              <div className="flex justify-between text-sm pt-2 border-t border-slate-200 mt-2">
+                <span className="text-slate-600">Kembalian:</span>
+                <span className={`font-bold ${cashAmount >= getTotal() ? 'text-emerald-600' : 'text-red-500'}`}>
+                  Rp {(cashAmount - getTotal()).toLocaleString()}
+                </span>
+              </div>
+            </div>
+          )}
 
           <div className="relative">
             <label className="text-sm font-medium text-slate-700 block mb-1">
