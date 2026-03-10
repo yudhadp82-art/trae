@@ -601,7 +601,14 @@ export default function Reports() {
           const totalItems = data.reduce((sum, sale) => sum + (sale.items?.reduce((s, i) => s + i.quantity, 0) || 0), 0);
           const totalMargin = data.reduce((sum, sale) => sum + calculateProfit(sale), 0);
 
-          const finalY = (doc as any).lastAutoTable.finalY + 10;
+          let finalY = (doc as any).lastAutoTable.finalY + 10;
+          const pageHeight = doc.internal.pageSize.height;
+          
+          // Check if there is enough space for the summary (approx 50 units)
+          if (finalY + 50 > pageHeight) {
+            doc.addPage();
+            finalY = 20;
+          }
           
           doc.setFontSize(10);
           doc.setFont('helvetica', 'bold');
@@ -618,7 +625,14 @@ export default function Reports() {
           doc.text(`Total Margin (Laba Kotor): Rp ${totalMargin.toLocaleString()}`, 14, finalY + 36);
 
           // Product Summary Breakdown
-          const breakdownY = finalY + 46;
+          let breakdownY = finalY + 46;
+          
+          // Check if there is enough space for the breakdown title and table header (approx 30 units)
+          if (breakdownY + 30 > pageHeight) {
+            doc.addPage();
+            breakdownY = 20;
+          }
+
           doc.setFont('helvetica', 'bold');
           doc.text('Rincian Barang Terjual:', 14, breakdownY);
           
