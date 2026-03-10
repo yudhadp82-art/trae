@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { collection, query, orderBy, onSnapshot, where, doc, updateDoc, serverTimestamp, increment, addDoc } from 'firebase/firestore';
 import { db } from '../api/firebase';
 import { Sale, Customer, SavingsAccount } from '../types';
-import { Search, Calendar, CheckCircle, Clock, FileText, User, TrendingUp, Download, Wallet, ShoppingBag, X, ChevronDown, ChevronRight, Edit, Trash2, Printer } from 'lucide-react';
+import { Search, Calendar, CheckCircle, Clock, FileText, User, TrendingUp, Download, Wallet, ShoppingBag, X, ChevronDown, ChevronRight, Edit, Trash2, Printer, Package } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 export default function Reports() {
-  const [activeTab, setActiveTab] = useState<'sales' | 'debts' | 'profit' | 'savings' | 'member_purchases'>('sales');
+  const [activeTab, setActiveTab] = useState<'sales' | 'debts' | 'profit' | 'savings' | 'member_purchases' | 'product_sales'>('sales');
   const [sales, setSales] = useState<Sale[]>([]);
   const [debts, setDebts] = useState<Sale[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -16,6 +16,8 @@ export default function Reports() {
   const [debtPayments, setDebtPayments] = useState<any[]>([]); 
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   
   // Expandable state for member purchases
   const [expandedMembers, setExpandedMembers] = useState<Set<string>>(new Set());
@@ -292,14 +294,33 @@ export default function Reports() {
     }
   };
 
-  const filteredSales = sales.filter(sale => 
-    sale.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    sale.customerName?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredSales = sales.filter(sale => {
+    const matchesSearch = sale.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    sale.customerName?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    if (!startDate && !endDate) return matchesSearch;
 
-  const filteredDebts = debts.filter(sale => 
-    sale.customerName?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    const saleDate = sale.createdAt ? new Date(sale.createdAt) : new Date(0);
+    const start = startDate ? new Date(startDate) : new Date(0);
+    const end = endDate ? new Date(endDate) : new Date();
+    // Set end date to end of day
+    end.setHours(23, 59, 59, 999);
+
+    return matchesSearch && saleDate >= start && saleDate <= end;
+  });
+
+  const filteredDebts = debts.filter(sale => {
+    const matchesSearch = sale.customerName?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    if (!startDate && !endDate) return matchesSearch;
+
+    const saleDate = sale.createdAt ? new Date(sale.createdAt) : new Date(0);
+    const start = startDate ? new Date(startDate) : new Date(0);
+    const end = endDate ? new Date(endDate) : new Date();
+    end.setHours(23, 59, 59, 999);
+
+    return matchesSearch && saleDate >= start && saleDate <= end;
+  });
 
   // Merge customer and savings data for savings report
   const savingsReportData = customers.map(customer => {
@@ -316,9 +337,58 @@ export default function Reports() {
     data.memberId.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Prepare Product Sales Data (Aggregated)
+  const productSalesRaw = sales
+    .filter(sale => {
+        if (!startDate && !endDate) return true;
+        const saleDate = sale.createdAt ? new Date(sale.createdAt) : new Date(0);
+        const start = startDate ? new Date(startDate) : new Date(0);
+        const end = endDate ? new Date(endDate) : new Date();
+        end.setHours(23, 59, 59, 999);
+        return saleDate >= start && saleDate <= end;
+    })
+    .flatMap(sale => 
+      (sale.items || []).map(item => ({
+        id: item.productId,
+        name: item.name,
+        quantity: item.quantity,
+        total: (item.price || 0) * (item.quantity || 0),
+        margin: ((item.price || 0) - (item.costPrice || 0)) * (item.quantity || 0)
+      }))
+    );
+
+  // Group by product
+  const productSalesGrouped = productSalesRaw.reduce((acc, curr) => {
+    if (!acc[curr.id]) {
+        acc[curr.id] = {
+            id: curr.id,
+            name: curr.name,
+            quantity: 0,
+            total: 0,
+            margin: 0
+        };
+    }
+    acc[curr.id].quantity += curr.quantity;
+    acc[curr.id].total += curr.total;
+    acc[curr.id].margin += curr.margin;
+    return acc;
+  }, {} as Record<string, { id: string, name: string, quantity: number, total: number, margin: number }>);
+
+  const productSalesList = Object.values(productSalesGrouped)
+    .filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => b.quantity - a.quantity); // Sort by quantity sold desc
+
   // Prepare Member Purchases Data (Aggregated)
   const memberPurchasesRaw = sales
     .filter(sale => sale.customerId) // Only transactions with a customerId (members)
+    .filter(sale => {
+        if (!startDate && !endDate) return true;
+        const saleDate = sale.createdAt ? new Date(sale.createdAt) : new Date(0);
+        const start = startDate ? new Date(startDate) : new Date(0);
+        const end = endDate ? new Date(endDate) : new Date();
+        end.setHours(23, 59, 59, 999);
+        return saleDate >= start && saleDate <= end;
+    })
     .flatMap(sale => 
       (sale.items || []).map(item => ({
         id: `${sale.id}-${item.productId}`, // Unique ID for key
@@ -397,10 +467,18 @@ export default function Reports() {
         'Margin Pembelian': data.margin
       }));
       sheetName = "Laporan Pembelian Anggota";
+    } else if (activeTab === 'product_sales') {
+      dataToExport = productSalesList.map(data => ({
+        'Nama Barang': data.name,
+        'Terjual': data.quantity,
+        'Total Pendapatan': data.total,
+        'Total Margin': data.margin
+      }));
+      sheetName = "Laporan Penjualan Produk";
     } else {
       dataToExport = (activeTab === 'sales' || activeTab === 'profit' ? filteredSales : filteredDebts).map(sale => ({
         'ID Transaksi': sale.id,
-        'Tanggal': sale.createdAt ? new Date(sale.createdAt).toLocaleDateString() : '-',
+        'Tanggal': sale.createdAt ? new Date(sale.createdAt).toLocaleDateString('en-GB') : '-',
         'Pelanggan': sale.customerName || 'Umum',
         'Total': sale.totalAmount,
         'Metode': sale.paymentMethod,
@@ -422,18 +500,24 @@ export default function Reports() {
     const title = activeTab === 'sales' ? 'Laporan Penjualan' : 
                   activeTab === 'debts' ? 'Laporan Hutang' : 
                   activeTab === 'profit' ? 'Laporan Laba' : 
+                  activeTab === 'product_sales' ? 'Laporan Penjualan Produk' :
                   activeTab === 'savings' ? 'Laporan Simpanan' : 'Laporan Pembelian Anggota';
     
     doc.setFontSize(18);
     doc.text(title, 14, 22);
     doc.setFontSize(10);
-    doc.text(`Dicetak pada: ${new Date().toLocaleString()}`, 14, 30);
+    doc.text(`Dicetak pada: ${new Date().toLocaleString('en-GB')}`, 14, 30);
+    if (startDate || endDate) {
+        const startStr = startDate ? new Date(startDate).toLocaleDateString('en-GB') : 'Awal';
+        const endStr = endDate ? new Date(endDate).toLocaleDateString('en-GB') : 'Akhir';
+        doc.text(`Periode: ${startStr} - ${endStr}`, 14, 36);
+    }
 
     if (activeTab === 'savings') {
       const tableData = savingsReportData.map(data => [
         data.memberId,
         data.name,
-        data.joinDate ? new Date(data.joinDate).toLocaleDateString() : '-',
+        data.joinDate ? new Date(data.joinDate).toLocaleDateString('en-GB') : '-',
         `Rp ${data.balancePokok.toLocaleString()}`,
         `Rp ${data.balanceWajib.toLocaleString()}`,
         `Rp ${data.balanceSukarela.toLocaleString()}`,
@@ -443,13 +527,13 @@ export default function Reports() {
       autoTable(doc, {
         head: [['ID', 'Nama', 'Tgl Gabung', 'Pokok', 'Wajib', 'Sukarela', 'Total']],
         body: tableData,
-        startY: 40,
+        startY: startDate || endDate ? 42 : 40,
         styles: { fontSize: 8 },
         headStyles: { fillColor: [16, 185, 129] }
       });
     } else if (activeTab === 'member_purchases') {
         const tableData = memberPurchasesRaw.map(data => [
-            data.date ? new Date(data.date).toLocaleDateString() : '-',
+            data.date ? new Date(data.date).toLocaleDateString('en-GB') : '-',
             data.memberName,
             data.itemName,
             data.quantity,
@@ -460,16 +544,31 @@ export default function Reports() {
         autoTable(doc, {
             head: [['Tanggal', 'Anggota', 'Barang', 'Qty', 'Total', 'Margin']],
             body: tableData,
-            startY: 40,
+            startY: startDate || endDate ? 42 : 40,
             styles: { fontSize: 8 },
             headStyles: { fillColor: [13, 148, 136] }
+        });
+    } else if (activeTab === 'product_sales') {
+        const tableData = productSalesList.map(data => [
+            data.name,
+            data.quantity,
+            `Rp ${data.total.toLocaleString()}`,
+            `Rp ${data.margin.toLocaleString()}`
+        ]);
+
+        autoTable(doc, {
+            head: [['Nama Barang', 'Terjual', 'Total Pendapatan', 'Total Margin']],
+            body: tableData,
+            startY: startDate || endDate ? 42 : 40,
+            styles: { fontSize: 8 },
+            headStyles: { fillColor: [59, 130, 246] } // Blue
         });
     } else {
       // Sales, Debts, Profit
       const data = activeTab === 'sales' || activeTab === 'profit' ? filteredSales : filteredDebts;
       
       const tableData = data.map(sale => [
-        sale.createdAt ? new Date(sale.createdAt).toLocaleDateString() : '-',
+        sale.createdAt ? new Date(sale.createdAt).toLocaleDateString('en-GB') : '-',
         sale.id.slice(0, 8),
         sale.customerName || 'Umum',
         `Rp ${sale.totalAmount.toLocaleString()}`,
@@ -481,7 +580,7 @@ export default function Reports() {
       autoTable(doc, {
         head: [['Tanggal', 'ID', 'Pelanggan', 'Total', 'Metode', 'Status', activeTab === 'profit' ? 'Laba' : 'Item']],
         body: tableData,
-        startY: 40,
+        startY: startDate || endDate ? 42 : 40,
         styles: { fontSize: 8 },
         headStyles: { fillColor: [16, 185, 129] },
         didParseCell: (data) => {
@@ -545,6 +644,17 @@ export default function Reports() {
           >
             <ShoppingBag className="w-4 h-4" />
             Pembelian Anggota
+          </button>
+          <button
+            onClick={() => setActiveTab('product_sales')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+              activeTab === 'product_sales'
+                ? 'bg-blue-100 text-blue-700'
+                : 'text-slate-600 hover:bg-slate-50'
+            }`}
+          >
+            <Package className="w-4 h-4" />
+            Produk Terlaris
           </button>
           <button
             onClick={() => setActiveTab('debts')}
@@ -627,16 +737,48 @@ export default function Reports() {
         </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-        <input
-          type="text"
-          placeholder={activeTab === 'sales' ? "Cari ID Transaksi atau Nama..." : activeTab === 'member_purchases' ? "Cari Anggota atau Barang..." : "Cari Nama Pelanggan..."}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm"
-        />
+      {/* Search and Date Filter */}
+      <div className="flex flex-col md:flex-row gap-4 justify-between">
+        <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <input
+            type="text"
+            placeholder={activeTab === 'sales' ? "Cari ID Transaksi atau Nama..." : activeTab === 'member_purchases' ? "Cari Anggota atau Barang..." : activeTab === 'product_sales' ? "Cari Nama Barang..." : "Cari Nama Pelanggan..."}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm"
+            />
+        </div>
+        
+        <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2 shadow-sm">
+                <span className="text-slate-500 text-sm">Dari:</span>
+                <input 
+                    type="date" 
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="outline-none text-slate-700 text-sm"
+                />
+            </div>
+            <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2 shadow-sm">
+                <span className="text-slate-500 text-sm">Sampai:</span>
+                <input 
+                    type="date" 
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="outline-none text-slate-700 text-sm"
+                />
+            </div>
+            {(startDate || endDate) && (
+                <button 
+                    onClick={() => { setStartDate(''); setEndDate(''); }}
+                    className="text-slate-400 hover:text-red-500"
+                    title="Reset Filter Tanggal"
+                >
+                    <X className="w-5 h-5" />
+                </button>
+            )}
+        </div>
       </div>
 
       {/* Content Table */}
@@ -662,6 +804,13 @@ export default function Reports() {
                     <th className="px-6 py-4">Nama Anggota</th>
                     <th className="px-6 py-4 text-right">Total Belanja</th>
                     <th className="px-6 py-4 text-right">Jumlah Transaksi</th>
+                  </>
+                ) : activeTab === 'product_sales' ? (
+                  <>
+                    <th className="px-6 py-4">Nama Barang</th>
+                    <th className="px-6 py-4 text-center">Terjual</th>
+                    <th className="px-6 py-4 text-right">Total Pendapatan</th>
+                    <th className="px-6 py-4 text-right">Total Margin</th>
                   </>
                 ) : (
                   <>
@@ -753,7 +902,7 @@ export default function Reports() {
                                 {data.items.map((item, idx) => (
                                   <tr key={`${item.id}-${idx}`}>
                                     <td className="px-4 py-2 text-slate-500">
-                                      {item.date ? new Date(item.date).toLocaleDateString() : '-'}
+                                      {item.date ? new Date(item.date).toLocaleDateString('en-GB') : '-'}
                                     </td>
                                     <td className="px-4 py-2 text-slate-800">{item.itemName}</td>
                                     <td className="px-4 py-2 text-right text-slate-600">{item.quantity}</td>
@@ -771,16 +920,37 @@ export default function Reports() {
                     </>
                   ))
                 )
+              ) : activeTab === 'product_sales' ? (
+                productSalesList.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="px-6 py-8 text-center text-slate-500">
+                      Tidak ada data penjualan produk ditemukan.
+                    </td>
+                  </tr>
+                ) : (
+                    productSalesList.map((data) => (
+                    <tr key={data.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="px-6 py-4 font-medium text-slate-800">{data.name}</td>
+                      <td className="px-6 py-4 text-center font-bold text-blue-600">{data.quantity}</td>
+                      <td className="px-6 py-4 text-right font-medium text-emerald-600">
+                        Rp {data.total.toLocaleString()}
+                      </td>
+                      <td className="px-6 py-4 text-right font-medium text-purple-600">
+                        Rp {data.margin.toLocaleString()}
+                      </td>
+                    </tr>
+                  ))
+                )
               ) : (
                 (activeTab === 'sales' || activeTab === 'profit' ? filteredSales : filteredDebts).map((sale) => (
                   <tr key={sale.id} className="hover:bg-slate-50 transition-colors">
                     <td className="px-6 py-4 text-slate-600">
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4 text-slate-400" />
-                        {sale.createdAt ? new Date(sale.createdAt).toLocaleDateString() : '-'}
+                        {sale.createdAt ? new Date(sale.createdAt).toLocaleDateString('en-GB') : '-'}
                       </div>
                       <div className="text-xs text-slate-400 pl-6">
-                        {sale.createdAt ? new Date(sale.createdAt).toLocaleTimeString() : ''}
+                        {sale.createdAt ? new Date(sale.createdAt).toLocaleTimeString('en-GB') : ''}
                       </div>
                     </td>
                     <td className="px-6 py-4 font-mono text-slate-500">#{sale.id.slice(0, 8)}</td>
