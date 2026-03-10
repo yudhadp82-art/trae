@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { collection, query, orderBy, onSnapshot, where, doc, updateDoc, serverTimestamp, increment, addDoc } from 'firebase/firestore';
 import { db } from '../api/firebase';
 import { Sale, Customer, SavingsAccount } from '../types';
-import { Search, Calendar, CheckCircle, Clock, FileText, User, TrendingUp, Download, Wallet, ShoppingBag, X, ChevronDown, ChevronRight } from 'lucide-react';
+import { Search, Calendar, CheckCircle, Clock, FileText, User, TrendingUp, Download, Wallet, ShoppingBag, X, ChevronDown, ChevronRight, Edit, Trash2 } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
 export default function Reports() {
@@ -33,6 +33,15 @@ export default function Reports() {
   const [selectedDebtSale, setSelectedDebtSale] = useState<Sale | null>(null);
   const [paymentAmount, setPaymentAmount] = useState<string>('');
   const [processingPayment, setProcessingPayment] = useState(false);
+
+  // Edit Transaction State
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingSale, setEditingSale] = useState<Sale | null>(null);
+  const [editedCustomerName, setEditedCustomerName] = useState('');
+  const [editedPaymentMethod, setEditedPaymentMethod] = useState<'cash' | 'debt'>('cash');
+  const [editedPaymentStatus, setEditedPaymentStatus] = useState<'paid' | 'pending'>('paid');
+  const [editedItems, setEditedItems] = useState<any[]>([]);
+  const [processingEdit, setProcessingEdit] = useState(false);
 
   // Fetch Data
   useEffect(() => {
@@ -167,6 +176,117 @@ export default function Reports() {
       alert('Gagal memproses pembayaran.');
     } finally {
       setProcessingPayment(false);
+    }
+  };
+
+  const openEditModal = (sale: Sale) => {
+    setEditingSale(sale);
+    setEditedCustomerName(sale.customerName || '');
+    setEditedPaymentMethod(sale.paymentMethod);
+    setEditedPaymentStatus(sale.paymentStatus);
+    setEditedItems(sale.items ? sale.items.map(i => ({...i})) : []);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingSale) return;
+
+    // Calculate new total
+    const newTotal = editedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const oldTotal = editingSale.totalAmount || 0;
+
+    setProcessingEdit(true);
+    try {
+      const saleRef = doc(db, 'sales', editingSale.id);
+
+      // 1. Update Stock
+      const stockUpdates = new Map<string, number>(); // productId -> change (positive = add to stock/return, negative = remove/sold)
+      const productNames = new Map<string, string>();
+
+      // Process original items (removing them conceptually adds to stock)
+      editingSale.items.forEach(item => {
+        stockUpdates.set(item.productId, (stockUpdates.get(item.productId) || 0) + item.quantity);
+        productNames.set(item.productId, item.name);
+      });
+
+      // Process new items (adding them conceptually removes from stock)
+      editedItems.forEach(item => {
+        stockUpdates.set(item.productId, (stockUpdates.get(item.productId) || 0) - item.quantity);
+        productNames.set(item.productId, item.name);
+      });
+
+      // Apply updates
+      for (const [productId, change] of stockUpdates.entries()) {
+        if (change !== 0) {
+            const productRef = doc(db, 'products', productId);
+            await updateDoc(productRef, {
+                stock: increment(change),
+                updatedAt: serverTimestamp()
+            });
+            
+            // Log inventory change
+            await addDoc(collection(db, 'inventory_logs'), {
+                productId,
+                productName: productNames.get(productId) || 'Unknown Product',
+                type: change > 0 ? 'in' : 'out',
+                quantity: Math.abs(change),
+                reason: `Edit Transaksi #${editingSale.id.slice(0, 8)}`,
+                userId: 'admin',
+                createdAt: serverTimestamp()
+            });
+        }
+      }
+
+      // 2. Update Customer Data (if applicable)
+      if (editingSale.customerId) {
+        const customerRef = doc(db, 'customers', editingSale.customerId);
+        
+        // Handle Total Spent
+        const spendingDiff = newTotal - oldTotal;
+        
+        // Handle Debt
+        let debtChange = 0;
+        const oldStatus = editingSale.paymentStatus;
+        const newStatus = editedPaymentStatus;
+
+        // Calculate debt impact
+        if (oldStatus === 'paid' && newStatus === 'pending') {
+            debtChange = newTotal;
+        } else if (oldStatus === 'pending' && newStatus === 'paid') {
+            // If it was pending, we remove the OLD debt amount.
+            // Wait, if we edit the amount too, we remove the OLD amount from debt.
+            debtChange = -oldTotal;
+        } else if (oldStatus === 'pending' && newStatus === 'pending') {
+            debtChange = newTotal - oldTotal;
+        } else if (oldStatus === 'paid' && newStatus === 'paid') {
+            debtChange = 0;
+        }
+
+        await updateDoc(customerRef, {
+            totalSpent: increment(spendingDiff),
+            debt: increment(debtChange)
+        });
+      }
+
+      // 3. Update Sale Document
+      await updateDoc(saleRef, {
+        customerName: editedCustomerName,
+        paymentMethod: editedPaymentMethod,
+        paymentStatus: editedPaymentStatus,
+        items: editedItems,
+        totalAmount: newTotal,
+        updatedAt: serverTimestamp()
+      });
+
+      alert('Transaksi berhasil diperbarui!');
+      setIsEditModalOpen(false);
+      setEditingSale(null);
+    } catch (error) {
+      console.error('Error updating transaction:', error);
+      alert('Gagal memperbarui transaksi.');
+    } finally {
+      setProcessingEdit(false);
     }
   };
 
@@ -466,7 +586,7 @@ export default function Reports() {
                         <th className="px-6 py-4">Status</th>
                       </>
                     )}
-                    {activeTab === 'debts' && <th className="px-6 py-4 text-right">Aksi</th>}
+                    {(activeTab === 'debts' || activeTab === 'sales') && <th className="px-6 py-4 text-right">Aksi</th>}
                   </>
                 )}
               </tr>
@@ -599,17 +719,28 @@ export default function Reports() {
                         </td>
                       </>
                     )}
-                    {activeTab === 'debts' && (
+                    {(activeTab === 'debts' || activeTab === 'sales') && (
                       <td className="px-6 py-4 text-right">
-                        <div className="flex flex-col items-end gap-1">
-                          <span className="text-xs text-slate-500">
-                            Terbayar: Rp {((sale as any).amountPaid || 0).toLocaleString()}
-                          </span>
-                          <button
-                            onClick={() => openPaymentModal(sale)}
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors shadow-sm"
+                        <div className="flex items-center justify-end gap-3">
+                          {activeTab === 'debts' && (
+                            <div className="flex flex-col items-end gap-1">
+                              <span className="text-xs text-slate-500">
+                                Terbayar: Rp {((sale as any).amountPaid || 0).toLocaleString()}
+                              </span>
+                              <button
+                                onClick={() => openPaymentModal(sale)}
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors shadow-sm"
+                              >
+                                Bayar
+                              </button>
+                            </div>
+                          )}
+                          <button 
+                            onClick={() => openEditModal(sale)} 
+                            className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            title="Edit Transaksi"
                           >
-                            Bayar
+                            <Edit className="w-4 h-4" />
                           </button>
                         </div>
                       </td>
@@ -698,6 +829,148 @@ export default function Reports() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Transaction Modal */}
+      {isEditModalOpen && editingSale && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-2xl w-full max-w-2xl overflow-hidden shadow-xl max-h-[90vh] flex flex-col">
+            <div className="p-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+              <h3 className="font-bold text-lg text-slate-800">Edit Transaksi #{editingSale.id.slice(0, 8)}</h3>
+              <button 
+                onClick={() => setIsEditModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleEditSubmit} className="flex-1 overflow-y-auto p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Nama Pelanggan</label>
+                  <input
+                    type="text"
+                    value={editedCustomerName}
+                    onChange={(e) => setEditedCustomerName(e.target.value)}
+                    className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    placeholder="Nama Pelanggan"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Metode Pembayaran</label>
+                  <select
+                    value={editedPaymentMethod}
+                    onChange={(e) => setEditedPaymentMethod(e.target.value as 'cash' | 'debt')}
+                    className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    <option value="cash">Cash</option>
+                    <option value="debt">Hutang</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Status Pembayaran</label>
+                  <select
+                    value={editedPaymentStatus}
+                    onChange={(e) => setEditedPaymentStatus(e.target.value as 'paid' | 'pending')}
+                    className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    <option value="paid">Lunas</option>
+                    <option value="pending">Belum Lunas</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-medium text-slate-800 mb-2">Item Transaksi</h4>
+                <div className="border border-slate-200 rounded-lg overflow-hidden">
+                  <table className="w-full text-sm">
+                    <thead className="bg-slate-50 text-slate-600">
+                      <tr>
+                        <th className="px-4 py-2 text-left">Barang</th>
+                        <th className="px-4 py-2 text-right">Harga</th>
+                        <th className="px-4 py-2 text-center w-24">Qty</th>
+                        <th className="px-4 py-2 text-right">Total</th>
+                        <th className="px-4 py-2 text-center w-10"></th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {editedItems.map((item, index) => (
+                        <tr key={index}>
+                          <td className="px-4 py-2 font-medium text-slate-700">{item.name}</td>
+                          <td className="px-4 py-2 text-right text-slate-500">Rp {item.price.toLocaleString()}</td>
+                          <td className="px-4 py-2">
+                            <input
+                              type="number"
+                              min="1"
+                              value={item.quantity}
+                              onChange={(e) => {
+                                const newQty = parseInt(e.target.value) || 0;
+                                if (newQty > 0) {
+                                  const newItems = [...editedItems];
+                                  newItems[index].quantity = newQty;
+                                  setEditedItems(newItems);
+                                }
+                              }}
+                              className="w-full px-2 py-1 border border-slate-200 rounded text-center focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                            />
+                          </td>
+                          <td className="px-4 py-2 text-right font-medium text-emerald-600">
+                            Rp {(item.price * item.quantity).toLocaleString()}
+                          </td>
+                          <td className="px-4 py-2 text-center">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (confirm('Hapus item ini? Stok akan dikembalikan.')) {
+                                  const newItems = [...editedItems];
+                                  newItems.splice(index, 1);
+                                  setEditedItems(newItems);
+                                }
+                              }}
+                              className="text-red-400 hover:text-red-600"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot className="bg-slate-50 font-bold text-slate-800">
+                      <tr>
+                        <td colSpan={3} className="px-4 py-2 text-right">Total Baru:</td>
+                        <td className="px-4 py-2 text-right text-emerald-600">
+                          Rp {editedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toLocaleString()}
+                        </td>
+                        <td></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                <p className="text-xs text-amber-600 mt-2">
+                  * Mengubah jumlah atau menghapus item akan otomatis menyesuaikan stok barang.
+                </p>
+              </div>
+            </form>
+
+            <div className="p-4 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setIsEditModalOpen(false)}
+                className="px-4 py-2 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleEditSubmit}
+                disabled={processingEdit}
+                className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+              >
+                {processingEdit ? 'Menyimpan...' : 'Simpan Perubahan'}
+              </button>
+            </div>
           </div>
         </div>
       )}
