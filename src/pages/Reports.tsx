@@ -616,6 +616,38 @@ export default function Reports() {
           doc.text(`- Hutang: Rp ${totalDebt.toLocaleString()}`, 20, finalY + 30);
           doc.setTextColor(0, 0, 0); // Reset black
           doc.text(`Total Margin (Laba Kotor): Rp ${totalMargin.toLocaleString()}`, 14, finalY + 36);
+
+          // Product Summary Breakdown
+          const breakdownY = finalY + 46;
+          doc.setFont('helvetica', 'bold');
+          doc.text('Rincian Barang Terjual:', 14, breakdownY);
+          
+          const productSummary = data.flatMap(sale => sale.items || []).reduce((acc, item) => {
+              if (!acc[item.name]) {
+                  acc[item.name] = 0;
+              }
+              acc[item.name] += item.quantity;
+              return acc;
+          }, {} as Record<string, number>);
+
+          // Convert to array and sort by quantity desc
+          const productSummaryList = Object.entries(productSummary)
+              .sort(([, qtyA], [, qtyB]) => qtyB - qtyA)
+              .map(([name, qty]) => [name, `${qty} pcs`]);
+
+          autoTable(doc, {
+              head: [['Nama Barang', 'Jumlah']],
+              body: productSummaryList,
+              startY: breakdownY + 4,
+              styles: { fontSize: 8 },
+              headStyles: { fillColor: [59, 130, 246] }, // Blue header for product breakdown
+              theme: 'grid',
+              columnStyles: {
+                  0: { cellWidth: 100 },
+                  1: { cellWidth: 40, halign: 'right' }
+              },
+              margin: { left: 14 }
+          });
       }
     }
 
