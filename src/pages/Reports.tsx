@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { collection, query, orderBy, onSnapshot, where, doc, updateDoc, serverTimestamp, increment, addDoc } from 'firebase/firestore';
 import { db } from '../api/firebase';
 import { Sale, Customer, SavingsAccount } from '../types';
-import { Search, Calendar, CheckCircle, Clock, FileText, User, TrendingUp, Download, Wallet, ShoppingBag, X, ChevronDown, ChevronRight, Edit, Trash2 } from 'lucide-react';
+import { Search, Calendar, CheckCircle, Clock, FileText, User, TrendingUp, Download, Wallet, ShoppingBag, X, ChevronDown, ChevronRight, Edit, Trash2, Printer } from 'lucide-react';
 import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 export default function Reports() {
   const [activeTab, setActiveTab] = useState<'sales' | 'debts' | 'profit' | 'savings' | 'member_purchases'>('sales');
@@ -415,6 +417,86 @@ export default function Reports() {
     XLSX.writeFile(wb, `Laporan_${activeTab}_${new Date().toISOString().slice(0,10)}.xlsx`);
   };
 
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    const title = activeTab === 'sales' ? 'Laporan Penjualan' : 
+                  activeTab === 'debts' ? 'Laporan Hutang' : 
+                  activeTab === 'profit' ? 'Laporan Laba' : 
+                  activeTab === 'savings' ? 'Laporan Simpanan' : 'Laporan Pembelian Anggota';
+    
+    doc.setFontSize(18);
+    doc.text(title, 14, 22);
+    doc.setFontSize(10);
+    doc.text(`Dicetak pada: ${new Date().toLocaleString()}`, 14, 30);
+
+    if (activeTab === 'savings') {
+      const tableData = savingsReportData.map(data => [
+        data.memberId,
+        data.name,
+        data.joinDate ? new Date(data.joinDate).toLocaleDateString() : '-',
+        `Rp ${data.balancePokok.toLocaleString()}`,
+        `Rp ${data.balanceWajib.toLocaleString()}`,
+        `Rp ${data.balanceSukarela.toLocaleString()}`,
+        `Rp ${data.totalSavings.toLocaleString()}`
+      ]);
+
+      autoTable(doc, {
+        head: [['ID', 'Nama', 'Tgl Gabung', 'Pokok', 'Wajib', 'Sukarela', 'Total']],
+        body: tableData,
+        startY: 40,
+        styles: { fontSize: 8 },
+        headStyles: { fillColor: [16, 185, 129] }
+      });
+    } else if (activeTab === 'member_purchases') {
+        const tableData = memberPurchasesRaw.map(data => [
+            data.date ? new Date(data.date).toLocaleDateString() : '-',
+            data.memberName,
+            data.itemName,
+            data.quantity,
+            `Rp ${data.total.toLocaleString()}`,
+            `Rp ${data.margin.toLocaleString()}`
+        ]);
+
+        autoTable(doc, {
+            head: [['Tanggal', 'Anggota', 'Barang', 'Qty', 'Total', 'Margin']],
+            body: tableData,
+            startY: 40,
+            styles: { fontSize: 8 },
+            headStyles: { fillColor: [13, 148, 136] }
+        });
+    } else {
+      // Sales, Debts, Profit
+      const data = activeTab === 'sales' || activeTab === 'profit' ? filteredSales : filteredDebts;
+      
+      const tableData = data.map(sale => [
+        sale.createdAt ? new Date(sale.createdAt).toLocaleDateString() : '-',
+        sale.id.slice(0, 8),
+        sale.customerName || 'Umum',
+        `Rp ${sale.totalAmount.toLocaleString()}`,
+        sale.paymentMethod === 'debt' ? 'HUTANG' : 'CASH',
+        sale.paymentStatus === 'paid' ? 'LUNAS' : 'BELUM',
+        activeTab === 'profit' ? `Rp ${calculateProfit(sale).toLocaleString()}` : (sale.items?.map(i => `${i.name} (x${i.quantity})`).join(', ') || '-')
+      ]);
+
+      autoTable(doc, {
+        head: [['Tanggal', 'ID', 'Pelanggan', 'Total', 'Metode', 'Status', activeTab === 'profit' ? 'Laba' : 'Item']],
+        body: tableData,
+        startY: 40,
+        styles: { fontSize: 8 },
+        headStyles: { fillColor: [16, 185, 129] },
+        didParseCell: (data) => {
+            // Check if column index is 4 (Metode) and value is 'HUTANG'
+            if (data.section === 'body' && data.column.index === 4 && data.cell.raw === 'HUTANG') {
+                data.cell.styles.textColor = [220, 38, 38]; // Red color for Debt
+                data.cell.styles.fontStyle = 'bold';
+            }
+        }
+      });
+    }
+
+    doc.save(`Laporan_${activeTab}_${new Date().toISOString().slice(0,10)}.pdf`);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -425,12 +507,21 @@ export default function Reports() {
         
         <div className="flex bg-white rounded-lg p-1 border border-slate-200 shadow-sm overflow-x-auto max-w-full">
           <button
+            onClick={exportToPDF}
+            className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-red-600 transition-colors mr-2 border-r border-slate-100 whitespace-nowrap"
+            title="Download PDF"
+          >
+            <Printer className="w-4 h-4" />
+            <span className="hidden sm:inline">PDF</span>
+          </button>
+          
+          <button
             onClick={exportToExcel}
             className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-emerald-600 transition-colors mr-2 border-r border-slate-100 whitespace-nowrap"
             title="Download Excel"
           >
             <Download className="w-4 h-4" />
-            <span className="hidden sm:inline">Export</span>
+            <span className="hidden sm:inline">Excel</span>
           </button>
           
           <button
