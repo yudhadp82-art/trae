@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { collection, query, orderBy, onSnapshot, where, doc, updateDoc, serverTimestamp, increment, addDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../api/firebase';
 import { Sale, Customer, SavingsAccount } from '../types';
-import { Search, Calendar, CheckCircle, Clock, FileText, User, TrendingUp, Download, Wallet, ShoppingBag, X, ChevronDown, ChevronRight, Edit, Trash2, Printer, Package } from 'lucide-react';
+import { Search, Calendar, CheckCircle, Clock, FileText, User, TrendingUp, Download, Wallet, ShoppingBag, X, ChevronDown, ChevronRight, Edit, Trash2, Printer, Package, BookOpen } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 export default function Reports() {
-  const [activeTab, setActiveTab] = useState<'sales' | 'debts' | 'profit' | 'savings' | 'member_purchases' | 'product_sales'>('sales');
+  const [activeTab, setActiveTab] = useState<'sales' | 'debts' | 'profit' | 'savings' | 'member_purchases' | 'product_sales' | 'financial_statement'>('sales');
   const [sales, setSales] = useState<Sale[]>([]);
   const [debts, setDebts] = useState<Sale[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -497,6 +497,35 @@ export default function Reports() {
   const totalProfit = sales.reduce((acc, sale) => acc + calculateProfit(sale), 0);
   const totalSavingsAll = savingsAccounts.reduce((acc, curr) => acc + (curr.balancePokok || 0) + (curr.balanceWajib || 0) + (curr.balanceSukarela || 0), 0);
 
+  // Financial Statement Calculation (SAK EP Simple Version)
+  const financialData = {
+    incomeStatement: {
+      revenue: totalRevenue,
+      cogs: sales.reduce((acc, sale) => {
+        const saleCost = (sale.items || []).reduce((s, i) => s + ((i.costPrice || 0) * (i.quantity || 0)), 0);
+        return acc + saleCost;
+      }, 0),
+      grossProfit: totalProfit,
+      expenses: 0, // Placeholder for operating expenses (not tracked yet)
+      netProfit: totalProfit, // Assuming no expenses for now
+    },
+    balanceSheet: {
+      assets: {
+        current: {
+          cash: totalRevenue - totalDebt, // Cash on hand from sales
+          receivables: totalDebt, // Debt from customers
+          inventory: 0 // Ideally this should be fetched from total product value (need to pass products or fetch here)
+        }
+      },
+      liabilities: {
+        savings: totalSavingsAll // Savings as liability to members
+      },
+      equity: {
+        retainedEarnings: totalProfit
+      }
+    }
+  };
+
   const exportToExcel = () => {
     let dataToExport;
     let sheetName;
@@ -512,6 +541,26 @@ export default function Reports() {
         'Total Simpanan': data.totalSavings
       }));
       sheetName = "Laporan Simpanan";
+    } else if (activeTab === 'financial_statement') {
+        // Financial Statement Export
+        dataToExport = [
+            { 'Kategori': 'LAPORAN LABA RUGI', 'Akun': '', 'Nilai': '' },
+            { 'Kategori': '', 'Akun': 'Pendapatan Usaha', 'Nilai': financialData.incomeStatement.revenue },
+            { 'Kategori': '', 'Akun': 'Beban Pokok Penjualan', 'Nilai': financialData.incomeStatement.cogs },
+            { 'Kategori': '', 'Akun': 'Laba Kotor', 'Nilai': financialData.incomeStatement.grossProfit },
+            { 'Kategori': '', 'Akun': 'Beban Operasional', 'Nilai': financialData.incomeStatement.expenses },
+            { 'Kategori': '', 'Akun': 'Laba Bersih', 'Nilai': financialData.incomeStatement.netProfit },
+            { 'Kategori': '', 'Akun': '', 'Nilai': '' },
+            { 'Kategori': 'LAPORAN POSISI KEUANGAN (NERACA)', 'Akun': '', 'Nilai': '' },
+            { 'Kategori': 'ASET', 'Akun': '', 'Nilai': '' },
+            { 'Kategori': '', 'Akun': 'Kas dan Setara Kas', 'Nilai': financialData.balanceSheet.assets.current.cash },
+            { 'Kategori': '', 'Akun': 'Piutang Usaha', 'Nilai': financialData.balanceSheet.assets.current.receivables },
+            { 'Kategori': 'LIABILITAS', 'Akun': '', 'Nilai': '' },
+            { 'Kategori': '', 'Akun': 'Simpanan Anggota', 'Nilai': financialData.balanceSheet.liabilities.savings },
+            { 'Kategori': 'EKUITAS', 'Akun': '', 'Nilai': '' },
+            { 'Kategori': '', 'Akun': 'Saldo Laba', 'Nilai': financialData.balanceSheet.equity.retainedEarnings }
+        ];
+        sheetName = "Laporan Keuangan SAK EP";
     } else if (activeTab === 'member_purchases') {
       // For Excel export, we can flatten the data or just show summary. Let's flatten.
       dataToExport = memberPurchasesRaw.map(data => ({
@@ -618,6 +667,61 @@ export default function Reports() {
             startY: startDate || endDate ? 42 : 40,
             styles: { fontSize: 8 },
             headStyles: { fillColor: [59, 130, 246] } // Blue
+        });
+    } else if (activeTab === 'financial_statement') {
+        // Financial Statement PDF
+        doc.setFontSize(14);
+        doc.text('Laporan Laba Rugi', 14, 45);
+        
+        autoTable(doc, {
+            body: [
+                ['Pendapatan Usaha', `Rp ${financialData.incomeStatement.revenue.toLocaleString()}`],
+                ['Beban Pokok Penjualan', `(Rp ${financialData.incomeStatement.cogs.toLocaleString()})`],
+                ['Laba Kotor', `Rp ${financialData.incomeStatement.grossProfit.toLocaleString()}`],
+                ['Beban Operasional', `(Rp ${financialData.incomeStatement.expenses.toLocaleString()})`],
+                ['Laba Bersih', `Rp ${financialData.incomeStatement.netProfit.toLocaleString()}`]
+            ],
+            startY: 50,
+            styles: { fontSize: 10 },
+            theme: 'plain',
+            columnStyles: {
+                0: { cellWidth: 100 },
+                1: { cellWidth: 50, halign: 'right', fontStyle: 'bold' }
+            }
+        });
+
+        const nextY = (doc as any).lastAutoTable.finalY + 20;
+        doc.setFontSize(14);
+        doc.text('Laporan Posisi Keuangan (Neraca)', 14, nextY);
+
+        autoTable(doc, {
+            body: [
+                [{ content: 'ASET', styles: { fontStyle: 'bold' } }, ''],
+                ['Aset Lancar', ''],
+                ['  Kas dan Setara Kas', `Rp ${financialData.balanceSheet.assets.current.cash.toLocaleString()}`],
+                ['  Piutang Usaha', `Rp ${financialData.balanceSheet.assets.current.receivables.toLocaleString()}`],
+                ['Total Aset', `Rp ${(financialData.balanceSheet.assets.current.cash + financialData.balanceSheet.assets.current.receivables).toLocaleString()}`],
+                ['', ''],
+                [{ content: 'LIABILITAS DAN EKUITAS', styles: { fontStyle: 'bold' } }, ''],
+                ['Liabilitas', ''],
+                ['  Simpanan Anggota', `Rp ${financialData.balanceSheet.liabilities.savings.toLocaleString()}`],
+                ['Ekuitas', ''],
+                ['  Saldo Laba', `Rp ${financialData.balanceSheet.equity.retainedEarnings.toLocaleString()}`],
+                ['Total Liabilitas dan Ekuitas', `Rp ${(financialData.balanceSheet.liabilities.savings + financialData.balanceSheet.equity.retainedEarnings).toLocaleString()}`]
+            ],
+            startY: nextY + 5,
+            styles: { fontSize: 10 },
+            theme: 'plain',
+            columnStyles: {
+                0: { cellWidth: 100 },
+                1: { cellWidth: 50, halign: 'right' }
+            },
+            didParseCell: (data) => {
+                if (data.row.raw[0] === 'Total Aset' || (typeof data.row.raw[0] === 'string' && data.row.raw[0].includes('Total Liabilitas'))) {
+                    data.cell.styles.fontStyle = 'bold';
+                    data.cell.styles.fillColor = [240, 240, 240];
+                }
+            }
         });
     } else {
       // Sales, Debts, Profit
@@ -812,6 +916,17 @@ export default function Reports() {
             Simpanan
           </button>
           <button
+            onClick={() => setActiveTab('financial_statement')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+              activeTab === 'financial_statement'
+                ? 'bg-indigo-100 text-indigo-700'
+                : 'text-slate-600 hover:bg-slate-50'
+            }`}
+          >
+            <BookOpen className="w-4 h-4" />
+            Laporan Keuangan
+          </button>
+          <button
             onClick={() => setActiveTab('profit')}
             className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
               activeTab === 'profit'
@@ -940,7 +1055,90 @@ export default function Reports() {
                     <th className="px-6 py-4 text-right">Total Pendapatan</th>
                     <th className="px-6 py-4 text-right">Total Margin</th>
                   </>
-                ) : (
+                ) : activeTab === 'financial_statement' ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-8">
+                    <div className="max-w-3xl mx-auto space-y-8">
+                        {/* Income Statement */}
+                        <div className="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
+                            <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2">Laporan Laba Rugi</h3>
+                            <div className="space-y-2 text-sm">
+                                <div className="flex justify-between">
+                                    <span className="text-slate-600">Pendapatan Usaha</span>
+                                    <span className="font-medium text-slate-800">Rp {financialData.incomeStatement.revenue.toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-slate-600">Beban Pokok Penjualan</span>
+                                    <span className="text-red-600">(Rp {financialData.incomeStatement.cogs.toLocaleString()})</span>
+                                </div>
+                                <div className="flex justify-between pt-2 border-t border-slate-100 font-bold">
+                                    <span className="text-slate-800">Laba Kotor</span>
+                                    <span className="text-emerald-600">Rp {financialData.incomeStatement.grossProfit.toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between pt-2">
+                                    <span className="text-slate-600">Beban Operasional</span>
+                                    <span className="text-red-600">(Rp {financialData.incomeStatement.expenses.toLocaleString()})</span>
+                                </div>
+                                <div className="flex justify-between pt-2 border-t border-slate-200 font-bold text-base">
+                                    <span className="text-slate-800">Laba Bersih</span>
+                                    <span className="text-blue-600">Rp {financialData.incomeStatement.netProfit.toLocaleString()}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Balance Sheet */}
+                        <div className="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
+                            <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2">Laporan Posisi Keuangan (Neraca)</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                {/* Assets */}
+                                <div>
+                                    <h4 className="font-bold text-slate-700 mb-3 uppercase text-xs tracking-wider">Aset</h4>
+                                    <div className="space-y-2 text-sm">
+                                        <div className="flex justify-between">
+                                            <span className="text-slate-600 pl-2">Kas dan Setara Kas</span>
+                                            <span className="font-medium">Rp {financialData.balanceSheet.assets.current.cash.toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-slate-600 pl-2">Piutang Usaha</span>
+                                            <span className="font-medium">Rp {financialData.balanceSheet.assets.current.receivables.toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between pt-2 border-t border-slate-100 font-bold">
+                                            <span className="text-slate-800">Total Aset</span>
+                                            <span className="text-slate-800">Rp {(financialData.balanceSheet.assets.current.cash + financialData.balanceSheet.assets.current.receivables).toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Liabilities & Equity */}
+                                <div>
+                                    <h4 className="font-bold text-slate-700 mb-3 uppercase text-xs tracking-wider">Liabilitas & Ekuitas</h4>
+                                    <div className="space-y-4 text-sm">
+                                        <div>
+                                            <p className="font-medium text-slate-700 mb-1">Liabilitas</p>
+                                            <div className="flex justify-between">
+                                                <span className="text-slate-600 pl-2">Simpanan Anggota</span>
+                                                <span className="font-medium">Rp {financialData.balanceSheet.liabilities.savings.toLocaleString()}</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p className="font-medium text-slate-700 mb-1">Ekuitas</p>
+                                            <div className="flex justify-between">
+                                                <span className="text-slate-600 pl-2">Saldo Laba</span>
+                                                <span className="font-medium">Rp {financialData.balanceSheet.equity.retainedEarnings.toLocaleString()}</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-between pt-2 border-t border-slate-100 font-bold">
+                                            <span className="text-slate-800">Total Liabilitas & Ekuitas</span>
+                                            <span className="text-slate-800">Rp {(financialData.balanceSheet.liabilities.savings + financialData.balanceSheet.equity.retainedEarnings).toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
                   <>
                     <th className="px-6 py-4">Tanggal</th>
                     <th className="px-6 py-4">ID Transaksi</th>
@@ -990,6 +1188,89 @@ export default function Reports() {
                     </tr>
                   ))
                 )
+              ) : activeTab === 'financial_statement' ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-8">
+                    <div className="max-w-3xl mx-auto space-y-8">
+                        {/* Income Statement */}
+                        <div className="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
+                            <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2">Laporan Laba Rugi</h3>
+                            <div className="space-y-2 text-sm">
+                                <div className="flex justify-between">
+                                    <span className="text-slate-600">Pendapatan Usaha</span>
+                                    <span className="font-medium text-slate-800">Rp {financialData.incomeStatement.revenue.toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-slate-600">Beban Pokok Penjualan</span>
+                                    <span className="text-red-600">(Rp {financialData.incomeStatement.cogs.toLocaleString()})</span>
+                                </div>
+                                <div className="flex justify-between pt-2 border-t border-slate-100 font-bold">
+                                    <span className="text-slate-800">Laba Kotor</span>
+                                    <span className="text-emerald-600">Rp {financialData.incomeStatement.grossProfit.toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between pt-2">
+                                    <span className="text-slate-600">Beban Operasional</span>
+                                    <span className="text-red-600">(Rp {financialData.incomeStatement.expenses.toLocaleString()})</span>
+                                </div>
+                                <div className="flex justify-between pt-2 border-t border-slate-200 font-bold text-base">
+                                    <span className="text-slate-800">Laba Bersih</span>
+                                    <span className="text-blue-600">Rp {financialData.incomeStatement.netProfit.toLocaleString()}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Balance Sheet */}
+                        <div className="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
+                            <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2">Laporan Posisi Keuangan (Neraca)</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                {/* Assets */}
+                                <div>
+                                    <h4 className="font-bold text-slate-700 mb-3 uppercase text-xs tracking-wider">Aset</h4>
+                                    <div className="space-y-2 text-sm">
+                                        <div className="flex justify-between">
+                                            <span className="text-slate-600 pl-2">Kas dan Setara Kas</span>
+                                            <span className="font-medium">Rp {financialData.balanceSheet.assets.current.cash.toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-slate-600 pl-2">Piutang Usaha</span>
+                                            <span className="font-medium">Rp {financialData.balanceSheet.assets.current.receivables.toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between pt-2 border-t border-slate-100 font-bold">
+                                            <span className="text-slate-800">Total Aset</span>
+                                            <span className="text-slate-800">Rp {(financialData.balanceSheet.assets.current.cash + financialData.balanceSheet.assets.current.receivables).toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Liabilities & Equity */}
+                                <div>
+                                    <h4 className="font-bold text-slate-700 mb-3 uppercase text-xs tracking-wider">Liabilitas & Ekuitas</h4>
+                                    <div className="space-y-4 text-sm">
+                                        <div>
+                                            <p className="font-medium text-slate-700 mb-1">Liabilitas</p>
+                                            <div className="flex justify-between">
+                                                <span className="text-slate-600 pl-2">Simpanan Anggota</span>
+                                                <span className="font-medium">Rp {financialData.balanceSheet.liabilities.savings.toLocaleString()}</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p className="font-medium text-slate-700 mb-1">Ekuitas</p>
+                                            <div className="flex justify-between">
+                                                <span className="text-slate-600 pl-2">Saldo Laba</span>
+                                                <span className="font-medium">Rp {financialData.balanceSheet.equity.retainedEarnings.toLocaleString()}</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-between pt-2 border-t border-slate-100 font-bold">
+                                            <span className="text-slate-800">Total Liabilitas & Ekuitas</span>
+                                            <span className="text-slate-800">Rp {(financialData.balanceSheet.liabilities.savings + financialData.balanceSheet.equity.retainedEarnings).toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </td>
+                </tr>
               ) : activeTab === 'member_purchases' ? (
                 memberPurchasesList.length === 0 ? (
                   <tr>
