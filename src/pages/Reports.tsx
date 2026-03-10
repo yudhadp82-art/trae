@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, query, orderBy, onSnapshot, where, doc, updateDoc, serverTimestamp, increment, addDoc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, where, doc, updateDoc, serverTimestamp, increment, addDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../api/firebase';
 import { Sale, Customer, SavingsAccount } from '../types';
 import { Search, Calendar, CheckCircle, Clock, FileText, User, TrendingUp, Download, Wallet, ShoppingBag, X, ChevronDown, ChevronRight, Edit, Trash2, Printer, Package } from 'lucide-react';
@@ -180,6 +180,62 @@ export default function Reports() {
       alert('Gagal memproses pembayaran.');
     } finally {
       setProcessingPayment(false);
+    }
+  };
+
+  // Delete Transaction
+  const handleDeleteSale = async (sale: Sale) => {
+    if (!confirm(`Apakah Anda yakin ingin menghapus transaksi #${sale.id.slice(0, 8)}? Stok akan dikembalikan dan data tidak dapat dipulihkan.`)) return;
+
+    try {
+      // 1. Restore Stock
+      if (sale.items) {
+        for (const item of sale.items) {
+          const productRef = doc(db, 'products', item.productId);
+          await updateDoc(productRef, {
+            stock: increment(item.quantity),
+            updatedAt: serverTimestamp()
+          });
+
+          // Log inventory restore
+          await addDoc(collection(db, 'inventory_logs'), {
+            productId: item.productId,
+            productName: item.name,
+            type: 'in',
+            quantity: item.quantity,
+            reason: `Hapus Transaksi #${sale.id.slice(0, 8)}`,
+            userId: 'admin',
+            createdAt: serverTimestamp()
+          });
+        }
+      }
+
+      // 2. Revert Customer Debt/Spending (if applicable)
+      if (sale.customerId) {
+        const customerRef = doc(db, 'customers', sale.customerId);
+        
+        let debtChange = 0;
+        if (sale.paymentStatus === 'pending') {
+            debtChange = -((sale.totalAmount || 0) - ((sale as any).amountPaid || 0));
+        }
+
+        await updateDoc(customerRef, {
+          totalSpent: increment(-(sale.totalAmount || 0)),
+          debt: increment(debtChange)
+        });
+      }
+
+      // 3. Delete Sale Document
+      // Instead of deleting, it's safer to mark as 'void' or 'deleted', but user asked to delete.
+      // Let's delete for now as per request, or deleteDoc.
+      // Ideally move to 'deleted_sales' collection, but deleteDoc is direct.
+      // const { deleteDoc } = await import('firebase/firestore'); // Removed dynamic import
+      await deleteDoc(doc(db, 'sales', sale.id));
+
+      alert('Transaksi berhasil dihapus.');
+    } catch (error) {
+      console.error('Error deleting transaction:', error);
+      alert('Gagal menghapus transaksi.');
     }
   };
 
@@ -1074,6 +1130,13 @@ export default function Reports() {
                             title="Edit Transaksi"
                           >
                             <Edit className="w-4 h-4" />
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteSale(sale)} 
+                            className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Hapus Transaksi"
+                          >
+                            <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
                       </td>
