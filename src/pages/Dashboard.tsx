@@ -6,7 +6,8 @@ import {
   TrendingUp,
   ArrowUpRight,
   ArrowDownRight,
-  Wallet
+  Wallet,
+  DollarSign
 } from 'lucide-react';
 import { 
   AreaChart, 
@@ -21,13 +22,14 @@ import {
 } from 'recharts';
 import { collection, query, orderBy, onSnapshot, where, Timestamp } from 'firebase/firestore';
 import { db } from '../api/firebase';
-import { Sale, Product, SavingsAccount } from '../types';
+import { Sale, Product, SavingsAccount, InventoryLog } from '../types';
 
 export default function Dashboard() {
   const [sales, setSales] = useState<Sale[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [totalSavings, setTotalSavings] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [inventoryLogs, setInventoryLogs] = useState<InventoryLog[]>([]);
 
   useEffect(() => {
     // Fetch Sales
@@ -41,7 +43,7 @@ export default function Dashboard() {
       setSales(salesData);
     });
 
-    // Fetch Products for Low Stock Alert
+    // Fetch Products for Low Stock Alert and Asset Value
     const productsQuery = query(collection(db, 'products'));
     const unsubscribeProducts = onSnapshot(productsQuery, (snapshot) => {
       const productsData = snapshot.docs.map(doc => ({
@@ -50,6 +52,16 @@ export default function Dashboard() {
       })) as Product[];
       setProducts(productsData);
     });
+
+    // Fetch Inventory Logs (Optional if we want to track historical asset value, but for current value we use products)
+    // Actually, to track changes (add when purchase, reduce when sold), we just need current product state
+    // because product.stock * product.costPrice = Current Asset Value.
+    // However, the request asks to "add total value of purchased goods, reduce when sold, add when purchase".
+    // This sounds like "Current Inventory Asset Value".
+    // Current Inventory Value = Sum(Product Stock * Product Cost Price)
+    // When we sell, stock decreases -> Asset Value decreases.
+    // When we purchase (restock), stock increases -> Asset Value increases.
+    // So simply calculating Sum(Stock * CostPrice) from current products collection satisfies this.
 
     // Fetch Savings for Total
     const savingsQuery = query(collection(db, 'savings_accounts'));
@@ -76,6 +88,11 @@ export default function Dashboard() {
   const totalOrders = sales.length;
   const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
   const lowStockProducts = products.filter(p => (p.stock || 0) <= 5);
+
+  // Calculate Total Inventory Asset Value
+  const totalAssetValue = products.reduce((acc, product) => {
+      return acc + ((product.stock || 0) * (product.costPrice || 0));
+  }, 0);
 
   // Prepare Chart Data (Last 7 Days)
   const getLast7DaysData = () => {
@@ -136,6 +153,13 @@ export default function Dashboard() {
           icon={Banknote} 
           color="bg-emerald-500"
           trend={12.5}
+        />
+        <StatCard 
+          title="Asset Value (Inventory)" 
+          value={`Rp ${(totalAssetValue || 0).toLocaleString()}`} 
+          icon={DollarSign} 
+          color="bg-indigo-500"
+          trend={products.length > 0 ? 100 : 0} // Placeholder trend or calculate based on logs if needed
         />
         <StatCard 
           title="Total Savings" 
