@@ -591,6 +591,32 @@ export default function Reports() {
             }
         }
       });
+
+      // Summary for Sales Report
+      if (activeTab === 'sales') {
+          const totalTransactions = data.length;
+          const totalAmount = data.reduce((sum, sale) => sum + (sale.totalAmount || 0), 0);
+          const totalDebt = data.filter(s => s.paymentMethod === 'debt').reduce((sum, sale) => sum + (sale.totalAmount || 0), 0);
+          const totalCash = totalAmount - totalDebt;
+          const totalItems = data.reduce((sum, sale) => sum + (sale.items?.reduce((s, i) => s + i.quantity, 0) || 0), 0);
+          const totalMargin = data.reduce((sum, sale) => sum + calculateProfit(sale), 0);
+
+          const finalY = (doc as any).lastAutoTable.finalY + 10;
+          
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'bold');
+          doc.text('Rekapitulasi Penjualan:', 14, finalY);
+          
+          doc.setFont('helvetica', 'normal');
+          doc.text(`Total Transaksi: ${totalTransactions}`, 14, finalY + 6);
+          doc.text(`Total Barang Terjual: ${totalItems} pcs`, 14, finalY + 12);
+          doc.text(`Total Pendapatan: Rp ${totalAmount.toLocaleString()}`, 14, finalY + 18);
+          doc.text(`- Cash: Rp ${totalCash.toLocaleString()}`, 20, finalY + 24);
+          doc.setTextColor(220, 38, 38); // Red
+          doc.text(`- Hutang: Rp ${totalDebt.toLocaleString()}`, 20, finalY + 30);
+          doc.setTextColor(0, 0, 0); // Reset black
+          doc.text(`Total Margin (Laba Kotor): Rp ${totalMargin.toLocaleString()}`, 14, finalY + 36);
+      }
     }
 
     doc.save(`Laporan_${activeTab}_${new Date().toISOString().slice(0,10)}.pdf`);
