@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { collection, query, orderBy, onSnapshot, where, doc, updateDoc, serverTimestamp, increment, addDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../api/firebase';
-import { Sale, Customer, SavingsAccount } from '../types';
+import { useState, useEffect } from 'react';
+// Force Vercel Rebuild Trigger
 import { Search, Calendar, CheckCircle, Clock, FileText, User, TrendingUp, Download, Wallet, ShoppingBag, X, ChevronDown, ChevronRight, Edit, Trash2, Printer, Package, BookOpen } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
