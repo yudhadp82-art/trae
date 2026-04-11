@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, writeBatch, doc, increment } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, serverTimestamp, writeBatch, doc, increment } from 'firebase/firestore';
 import { db } from '../api/firebase';
-import { Product } from '../types';
-import { Search, Plus, ShoppingBag, Truck, DollarSign, Package } from 'lucide-react';
+import type { Product } from '../types';
+import { Search, Plus, ShoppingBag, Truck } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
+import { useAppFeedback } from '../components/useAppFeedback';
 
 export default function Purchases() {
+  const { notify } = useAppFeedback();
   const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [cart, setCart] = useState<{product: Product, quantity: number, costPrice: number}[]>([]);
@@ -54,7 +56,11 @@ export default function Purchases() {
   const handlePurchase = async () => {
     if (cart.length === 0) return;
     if (!supplier.trim()) {
-      alert('Mohon isi nama supplier');
+      notify({
+        title: 'Nama supplier belum diisi',
+        description: 'Masukkan nama supplier sebelum memproses restock.',
+        tone: 'error',
+      });
       return;
     }
     setProcessing(true);
@@ -109,10 +115,18 @@ export default function Purchases() {
       setCart([]);
       setSupplier('');
       setShippingCost(0);
-      alert('Pembelian berhasil disimpan! Stok telah bertambah.');
+      notify({
+        title: 'Pembelian berhasil disimpan',
+        description: 'Stok produk sudah ditambahkan ke inventaris.',
+        tone: 'success',
+      });
     } catch (error) {
       console.error('Error processing purchase:', error);
-      alert('Gagal menyimpan pembelian');
+      notify({
+        title: 'Pembelian gagal disimpan',
+        description: 'Periksa data pembelian lalu coba lagi.',
+        tone: 'error',
+      });
     } finally {
       setProcessing(false);
     }

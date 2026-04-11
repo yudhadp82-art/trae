@@ -16,20 +16,25 @@ import {
   YAxis, 
   CartesianGrid, 
   Tooltip, 
-  ResponsiveContainer,
-  BarChart,
-  Bar
+  ResponsiveContainer
 } from 'recharts';
-import { collection, query, orderBy, onSnapshot, where, Timestamp } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '../api/firebase';
-import { Sale, Product, SavingsAccount, InventoryLog } from '../types';
+import type { Sale, Product, SavingsAccount } from '../types';
+
+type StatCardProps = {
+  title: string;
+  value: string | number;
+  icon: React.ComponentType<{ className?: string }>;
+  color: string;
+  trend?: number;
+};
 
 export default function Dashboard() {
   const [sales, setSales] = useState<Sale[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [totalSavings, setTotalSavings] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [inventoryLogs, setInventoryLogs] = useState<InventoryLog[]>([]);
 
   useEffect(() => {
     // Fetch Sales
@@ -121,13 +126,13 @@ export default function Dashboard() {
 
   const chartData = getLast7DaysData();
 
-  const StatCard = ({ title, value, icon: Icon, color, trend }: any) => (
-    <div className="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
+  const StatCard = ({ title, value, icon: Icon, color, trend }: StatCardProps) => (
+    <div className="section-shell p-5 md:p-6">
       <div className="flex items-center justify-between mb-4">
-        <div className={`p-3 rounded-lg ${color}`}>
+        <div className={`rounded-2xl p-3 shadow-lg shadow-slate-200/60 ${color}`}>
           <Icon className="w-6 h-6 text-white" />
         </div>
-        {trend && (
+        {typeof trend === 'number' && (
           <div className={`flex items-center text-sm font-medium ${trend > 0 ? 'text-emerald-600' : 'text-red-600'}`}>
             {trend > 0 ? <ArrowUpRight className="w-4 h-4 mr-1" /> : <ArrowDownRight className="w-4 h-4 mr-1" />}
             {Math.abs(trend)}%
@@ -143,7 +148,28 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-slate-800">Dashboard Overview</h1>
+      <section className="relative overflow-hidden rounded-[32px] border border-white/70 bg-[linear-gradient(135deg,rgba(127,29,29,0.96),rgba(185,28,28,0.94)_45%,rgba(249,115,22,0.88))] px-6 py-7 text-white shadow-[0_24px_80px_rgba(127,29,29,0.24)] md:px-8 md:py-9">
+        <div className="absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.18),transparent_58%)]" />
+        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-red-100/80">Ringkasan Operasional</p>
+            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Dashboard KDMP yang lebih cepat dibaca</h1>
+            <p className="mt-3 max-w-xl text-sm text-red-50/82 md:text-base">
+              Pantau pendapatan, nilai aset inventaris, dan ritme transaksi harian dalam satu permukaan yang lebih jelas.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-3 md:min-w-[340px]">
+            <div className="rounded-2xl border border-white/12 bg-white/10 p-4 backdrop-blur-md">
+              <div className="text-xs uppercase tracking-[0.2em] text-red-100/75">Transaksi</div>
+              <div className="mt-2 text-2xl font-bold">{totalOrders}</div>
+            </div>
+            <div className="rounded-2xl border border-white/12 bg-black/10 p-4 backdrop-blur-md">
+              <div className="text-xs uppercase tracking-[0.2em] text-red-100/75">Rata-rata</div>
+              <div className="mt-2 text-2xl font-bold">Rp {(Math.round(averageOrderValue) || 0).toLocaleString()}</div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -193,8 +219,9 @@ export default function Dashboard() {
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Revenue Chart */}
-        <div className="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
-          <h3 className="text-lg font-bold text-slate-800 mb-6">Revenue Overview</h3>
+        <div className="section-shell lg:col-span-2 p-6">
+          <p className="section-headline mb-2">7 Hari Terakhir</p>
+          <h3 className="text-xl font-bold text-slate-800 mb-6">Revenue Overview</h3>
           <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData}>
@@ -218,8 +245,9 @@ export default function Dashboard() {
         </div>
 
         {/* Recent Activity / Low Stock */}
-        <div className="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
-          <h3 className="text-lg font-bold text-slate-800 mb-6">Low Stock Alert</h3>
+        <div className="section-shell p-6">
+          <p className="section-headline mb-2">Perlu Tindakan</p>
+          <h3 className="text-xl font-bold text-slate-800 mb-6">Low Stock Alert</h3>
           <div className="space-y-4">
             {lowStockProducts.length === 0 ? (
               <p className="text-slate-500 text-center py-4">All stock levels are good!</p>
@@ -250,8 +278,9 @@ export default function Dashboard() {
       </div>
 
       {/* Recent Transactions Table */}
-      <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-slate-100">
+      <div className="section-shell overflow-hidden">
+        <div className="border-b border-slate-100/80 p-6">
+          <p className="section-headline mb-2">Aktivitas Terakhir</p>
           <h3 className="text-lg font-bold text-slate-800">Recent Transactions</h3>
         </div>
         <div className="overflow-x-auto">

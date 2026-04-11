@@ -1,22 +1,54 @@
 import { useState, useEffect } from 'react';
-import { collection, query, orderBy, onSnapshot, where, doc, updateDoc, serverTimestamp, increment, addDoc, deleteDoc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, doc, updateDoc, serverTimestamp, increment, addDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../api/firebase';
-import { useState, useEffect } from 'react';
+import type { CartItem, Customer, Sale, SavingsAccount } from '../types';
 // Force Vercel Rebuild Trigger
 import { Search, Calendar, CheckCircle, Clock, FileText, User, TrendingUp, Download, Wallet, ShoppingBag, X, ChevronDown, ChevronRight, Edit, Trash2, Printer, Package, BookOpen } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { useAppFeedback } from '../components/useAppFeedback';
+
+type SaleWithPayment = Sale & { amountPaid?: number };
+type DebtPayment = {
+  id: string;
+  amount?: number;
+  createdAt?: Date;
+  customerId?: string;
+  customerName?: string;
+  saleId?: string;
+  remainingDebtOnTransaction?: number;
+};
+type MemberPurchaseItem = {
+  id: string;
+  saleId: string;
+  date: Date;
+  memberName: string;
+  memberId: string;
+  itemName: string;
+  quantity: number;
+  total: number;
+  margin: number;
+};
+type JsPdfWithAutoTable = jsPDF & {
+  lastAutoTable?: {
+    finalY: number;
+  };
+};
+
+function getAmountPaid(sale: SaleWithPayment | null): number {
+  return sale?.amountPaid || 0;
+}
 
 export default function Reports() {
+  const { notify, confirm } = useAppFeedback();
   const [activeTab, setActiveTab] = useState<'sales' | 'debts' | 'profit' | 'savings' | 'member_purchases' | 'product_sales' | 'financial_statement'>('sales');
   const [sales, setSales] = useState<Sale[]>([]);
   const [debts, setDebts] = useState<Sale[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [savingsAccounts, setSavingsAccounts] = useState<SavingsAccount[]>([]);
-  const [debtPayments, setDebtPayments] = useState<any[]>([]); 
+  const [debtPayments, setDebtPayments] = useState<DebtPayment[]>([]); 
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(true);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   
@@ -35,7 +67,7 @@ export default function Reports() {
 
   // Modal State for Partial Payment
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [selectedDebtSale, setSelectedDebtSale] = useState<Sale | null>(null);
+  const [selectedDebtSale, setSelectedDebtSale] = useState<SaleWithPayment | null>(null);
   const [paymentAmount, setPaymentAmount] = useState<string>('');
   const [processingPayment, setProcessingPayment] = useState(false);
 
@@ -45,7 +77,7 @@ export default function Reports() {
   const [editedCustomerName, setEditedCustomerName] = useState('');
   const [editedPaymentMethod, setEditedPaymentMethod] = useState<'cash' | 'debt'>('cash');
   const [editedPaymentStatus, setEditedPaymentStatus] = useState<'paid' | 'pending'>('paid');
-  const [editedItems, setEditedItems] = useState<any[]>([]);
+  const [editedItems, setEditedItems] = useState<CartItem[]>([]);
   const [processingEdit, setProcessingEdit] = useState(false);
 
   // Fetch Data
@@ -60,7 +92,6 @@ export default function Reports() {
       
       setSales(salesData);
       setDebts(salesData.filter(sale => sale.paymentStatus === 'pending'));
-      setLoading(false);
     });
 
     // Fetch Debt Payments
@@ -113,7 +144,7 @@ export default function Reports() {
     // Let's implement robust partial payment:
     // 1. Check if sale has 'amountPaid'. If not, 0.
     // 2. Remaining = totalAmount - amountPaid.
-    const paid = (sale as any).amountPaid || 0;
+    const paid = getAmountPaid(sale);
     const remaining = (sale.totalAmount || 0) - paid;
     setPaymentAmount(remaining.toString());
     setIsPaymentModalOpen(true);
@@ -125,16 +156,24 @@ export default function Reports() {
 
     const amount = Number(paymentAmount);
     if (amount <= 0) {
-      alert('Jumlah pembayaran harus lebih dari 0');
+      notify({
+        title: 'Jumlah pembayaran tidak valid',
+        description: 'Masukkan nominal yang lebih dari 0.',
+        tone: 'error',
+      });
       return;
     }
 
-    const currentPaid = (selectedDebtSale as any).amountPaid || 0;
+    const currentPaid = getAmountPaid(selectedDebtSale);
     const total = selectedDebtSale.totalAmount || 0;
     const remaining = total - currentPaid;
 
     if (amount > remaining) {
-      alert(`Pembayaran melebihi sisa hutang (Rp ${remaining.toLocaleString()})`);
+      notify({
+        title: 'Nominal melebihi sisa hutang',
+        description: `Sisa hutang saat ini Rp ${remaining.toLocaleString()}.`,
+        tone: 'error',
+      });
       return;
     }
 
@@ -172,13 +211,21 @@ export default function Reports() {
         note: `Angsuran Transaksi #${selectedDebtSale.id.slice(0,8)}`
       });
 
-      alert('Pembayaran berhasil dicatat!');
+      notify({
+        title: 'Pembayaran berhasil dicatat',
+        description: 'Riwayat angsuran dan saldo hutang sudah diperbarui.',
+        tone: 'success',
+      });
       setIsPaymentModalOpen(false);
       setSelectedDebtSale(null);
       setPaymentAmount('');
     } catch (error) {
       console.error('Error processing debt payment:', error);
-      alert('Gagal memproses pembayaran.');
+      notify({
+        title: 'Pembayaran gagal diproses',
+        description: 'Coba ulangi pencatatan angsuran.',
+        tone: 'error',
+      });
     } finally {
       setProcessingPayment(false);
     }
@@ -186,7 +233,13 @@ export default function Reports() {
 
   // Delete Transaction
   const handleDeleteSale = async (sale: Sale) => {
-    if (!confirm(`Apakah Anda yakin ingin menghapus transaksi #${sale.id.slice(0, 8)}? Stok akan dikembalikan dan data tidak dapat dipulihkan.`)) return;
+    const confirmed = await confirm({
+      title: `Hapus transaksi #${sale.id.slice(0, 8)}?`,
+      description: 'Stok akan dikembalikan dan data transaksi tidak dapat dipulihkan.',
+      confirmLabel: 'Hapus transaksi',
+      tone: 'danger',
+    });
+    if (!confirmed) return;
 
     try {
       // 1. Restore Stock
@@ -217,7 +270,7 @@ export default function Reports() {
         
         let debtChange = 0;
         if (sale.paymentStatus === 'pending') {
-            debtChange = -((sale.totalAmount || 0) - ((sale as any).amountPaid || 0));
+            debtChange = -((sale.totalAmount || 0) - getAmountPaid(sale));
         }
 
         await updateDoc(customerRef, {
@@ -233,10 +286,18 @@ export default function Reports() {
       // const { deleteDoc } = await import('firebase/firestore'); // Removed dynamic import
       await deleteDoc(doc(db, 'sales', sale.id));
 
-      alert('Transaksi berhasil dihapus.');
+      notify({
+        title: 'Transaksi berhasil dihapus',
+        description: 'Stok dan data pelanggan terkait sudah disesuaikan.',
+        tone: 'success',
+      });
     } catch (error) {
       console.error('Error deleting transaction:', error);
-      alert('Gagal menghapus transaksi.');
+      notify({
+        title: 'Transaksi gagal dihapus',
+        description: 'Coba ulangi proses penghapusan.',
+        tone: 'error',
+      });
     }
   };
 
@@ -340,12 +401,20 @@ export default function Reports() {
         updatedAt: serverTimestamp()
       });
 
-      alert('Transaksi berhasil diperbarui!');
+      notify({
+        title: 'Transaksi berhasil diperbarui',
+        description: 'Perubahan item, pembayaran, dan stok sudah tersimpan.',
+        tone: 'success',
+      });
       setIsEditModalOpen(false);
       setEditingSale(null);
     } catch (error) {
       console.error('Error updating transaction:', error);
-      alert('Gagal memperbarui transaksi.');
+      notify({
+        title: 'Transaksi gagal diperbarui',
+        description: 'Periksa perubahan data lalu coba lagi.',
+        tone: 'error',
+      });
     } finally {
       setProcessingEdit(false);
     }
@@ -477,7 +546,7 @@ export default function Reports() {
     acc[curr.memberId].totalSpent += curr.total;
     acc[curr.memberId].items.push(curr);
     return acc;
-  }, {} as Record<string, { memberId: string, memberName: string, totalSpent: number, items: typeof memberPurchasesRaw }>);
+  }, {} as Record<string, { memberId: string, memberName: string, totalSpent: number, items: MemberPurchaseItem[] }>);
 
   const memberPurchasesList = Object.values(memberPurchasesGrouped);
 
@@ -602,7 +671,7 @@ export default function Reports() {
   };
 
   const exportToPDF = () => {
-    const doc = new jsPDF();
+    const doc = new jsPDF() as JsPdfWithAutoTable;
     const title = activeTab === 'sales' ? 'Laporan Penjualan' : 
                   activeTab === 'debts' ? 'Laporan Hutang' : 
                   activeTab === 'profit' ? 'Laporan Laba' : 
@@ -691,7 +760,7 @@ export default function Reports() {
             }
         });
 
-        const nextY = (doc as any).lastAutoTable.finalY + 20;
+        const nextY = (doc.lastAutoTable?.finalY || 50) + 20;
         doc.setFontSize(14);
         doc.text('Laporan Posisi Keuangan (Neraca)', 14, nextY);
 
@@ -762,7 +831,7 @@ export default function Reports() {
           const totalItems = data.reduce((sum, sale) => sum + (sale.items?.reduce((s, i) => s + i.quantity, 0) || 0), 0);
           const totalMargin = data.reduce((sum, sale) => sum + calculateProfit(sale), 0);
 
-          let finalY = (doc as any).lastAutoTable.finalY + 10;
+          let finalY = (doc.lastAutoTable?.finalY || 40) + 10;
           const pageHeight = doc.internal.pageSize.height;
           
           // Check if there is enough space for the summary (approx 50 units)
@@ -831,13 +900,41 @@ export default function Reports() {
 
   return (
     <div className="space-y-6">
+      <section className="relative overflow-hidden rounded-[32px] border border-white/70 bg-[linear-gradient(135deg,rgba(88,28,135,0.96),rgba(79,70,229,0.9)_48%,rgba(14,165,233,0.8))] px-6 py-7 text-white shadow-[0_24px_80px_rgba(79,70,229,0.2)] md:px-8 md:py-9">
+        <div className="absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.18),transparent_58%)]" />
+        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-indigo-100/75">Insights & Finance</p>
+            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Laporan yang lebih terstruktur</h1>
+            <p className="mt-3 max-w-xl text-sm text-indigo-50/84 md:text-base">
+              Tinjau penjualan, hutang, margin, simpanan, dan pembelian anggota dari panel analitik yang lebih tenang dan lebih padat informasi.
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-3 md:min-w-[360px]">
+            <div className="rounded-2xl border border-white/12 bg-white/10 p-4 backdrop-blur-md">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-indigo-100/75">Transaksi</div>
+              <div className="mt-2 text-2xl font-bold">{sales.length}</div>
+            </div>
+            <div className="rounded-2xl border border-white/12 bg-black/10 p-4 backdrop-blur-md">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-indigo-100/75">Piutang</div>
+              <div className="mt-2 text-2xl font-bold">Rp {totalDebt.toLocaleString()}</div>
+            </div>
+            <div className="rounded-2xl border border-white/12 bg-white/10 p-4 backdrop-blur-md">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-indigo-100/75">Laba</div>
+              <div className="mt-2 text-2xl font-bold">Rp {totalProfit.toLocaleString()}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Laporan & Keuangan</h1>
+          <p className="section-headline mb-2">Analitik</p>
+          <h2 className="text-2xl font-bold text-slate-800">Laporan & Keuangan</h2>
           <p className="text-slate-500 text-sm">Kelola laporan penjualan, piutang, dan simpanan anggota</p>
         </div>
         
-        <div className="flex bg-white rounded-lg p-1 border border-slate-200 shadow-sm overflow-x-auto max-w-full">
+        <div className="flex max-w-full overflow-x-auto rounded-2xl border border-slate-200 bg-white/85 p-1.5 shadow-sm backdrop-blur-md">
           <button
             onClick={exportToPDF}
             className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-red-600 transition-colors mr-2 border-r border-slate-100 whitespace-nowrap"
@@ -943,7 +1040,7 @@ export default function Reports() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-xl border border-emerald-100 shadow-sm flex items-center justify-between">
+        <div className="section-shell flex items-center justify-between p-5">
           <div>
             <p className="text-slate-500 text-xs font-medium uppercase tracking-wider">Pendapatan</p>
             <h3 className="text-xl font-bold text-emerald-600">Rp {(totalRevenue || 0).toLocaleString()}</h3>
@@ -952,7 +1049,7 @@ export default function Reports() {
             <CheckCircle className="w-5 h-5 text-emerald-500" />
           </div>
         </div>
-        <div className="bg-white p-5 rounded-xl border border-amber-100 shadow-sm flex items-center justify-between">
+        <div className="section-shell flex items-center justify-between p-5">
           <div>
             <p className="text-slate-500 text-xs font-medium uppercase tracking-wider">Piutang</p>
             <h3 className="text-xl font-bold text-amber-600">Rp {(totalDebt || 0).toLocaleString()}</h3>
@@ -961,7 +1058,7 @@ export default function Reports() {
             <Clock className="w-5 h-5 text-amber-500" />
           </div>
         </div>
-        <div className="bg-white p-5 rounded-xl border border-purple-100 shadow-sm flex items-center justify-between">
+        <div className="section-shell flex items-center justify-between p-5">
           <div>
             <p className="text-slate-500 text-xs font-medium uppercase tracking-wider">Total Simpanan</p>
             <h3 className="text-xl font-bold text-purple-600">Rp {(totalSavingsAll || 0).toLocaleString()}</h3>
@@ -970,7 +1067,7 @@ export default function Reports() {
             <Wallet className="w-5 h-5 text-purple-500" />
           </div>
         </div>
-        <div className="bg-white p-5 rounded-xl border border-blue-100 shadow-sm flex items-center justify-between">
+        <div className="section-shell flex items-center justify-between p-5">
           <div>
             <p className="text-slate-500 text-xs font-medium uppercase tracking-wider">Laba Kotor</p>
             <h3 className="text-xl font-bold text-blue-600">Rp {(totalProfit || 0).toLocaleString()}</h3>
@@ -982,7 +1079,7 @@ export default function Reports() {
       </div>
 
       {/* Search and Date Filter */}
-      <div className="flex flex-col md:flex-row gap-4 justify-between">
+      <div className="section-shell flex flex-col gap-4 justify-between p-4 md:flex-row">
         <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <input
@@ -990,12 +1087,12 @@ export default function Reports() {
             placeholder={activeTab === 'sales' ? "Cari ID Transaksi atau Nama..." : activeTab === 'member_purchases' ? "Cari Anggota atau Barang..." : activeTab === 'product_sales' ? "Cari Nama Barang..." : "Cari Nama Pelanggan..."}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm"
+            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 pl-10 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
         </div>
         
         <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2 shadow-sm">
+            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-sm">
                 <span className="text-slate-500 text-sm">Dari:</span>
                 <input 
                     type="date" 
@@ -1004,7 +1101,7 @@ export default function Reports() {
                     className="outline-none text-slate-700 text-sm"
                 />
             </div>
-            <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2 shadow-sm">
+            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-sm">
                 <span className="text-slate-500 text-sm">Sampai:</span>
                 <input 
                     type="date" 
@@ -1026,7 +1123,7 @@ export default function Reports() {
       </div>
 
       {/* Content Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="section-shell overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50 text-slate-600 font-medium">
@@ -1396,7 +1493,7 @@ export default function Reports() {
                           {activeTab === 'debts' && (
                             <div className="flex flex-col items-end gap-1">
                               <span className="text-xs text-slate-500">
-                                Terbayar: Rp {((sale as any).amountPaid || 0).toLocaleString()}
+                                Terbayar: Rp {getAmountPaid(sale).toLocaleString()}
                               </span>
                               <button
                                 onClick={() => openPaymentModal(sale)}
@@ -1468,7 +1565,7 @@ export default function Reports() {
                 <div className="flex justify-between text-sm pt-2 border-t border-slate-200 mt-2">
                   <span className="text-slate-500">Sisa Hutang</span>
                   <span className="font-bold text-red-600">
-                    Rp {((selectedDebtSale.totalAmount || 0) - ((selectedDebtSale as any).amountPaid || 0)).toLocaleString()}
+                    Rp {((selectedDebtSale.totalAmount || 0) - getAmountPaid(selectedDebtSale)).toLocaleString()}
                   </span>
                 </div>
               </div>
@@ -1481,7 +1578,7 @@ export default function Reports() {
                     type="number"
                     required
                     min="1"
-                    max={(selectedDebtSale.totalAmount || 0) - ((selectedDebtSale as any).amountPaid || 0)}
+                    max={(selectedDebtSale.totalAmount || 0) - getAmountPaid(selectedDebtSale)}
                     value={paymentAmount}
                     onChange={(e) => setPaymentAmount(e.target.value)}
                     className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold text-lg"
@@ -1602,11 +1699,19 @@ export default function Reports() {
                             <button
                               type="button"
                               onClick={() => {
-                                if (confirm('Hapus item ini? Stok akan dikembalikan.')) {
+                                const removeItem = async () => {
+                                  const confirmed = await confirm({
+                                    title: 'Hapus item ini?',
+                                    description: 'Stok akan dikembalikan saat transaksi disimpan.',
+                                    confirmLabel: 'Hapus item',
+                                    tone: 'danger',
+                                  });
+                                  if (!confirmed) return;
                                   const newItems = [...editedItems];
                                   newItems.splice(index, 1);
                                   setEditedItems(newItems);
-                                }
+                                };
+                                void removeItem();
                               }}
                               className="text-red-400 hover:text-red-600"
                             >

@@ -13,6 +13,7 @@ import {
 import { db } from '../api/firebase';
 import { Sale, Product, Customer } from '../types';
 import { useAuthStore } from '../store/authStore';
+import { useAppFeedback } from '../components/useAppFeedback';
 import { 
   Send, 
   Plus, 
@@ -21,15 +22,14 @@ import {
   CheckCircle, 
   Clock, 
   Trash2, 
-  ExternalLink,
   MessageCircle,
   ShoppingBag,
-  User,
   X
 } from 'lucide-react';
 
 export default function TelegramOrders() {
   const { user } = useAuthStore();
+  const { notify } = useAppFeedback();
   const [orders, setOrders] = useState<Sale[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -124,11 +124,19 @@ export default function TelegramOrders() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (cart.length === 0) {
-      alert('Keranjang pesanan kosong!');
+      notify({
+        title: 'Keranjang pesanan masih kosong',
+        description: 'Tambahkan minimal satu produk sebelum menyimpan pesanan.',
+        tone: 'error',
+      });
       return;
     }
     if (!customerName && !selectedCustomer) {
-      alert('Nama pelanggan harus diisi!');
+      notify({
+        title: 'Nama pelanggan belum diisi',
+        description: 'Pilih pelanggan yang sudah ada atau isi nama pelanggan baru.',
+        tone: 'error',
+      });
       return;
     }
 
@@ -160,10 +168,18 @@ export default function TelegramOrders() {
       setCart([]);
       setCustomerName('');
       setSelectedCustomer(null);
-      alert('Pesanan Telegram berhasil ditambahkan!');
+      notify({
+        title: 'Pesanan Telegram berhasil ditambahkan',
+        description: 'Pesanan baru sudah masuk ke daftar dan siap diproses.',
+        tone: 'success',
+      });
     } catch (error) {
       console.error('Error adding order:', error);
-      alert('Gagal menambahkan pesanan.');
+      notify({
+        title: 'Pesanan gagal ditambahkan',
+        description: 'Periksa koneksi dan coba simpan ulang beberapa saat lagi.',
+        tone: 'error',
+      });
     }
   };
 
@@ -172,9 +188,18 @@ export default function TelegramOrders() {
       await updateDoc(doc(db, 'sales', orderId), {
         paymentStatus: status
       });
+      notify({
+        title: status === 'paid' ? 'Status pembayaran diperbarui' : 'Pesanan dikembalikan ke pending',
+        description: status === 'paid' ? 'Pesanan Telegram sudah ditandai lunas.' : 'Status pembayaran berhasil diubah.',
+        tone: 'success',
+      });
     } catch (error) {
       console.error('Error updating status:', error);
-      alert('Gagal update status pembayaran');
+      notify({
+        title: 'Status pembayaran gagal diperbarui',
+        description: 'Coba ulangi perubahan status pada pesanan ini.',
+        tone: 'error',
+      });
     }
   };
 
@@ -191,7 +216,11 @@ No HP: [Nomor WhatsApp/Telegram]
 Terima kasih!
     `.trim();
     navigator.clipboard.writeText(format);
-    alert('Format pesanan disalin! Kirimkan ke pelanggan.');
+    notify({
+      title: 'Format pesanan disalin',
+      description: 'Template pesan siap dikirim ke pelanggan.',
+      tone: 'success',
+    });
   };
 
   const filteredOrders = orders.filter(order => 

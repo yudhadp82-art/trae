@@ -14,6 +14,7 @@ import {
 import { db } from '../api/firebase';
 import { Customer, Sale } from '../types';
 import * as XLSX from 'xlsx';
+import { useAppFeedback } from '../components/useAppFeedback';
 import { 
   Search, 
   Plus, 
@@ -29,11 +30,18 @@ import {
   Loader,
   FileSpreadsheet,
   History,
-  TrendingUp,
-  Package
 } from 'lucide-react';
 
+type ImportCustomerRow = {
+  'Member ID'?: string | number;
+  Name?: string | number;
+  Phone?: string | number;
+  Address?: string | number;
+  'Join Date'?: string | number | Date;
+};
+
 export default function Customers() {
+  const { notify, confirm } = useAppFeedback();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [sales, setSales] = useState<Sale[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -160,7 +168,11 @@ export default function Customers() {
     e.preventDefault();
     
     if (!formData.memberId.trim() || !formData.name.trim()) {
-      alert('Member ID and Name are required!');
+      notify({
+        title: 'Nomor anggota dan nama wajib diisi',
+        description: 'Lengkapi data utama pelanggan sebelum disimpan.',
+        tone: 'error',
+      });
       return;
     }
 
@@ -184,20 +196,44 @@ export default function Customers() {
         });
       }
       setIsModalOpen(false);
+      notify({
+        title: editingCustomer ? 'Data pelanggan diperbarui' : 'Pelanggan baru ditambahkan',
+        description: 'Perubahan data pelanggan sudah tersimpan.',
+        tone: 'success',
+      });
     } catch (error) {
       console.error('Error saving customer:', error);
-      alert('Failed to save customer');
+      notify({
+        title: 'Data pelanggan gagal disimpan',
+        description: 'Coba ulangi proses penyimpanan beberapa saat lagi.',
+        tone: 'error',
+      });
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('Are you sure you want to delete this customer?')) {
-      try {
-        await deleteDoc(doc(db, 'customers', id));
-      } catch (error) {
-        console.error('Error deleting customer:', error);
-        alert('Failed to delete customer');
-      }
+    const confirmed = await confirm({
+      title: 'Hapus pelanggan ini?',
+      description: 'Data pelanggan akan dihapus permanen dari daftar.',
+      confirmLabel: 'Hapus',
+      tone: 'danger',
+    });
+
+    if (!confirmed) return;
+
+    try {
+      await deleteDoc(doc(db, 'customers', id));
+      notify({
+        title: 'Pelanggan berhasil dihapus',
+        tone: 'success',
+      });
+    } catch (error) {
+      console.error('Error deleting customer:', error);
+      notify({
+        title: 'Pelanggan gagal dihapus',
+        description: 'Coba ulangi proses penghapusan.',
+        tone: 'error',
+      });
     }
   };
 
@@ -244,7 +280,7 @@ export default function Customers() {
         const wb = XLSX.read(bstr, { type: 'binary' });
         const wsname = wb.SheetNames[0];
         const ws = wb.Sheets[wsname];
-        const data = XLSX.utils.sheet_to_json(ws) as any[];
+        const data = XLSX.utils.sheet_to_json<ImportCustomerRow>(ws);
 
         const batch = writeBatch(db);
         let count = 0;
@@ -327,10 +363,18 @@ export default function Customers() {
         });
 
         await batch.commit();
-        alert(`Berhasil mengimpor ${count} pelanggan!`);
+        notify({
+          title: `Berhasil mengimpor ${count} pelanggan`,
+          description: 'Data pelanggan dari Excel sudah diproses.',
+          tone: 'success',
+        });
       } catch (error) {
         console.error('Import failed:', error);
-        alert('Gagal mengimpor file Excel. Pastikan format sesuai.');
+        notify({
+          title: 'Import pelanggan gagal',
+          description: 'Periksa format file Excel lalu coba lagi.',
+          tone: 'error',
+        });
       } finally {
         setImporting(false);
         // Reset file input
@@ -362,9 +406,37 @@ export default function Customers() {
 
   return (
     <div className="space-y-6">
+      <section className="relative overflow-hidden rounded-[32px] border border-white/70 bg-[linear-gradient(135deg,rgba(2,132,199,0.96),rgba(14,116,144,0.92)_45%,rgba(15,23,42,0.78))] px-6 py-7 text-white shadow-[0_24px_80px_rgba(14,116,144,0.2)] md:px-8 md:py-9">
+        <div className="absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.16),transparent_58%)]" />
+        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-sky-100/75">Customer Ledger</p>
+            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Anggota lebih rapi, riwayat lebih jelas</h1>
+            <p className="mt-3 max-w-xl text-sm text-slate-100/82 md:text-base">
+              Kelola data pelanggan, impor Excel, dan lihat histori pembelian dari panel yang lebih mudah discan.
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-3 md:min-w-[360px]">
+            <div className="rounded-2xl border border-white/12 bg-white/10 p-4 backdrop-blur-md">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-sky-100/75">Pelanggan</div>
+              <div className="mt-2 text-2xl font-bold">{customers.length}</div>
+            </div>
+            <div className="rounded-2xl border border-white/12 bg-black/10 p-4 backdrop-blur-md">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-sky-100/75">Hasil Filter</div>
+              <div className="mt-2 text-2xl font-bold">{filteredCustomers.length}</div>
+            </div>
+            <div className="rounded-2xl border border-white/12 bg-white/10 p-4 backdrop-blur-md">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-sky-100/75">Transaksi</div>
+              <div className="mt-2 text-2xl font-bold">{sales.length}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Manajemen Pelanggan</h1>
+          <p className="section-headline mb-2">Customer Registry</p>
+          <h2 className="text-2xl font-bold text-slate-800">Manajemen Pelanggan</h2>
           <p className="text-slate-500 text-sm">Kelola data anggota dan pelanggan toko</p>
         </div>
         <div className="flex gap-2">

@@ -5,17 +5,33 @@ import {
   query, 
   where, 
   addDoc, 
-  updateDoc, 
   serverTimestamp,
-  Timestamp,
   orderBy,
   runTransaction
 } from 'firebase/firestore';
 import { db } from './firebase';
-import { SavingsAccount, SavingsTransaction } from '../types';
+import type { SavingsAccount, SavingsTransaction } from '../types';
 
 const SAVINGS_COLLECTION = 'savings_accounts';
 const TRANSACTIONS_COLLECTION = 'savings_transactions';
+
+type SavingsAccountRecord = {
+  customerId: string;
+  balanceWajib: number;
+  balanceSukarela: number;
+  balancePokok: number;
+  createdAt?: unknown;
+  updatedAt?: unknown;
+  lastWajibPayment?: unknown;
+};
+
+type SavingsAccountUpdate = {
+  balanceWajib: number;
+  balanceSukarela: number;
+  balancePokok: number;
+  updatedAt: ReturnType<typeof serverTimestamp>;
+  lastWajibPayment?: ReturnType<typeof serverTimestamp>;
+};
 
 export const getSavingsAccount = async (customerId: string): Promise<SavingsAccount | null> => {
   const q = query(collection(db, SAVINGS_COLLECTION), where('customerId', '==', customerId));
@@ -71,7 +87,7 @@ export const processTransaction = async (
       const querySnapshot = await getDocs(q);
       
       let accountRef;
-      let currentAccount: any;
+      let currentAccount: SavingsAccountRecord;
       
       if (querySnapshot.empty) {
         // Create new account reference
@@ -87,7 +103,7 @@ export const processTransaction = async (
         transaction.set(accountRef, currentAccount);
       } else {
         accountRef = querySnapshot.docs[0].ref;
-        currentAccount = querySnapshot.docs[0].data();
+        currentAccount = querySnapshot.docs[0].data() as SavingsAccountRecord;
       }
       
       // 2. Calculate new balance
@@ -115,7 +131,7 @@ export const processTransaction = async (
       }
       
       // 3. Update account
-      const updateData: any = {
+      const updateData: SavingsAccountUpdate = {
         balanceWajib: newBalanceWajib,
         balanceSukarela: newBalanceSukarela,
         balancePokok: newBalancePokok,

@@ -23,8 +23,10 @@ import {
 import { db } from '../api/firebase';
 import { Product } from '../types';
 import { useAuthStore } from '../store/authStore';
+import { useAppFeedback } from '../components/useAppFeedback';
 
 export default function Products() {
+  const { notify, confirm } = useAppFeedback();
   const [products, setProducts] = useState<Product[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -90,7 +92,11 @@ export default function Products() {
 
     // Validasi ukuran file (max 2MB)
     if (file.size > 2 * 1024 * 1024) {
-      alert('Ukuran file terlalu besar (Maksimal 2MB)');
+      notify({
+        title: 'Ukuran file terlalu besar',
+        description: 'Batas maksimum upload gambar adalah 2MB.',
+        tone: 'error',
+      });
       return;
     }
 
@@ -117,7 +123,11 @@ export default function Products() {
       }
     } catch (error) {
       console.error('Upload failed:', error);
-      alert('Gagal mengupload gambar. Silakan coba lagi atau gunakan URL manual.');
+      notify({
+        title: 'Upload gambar gagal',
+        description: 'Coba lagi atau gunakan URL gambar manual.',
+        tone: 'error',
+      });
     } finally {
       setUploading(false);
     }
@@ -147,18 +157,44 @@ export default function Products() {
         });
       }
       setIsModalOpen(false);
+      notify({
+        title: editingProduct ? 'Produk diperbarui' : 'Produk baru ditambahkan',
+        description: 'Perubahan katalog sudah tersimpan.',
+        tone: 'success',
+      });
     } catch (error) {
       console.error('Error saving product:', error);
+      notify({
+        title: 'Produk gagal disimpan',
+        description: 'Periksa data produk lalu coba lagi.',
+        tone: 'error',
+      });
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('Are you sure you want to delete this product?')) {
-      try {
-        await deleteDoc(doc(db, 'products', id));
-      } catch (error) {
-        console.error('Error deleting product:', error);
-      }
+    const confirmed = await confirm({
+      title: 'Hapus produk ini?',
+      description: 'Produk akan dihapus dari katalog.',
+      confirmLabel: 'Hapus',
+      tone: 'danger',
+    });
+
+    if (!confirmed) return;
+
+    try {
+      await deleteDoc(doc(db, 'products', id));
+      notify({
+        title: 'Produk berhasil dihapus',
+        tone: 'success',
+      });
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      notify({
+        title: 'Produk gagal dihapus',
+        description: 'Coba ulangi proses penghapusan.',
+        tone: 'error',
+      });
     }
   };
 
@@ -170,12 +206,42 @@ export default function Products() {
 
   return (
     <div className="space-y-6">
+      <section className="relative overflow-hidden rounded-[32px] border border-white/70 bg-[linear-gradient(135deg,rgba(15,23,42,0.96),rgba(30,41,59,0.92)_45%,rgba(14,116,144,0.8))] px-6 py-7 text-white shadow-[0_24px_80px_rgba(15,23,42,0.18)] md:px-8 md:py-9">
+        <div className="absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.16),transparent_58%)]" />
+        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-sky-100/75">Catalogue Control</p>
+            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Produk yang lebih mudah diaudit</h1>
+            <p className="mt-3 max-w-xl text-sm text-slate-100/80 md:text-base">
+              Kelola nama, kategori, stok, dan harga dari panel yang lebih padat informasi tapi tetap enak dibaca.
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-3 md:min-w-[360px]">
+            <div className="rounded-2xl border border-white/12 bg-white/10 p-4 backdrop-blur-md">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-sky-100/75">Produk</div>
+              <div className="mt-2 text-2xl font-bold">{products.length}</div>
+            </div>
+            <div className="rounded-2xl border border-white/12 bg-black/10 p-4 backdrop-blur-md">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-sky-100/75">Hasil Filter</div>
+              <div className="mt-2 text-2xl font-bold">{filteredProducts.length}</div>
+            </div>
+            <div className="rounded-2xl border border-white/12 bg-white/10 p-4 backdrop-blur-md">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-sky-100/75">Stok Tipis</div>
+              <div className="mt-2 text-2xl font-bold">{products.filter((product) => (product.stock || 0) <= 5).length}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-2xl font-bold text-slate-800">Products</h1>
+        <div>
+          <p className="section-headline mb-2">Master Data</p>
+          <h2 className="text-2xl font-bold text-slate-800">Products</h2>
+        </div>
         {user?.role === 'admin' && (
           <button
             onClick={() => handleOpenModal()}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+            className="rounded-2xl bg-emerald-600 px-4 py-2.5 text-white shadow-lg shadow-emerald-200 transition-colors hover:bg-emerald-700 flex items-center gap-2"
           >
             <Plus className="w-5 h-5" />
             Add Product
@@ -183,8 +249,8 @@ export default function Products() {
         )}
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className="p-4 border-b border-slate-100">
+      <div className="section-shell overflow-hidden">
+        <div className="border-b border-slate-100/80 p-4 md:p-5">
           <div className="relative max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <input
@@ -199,7 +265,7 @@ export default function Products() {
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="bg-slate-50 text-slate-600 font-medium">
+            <thead className="bg-slate-50/90 text-slate-600 font-medium">
               <tr>
                 <th className="px-6 py-4">Product</th>
                 <th className="px-6 py-4">Category</th>
@@ -226,7 +292,7 @@ export default function Products() {
                 </tr>
               ) : (
                 filteredProducts.map((product) => (
-                  <tr key={product.id} className="hover:bg-slate-50 transition-colors">
+                  <tr key={product.id} className="transition-colors hover:bg-sky-50/40">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden">
@@ -243,7 +309,7 @@ export default function Products() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs font-medium">
+                      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
                         {product.categoryId}
                       </span>
                     </td>
@@ -285,8 +351,8 @@ export default function Products() {
       {/* Product Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
-            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+          <div className="w-full max-w-lg overflow-hidden rounded-[28px] bg-white shadow-[0_24px_80px_rgba(15,23,42,0.18)] animate-in fade-in zoom-in duration-200">
+            <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50 px-6 py-4">
               <h2 className="text-lg font-bold text-slate-800">
                 {editingProduct ? 'Edit Product' : 'Add New Product'}
               </h2>

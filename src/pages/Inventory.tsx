@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { collection, onSnapshot, query, orderBy, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../api/firebase';
-import { Product, InventoryLog } from '../types';
-import { Search, Plus, Minus, History, Save, X } from 'lucide-react';
+import type { Product, InventoryLog } from '../types';
+import { Search, Plus, Minus, Save, X } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
+import { useAppFeedback } from '../components/useAppFeedback';
 
 export default function Inventory() {
+  const { notify } = useAppFeedback();
   const [activeTab, setActiveTab] = useState<'stock' | 'history'>('stock');
   const [products, setProducts] = useState<Product[]>([]);
   const [logs, setLogs] = useState<InventoryLog[]>([]);
@@ -54,7 +56,12 @@ export default function Inventory() {
       // Get latest product data to ensure stock is accurate
       const currentProduct = products.find(p => p.id === selectedProduct.id);
       if (!currentProduct) {
-        alert('Product not found');
+        notify({
+          title: 'Produk tidak ditemukan',
+          description: 'Muat ulang data inventaris lalu coba lagi.',
+          tone: 'error',
+        });
+        setProcessing(false);
         return;
       }
 
@@ -63,7 +70,11 @@ export default function Inventory() {
         : currentProduct.stock - adjustmentQty;
 
       if (newStock < 0) {
-        alert('Insufficient stock!');
+        notify({
+          title: 'Stok tidak mencukupi',
+          description: 'Jumlah pengurangan melebihi stok yang tersedia.',
+          tone: 'error',
+        });
         setProcessing(false);
         return;
       }
@@ -89,10 +100,18 @@ export default function Inventory() {
       setSelectedProduct(null);
       setAdjustmentQty(0);
       setAdjustmentReason('');
-      alert('Stock updated successfully!');
+      notify({
+        title: 'Stok berhasil diperbarui',
+        description: 'Perubahan stok dan log inventaris sudah tersimpan.',
+        tone: 'success',
+      });
     } catch (error) {
       console.error('Error adjusting stock:', error);
-      alert('Failed to update stock');
+      notify({
+        title: 'Stok gagal diperbarui',
+        description: 'Coba ulangi penyesuaian stok beberapa saat lagi.',
+        tone: 'error',
+      });
     } finally {
       setProcessing(false);
     }
@@ -104,9 +123,39 @@ export default function Inventory() {
 
   return (
     <div className="space-y-6">
+      <section className="relative overflow-hidden rounded-[32px] border border-white/70 bg-[linear-gradient(135deg,rgba(120,53,15,0.96),rgba(234,88,12,0.9)_45%,rgba(245,158,11,0.78))] px-6 py-7 text-white shadow-[0_24px_80px_rgba(234,88,12,0.2)] md:px-8 md:py-9">
+        <div className="absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.18),transparent_58%)]" />
+        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-amber-100/75">Stock Control</p>
+            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Pergerakan stok lebih mudah diawasi</h1>
+            <p className="mt-3 max-w-xl text-sm text-amber-50/84 md:text-base">
+              Pantau stok aktif dan histori penyesuaian dari satu workspace inventaris yang lebih jelas.
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-3 md:min-w-[360px]">
+            <div className="rounded-2xl border border-white/12 bg-white/10 p-4 backdrop-blur-md">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-amber-100/75">Produk</div>
+              <div className="mt-2 text-2xl font-bold">{products.length}</div>
+            </div>
+            <div className="rounded-2xl border border-white/12 bg-black/10 p-4 backdrop-blur-md">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-amber-100/75">Stok Tipis</div>
+              <div className="mt-2 text-2xl font-bold">{products.filter((product) => (product.stock || 0) <= 5).length}</div>
+            </div>
+            <div className="rounded-2xl border border-white/12 bg-white/10 p-4 backdrop-blur-md">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-amber-100/75">Log</div>
+              <div className="mt-2 text-2xl font-bold">{logs.length}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-slate-800">Inventory Management</h1>
-        <div className="flex bg-white rounded-lg p-1 border border-slate-200">
+        <div>
+          <p className="section-headline mb-2">Inventory Desk</p>
+          <h2 className="text-2xl font-bold text-slate-800">Manajemen Inventaris</h2>
+        </div>
+        <div className="flex bg-white/85 rounded-2xl p-1.5 border border-slate-200 shadow-sm backdrop-blur-md">
           <button
             onClick={() => setActiveTab('stock')}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
@@ -115,7 +164,7 @@ export default function Inventory() {
                 : 'text-slate-600 hover:bg-slate-50'
             }`}
           >
-            Stock Levels
+            Stok Aktif
           </button>
           <button
             onClick={() => setActiveTab('history')}
@@ -125,7 +174,7 @@ export default function Inventory() {
                 : 'text-slate-600 hover:bg-slate-50'
             }`}
           >
-            History Logs
+            Riwayat Log
           </button>
         </div>
       </div>
@@ -137,7 +186,7 @@ export default function Inventory() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder="Cari produk..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -145,13 +194,13 @@ export default function Inventory() {
           </div>
 
           {/* Product Table */}
-          <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+          <div className="section-shell overflow-hidden">
             <table className="w-full text-left">
               <thead className="bg-slate-50 border-b border-slate-100">
                 <tr>
-                  <th className="px-6 py-4 font-semibold text-slate-600">Product Name</th>
-                  <th className="px-6 py-4 font-semibold text-slate-600">Current Stock</th>
-                  <th className="px-6 py-4 font-semibold text-slate-600 text-right">Actions</th>
+                  <th className="px-6 py-4 font-semibold text-slate-600">Nama Produk</th>
+                  <th className="px-6 py-4 font-semibold text-slate-600">Stok Saat Ini</th>
+                  <th className="px-6 py-4 font-semibold text-slate-600 text-right">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -190,7 +239,7 @@ export default function Inventory() {
         </>
       ) : (
         /* History Logs Table */
-        <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <div className="section-shell overflow-hidden">
           <table className="w-full text-left">
             <thead className="bg-slate-50 border-b border-slate-100">
               <tr>

@@ -1,34 +1,58 @@
-import { useState, useEffect, useRef } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Search, ShoppingCart, Minus, Plus, Trash2, CreditCard, Banknote, Package, User, ScanBarcode, X, Printer } from 'lucide-react';
 import { collection, onSnapshot, query, orderBy, serverTimestamp, writeBatch, doc, increment } from 'firebase/firestore';
 import { db } from '../api/firebase';
-import { Product, Customer, CartItem } from '../types';
+import type { Product, Customer, CartItem, User as AppUser } from '../types';
 import { useCartStore } from '../store/cartStore';
 import { useAuthStore } from '../store/authStore';
 import { useZxing } from "react-zxing";
+import { useReactToPrint } from 'react-to-print';
+import { useAppFeedback } from '../components/useAppFeedback';
+
+function getCustomerLabel(customer: Customer | null | string): string {
+  if (typeof customer === 'string') {
+    return customer || 'Umum';
+  }
+
+  if (customer && typeof customer === 'object') {
+    return customer.name;
+  }
+
+  return 'Umum';
+}
+
+type PaymentMethod = 'cash' | 'debt';
+
+type CustomerUpdatePayload = {
+  totalSpent: ReturnType<typeof increment>;
+  lastVisit: ReturnType<typeof serverTimestamp>;
+  debt?: ReturnType<typeof increment>;
+};
+
+type PrintableReceiptProps = {
+  items: CartItem[];
+  total: number;
+  user: AppUser | null;
+  customer: Customer | null | string;
+  paymentMethod: string;
+  date: Date;
+  cashAmount: number;
+  change: number;
+};
 
 // Receipt Component for Printing
-const PrintableReceipt = ({ 
-  items, 
-  total, 
-  user, 
-  customer, 
-  paymentMethod, 
+const PrintableReceipt = forwardRef<HTMLDivElement, PrintableReceiptProps>(({
+  items,
+  total,
+  user,
+  customer,
+  paymentMethod,
   date,
   cashAmount,
-  change
-}: { 
-  items: CartItem[], 
-  total: number, 
-  user: any, 
-  customer: Customer | null | string, 
-  paymentMethod: string, 
-  date: Date,
-  cashAmount: number,
-  change: number
-}) => {
+  change,
+}, ref) => {
   return (
-    <div className="hidden print:block p-4 font-mono text-xs w-[80mm] mx-auto">
+    <div ref={ref} className="w-[80mm] bg-white p-4 font-mono text-xs text-black">
       <div className="text-center mb-4">
         <h2 className="text-lg font-bold">TOKO RETAIL</h2>
         <p>Jl. Contoh No. 123</p>
@@ -46,7 +70,7 @@ const PrintableReceipt = ({
         </div>
         <div className="flex justify-between">
           <span>Plg:</span>
-          <span className="truncate max-w-[100px]">{typeof customer === 'object' && customer ? customer.name : (customer || 'Umum')}</span>
+          <span className="truncate max-w-[100px]">{getCustomerLabel(customer)}</span>
         </div>
       </div>
 
@@ -93,14 +117,18 @@ const PrintableReceipt = ({
       </div>
     </div>
   );
-};
+});
+
+PrintableReceipt.displayName = 'PrintableReceipt';
 
 export default function POS() {
+  const { notify, confirm } = useAppFeedback();
+  const receiptRef = useRef<HTMLDivElement>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [paymentMethod, setPaymentMethod] = useState<'cash' | 'debt'>('cash');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash');
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [customerSearch, setCustomerSearch] = useState('');
   const [processing, setProcessing] = useState(false);
@@ -121,13 +149,49 @@ export default function POS() {
 
   const { items, addToCart, removeFromCart, updateQuantity, getTotal, clearCart } = useCartStore();
   const { user } = useAuthStore();
+  const total = getTotal();
+  const handlePrintReceipt = useReactToPrint({
+    contentRef: receiptRef,
+    documentTitle: () => {
+      const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+      return `nota-${stamp}`;
+    },
+    pageStyle: `
+      @page {
+        size: 80mm auto;
+        margin: 4mm;
+      }
+
+      @media print {
+        html, body {
+          margin: 0;
+          padding: 0;
+          background: white;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+      }
+    `,
+    onPrintError: (_location, error) => {
+      console.error('Receipt print error:', error);
+      notify({
+        title: 'Gagal membuka print nota',
+        description: 'Periksa browser atau printer yang aktif lalu coba lagi.',
+        tone: 'error',
+      });
+    },
+  });
 
   const addToCartWithStockCheck = (product: Product) => {
     const existingItem = items.find(i => i.productId === product.id);
     const currentQty = existingItem ? existingItem.quantity : 0;
     
     if (currentQty + 1 > (product.stock || 0)) {
-      alert(`Stok ${product.name} habis atau tidak cukup!`);
+      notify({
+        title: `Stok ${product.name} tidak mencukupi`,
+        description: 'Kurangi jumlah item atau pilih produk lain.',
+        tone: 'error',
+      });
       return;
     }
     
@@ -135,7 +199,7 @@ export default function POS() {
   };
 
   const { ref } = useZxing({
-    onDecodeResult(result) {
+    onResult(result) {
       const code = result.getText();
       // Mencari produk berdasarkan ID (karena belum ada field barcode, kita pakai ID dulu)
       // Nanti bisa diganti: p.barcode === code
@@ -148,9 +212,17 @@ export default function POS() {
         audio.play().catch(() => {});
         
         setIsScanning(false); // Stop scanning after success? Or keep scanning? Let's stop to confirm.
-        alert(`Produk ditemukan: ${product.name}`);
+        notify({
+          title: `Produk ditemukan: ${product.name}`,
+          description: 'Produk sudah ditambahkan ke keranjang.',
+          tone: 'success',
+        });
       } else {
-        alert(`Produk dengan kode "${code}" tidak ditemukan!`);
+        notify({
+          title: `Kode "${code}" tidak ditemukan`,
+          description: 'Periksa barcode atau data produk yang tersimpan.',
+          tone: 'error',
+        });
         setIsScanning(false);
       }
     },
@@ -214,17 +286,29 @@ export default function POS() {
     });
 
     if (outOfStockItems.length > 0) {
-      alert(`Stok tidak cukup untuk produk: ${outOfStockItems.map(i => i.name).join(', ')}`);
+      notify({
+        title: 'Stok tidak cukup',
+        description: `Produk bermasalah: ${outOfStockItems.map(i => i.name).join(', ')}`,
+        tone: 'error',
+      });
       return;
     }
     
     if (paymentMethod === 'debt' && !selectedCustomer) {
-      alert('Mohon pilih pelanggan untuk pembayaran hutang');
+      notify({
+        title: 'Pelanggan belum dipilih',
+        description: 'Pembayaran hutang wajib terkait ke pelanggan.',
+        tone: 'error',
+      });
       return;
     }
 
     if (paymentMethod === 'cash' && cashAmount < total) {
-      alert('Uang tunai kurang!');
+      notify({
+        title: 'Uang tunai kurang',
+        description: 'Jumlah pembayaran belum menutup total transaksi.',
+        tone: 'error',
+      });
       return;
     }
 
@@ -274,7 +358,7 @@ export default function POS() {
       // 3. Update Customer Total Spent
       if (selectedCustomer) {
         const customerRef = doc(db, 'customers', selectedCustomer.id);
-        const updates: any = {
+        const updates: CustomerUpdatePayload = {
           totalSpent: increment(getTotal()),
           lastVisit: serverTimestamp()
         };
@@ -309,14 +393,29 @@ export default function POS() {
       
       // Auto print prompt
       // We need to wait for state update to reflect in DOM before printing
-      setTimeout(() => {
-        if (confirm('Transaksi berhasil! Cetak struk?')) {
-          window.print();
+      notify({
+        title: 'Transaksi berhasil diproses',
+        description: 'Stok, penjualan, dan data pelanggan sudah diperbarui.',
+        tone: 'success',
+      });
+      setTimeout(async () => {
+        const shouldPrint = await confirm({
+          title: 'Cetak struk sekarang?',
+          description: 'Struk transaksi terakhir siap dicetak.',
+          confirmLabel: 'Cetak',
+          cancelLabel: 'Nanti',
+        });
+        if (shouldPrint) {
+          handlePrintReceipt();
         }
       }, 500);
     } catch (error) {
       console.error('Error processing sale:', error);
-      alert('Gagal memproses transaksi');
+      notify({
+        title: 'Transaksi gagal diproses',
+        description: 'Periksa data transaksi lalu coba lagi.',
+        tone: 'error',
+      });
     } finally {
       setProcessing(false);
     }
@@ -326,22 +425,53 @@ export default function POS() {
     <>
       {/* Hidden Receipt for Printing */}
       {lastTransaction && (
-        <PrintableReceipt 
-          items={lastTransaction.items}
-          total={lastTransaction.total}
-          user={user}
-          customer={lastTransaction.customer}
-          paymentMethod={lastTransaction.paymentMethod}
-          date={lastTransaction.date}
-          cashAmount={lastTransaction.cashAmount}
-          change={lastTransaction.change}
-        />
+        <div className="pointer-events-none fixed left-[-9999px] top-0 opacity-0">
+          <PrintableReceipt 
+            ref={receiptRef}
+            items={lastTransaction.items}
+            total={lastTransaction.total}
+            user={user}
+            customer={lastTransaction.customer}
+            paymentMethod={lastTransaction.paymentMethod}
+            date={lastTransaction.date}
+            cashAmount={lastTransaction.cashAmount}
+            change={lastTransaction.change}
+          />
+        </div>
       )}
 
-      {/* Main POS Interface - Hidden when printing */}
-      <div className="flex h-[calc(100vh-theme(spacing.24))] gap-6 print:hidden">
+      {/* Main POS Interface */}
+      <div className="space-y-6">
+        <section className="relative overflow-hidden rounded-[32px] border border-white/70 bg-[linear-gradient(135deg,rgba(6,78,59,0.96),rgba(5,150,105,0.9)_45%,rgba(16,185,129,0.78))] px-6 py-7 text-white shadow-[0_24px_80px_rgba(5,150,105,0.22)] md:px-8 md:py-9">
+          <div className="absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.18),transparent_58%)]" />
+          <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-100/75">Point Of Sale</p>
+              <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Checkout lebih cepat, scan lebih rapi</h1>
+              <p className="mt-3 max-w-xl text-sm text-emerald-50/82 md:text-base">
+                Kelola kasir, pemilihan pelanggan, dan pembayaran dari satu permukaan kerja yang lebih bersih dan fokus.
+              </p>
+            </div>
+            <div className="grid grid-cols-3 gap-3 md:min-w-[360px]">
+              <div className="rounded-2xl border border-white/12 bg-white/10 p-4 backdrop-blur-md">
+                <div className="text-[11px] uppercase tracking-[0.2em] text-emerald-100/75">Keranjang</div>
+                <div className="mt-2 text-2xl font-bold">{items.length}</div>
+              </div>
+              <div className="rounded-2xl border border-white/12 bg-black/10 p-4 backdrop-blur-md">
+                <div className="text-[11px] uppercase tracking-[0.2em] text-emerald-100/75">Pelanggan</div>
+                <div className="mt-2 text-lg font-bold truncate">{selectedCustomer?.name || 'Umum'}</div>
+              </div>
+              <div className="rounded-2xl border border-white/12 bg-white/10 p-4 backdrop-blur-md">
+                <div className="text-[11px] uppercase tracking-[0.2em] text-emerald-100/75">Total</div>
+                <div className="mt-2 text-xl font-bold">Rp {total.toLocaleString()}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      <div className="flex min-h-[calc(100vh-theme(spacing.24))] gap-6">
         {/* Product Grid Section */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="section-shell flex-1 flex flex-col min-w-0 p-5 md:p-6">
         <div className="mb-6 space-y-4">
           
           {/* Scanner Modal */}
@@ -365,6 +495,13 @@ export default function POS() {
             </div>
           )}
           
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="section-headline mb-2">Katalog</p>
+              <h2 className="text-xl font-bold text-slate-800">Pilih produk</h2>
+            </div>
+          </div>
+
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
             {categories.map(category => (
               <button
@@ -426,14 +563,14 @@ export default function POS() {
       </div>
 
       {/* Cart Section */}
-      <div className="w-96 bg-white rounded-2xl shadow-lg border border-slate-100 flex flex-col h-full">
-        <div className="p-6 border-b border-slate-100">
+      <div className="section-shell w-96 flex flex-col h-full overflow-hidden">
+        <div className="border-b border-slate-100/80 p-6">
           <div className="flex items-center gap-3 mb-1">
             <ShoppingCart className="w-6 h-6 text-emerald-600" />
             <h2 className="text-xl font-bold text-slate-800">Pesanan Saat Ini</h2>
             {lastTransaction && (
               <button
-                onClick={() => window.print()}
+                onClick={() => handlePrintReceipt()}
                 className="ml-auto p-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
                 title="Cetak Ulang Nota Terakhir"
               >
@@ -477,7 +614,11 @@ export default function POS() {
                   addToCartWithStockCheck(p);
                   setSearchTerm('');
                 } else {
-                  alert('Produk tidak ditemukan');
+                  notify({
+                    title: 'Produk tidak ditemukan',
+                    description: 'Cek nama produk lalu coba tambah lagi.',
+                    tone: 'error',
+                  });
                 }
               }}
               className="px-3 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
@@ -538,11 +679,11 @@ export default function POS() {
           )}
         </div>
 
-        <div className="p-6 bg-slate-50 border-t border-slate-100 rounded-b-2xl space-y-4">
+        <div className="space-y-4 border-t border-slate-100 bg-[linear-gradient(180deg,rgba(248,250,252,0.92),rgba(255,255,255,0.98))] p-6">
           <div className="space-y-2">
             <div className="flex justify-between text-slate-600">
               <span>Subtotal</span>
-              <span>Rp {getTotal().toLocaleString()}</span>
+              <span>Rp {total.toLocaleString()}</span>
             </div>
             <div className="flex justify-between text-slate-600">
               <span>Pajak (0%)</span>
@@ -550,18 +691,18 @@ export default function POS() {
             </div>
             <div className="flex justify-between text-lg font-bold text-slate-800 pt-2 border-t border-slate-200">
               <span>Total</span>
-              <span>Rp {getTotal().toLocaleString()}</span>
+              <span>Rp {total.toLocaleString()}</span>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-2">
-            {[
+            {([
               { id: 'cash', icon: Banknote, label: 'Cash' },
               { id: 'debt', icon: CreditCard, label: 'Hutang' }
-            ].map(method => (
+            ] as const).map(method => (
               <button
                 key={method.id}
-                onClick={() => setPaymentMethod(method.id as any)}
+                onClick={() => setPaymentMethod(method.id)}
                 className={`flex flex-col items-center justify-center p-2 rounded-lg border transition-all ${
                   paymentMethod === method.id
                     ? 'bg-emerald-50 border-emerald-500 text-emerald-700'
@@ -589,8 +730,8 @@ export default function POS() {
               </div>
               <div className="flex justify-between text-sm pt-2 border-t border-slate-200 mt-2">
                 <span className="text-slate-600">Kembalian:</span>
-                <span className={`font-bold ${cashAmount >= getTotal() ? 'text-emerald-600' : 'text-red-500'}`}>
-                  Rp {(cashAmount - getTotal()).toLocaleString()}
+                <span className={`font-bold ${cashAmount >= total ? 'text-emerald-600' : 'text-red-500'}`}>
+                  Rp {(cashAmount - total).toLocaleString()}
                 </span>
               </div>
             </div>
@@ -664,14 +805,15 @@ export default function POS() {
               <>
                 <span>Proses Pembayaran</span>
                 <span className="bg-emerald-500 px-2 py-0.5 rounded text-sm">
-                  Rp {getTotal().toLocaleString()}
+                  Rp {total.toLocaleString()}
                 </span>
               </>
             )}
           </button>
         </div>
       </div>
-    </div>
+      </div>
+      </div>
     </>
   );
 }

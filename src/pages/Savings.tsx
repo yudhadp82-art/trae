@@ -13,12 +13,24 @@ import {
 } from 'lucide-react';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '../api/firebase';
-import { Customer, SavingsAccount, SavingsTransaction } from '../types';
+import type { Customer, SavingsAccount, SavingsTransaction } from '../types';
 import { getSavingsAccount, processTransaction, getTransactions } from '../api/savings';
 import { useAuthStore } from '../store/authStore';
+import { useAppFeedback } from '../components/useAppFeedback';
+
+type SavingsCategory = 'wajib' | 'sukarela' | 'pokok';
+
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return 'Unknown error';
+}
 
 export default function Savings() {
   const { user } = useAuthStore();
+  const { notify } = useAppFeedback();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
@@ -93,10 +105,18 @@ export default function Savings() {
       setDescription('');
       setIsTransactionModalOpen(false);
       fetchSavingsData(selectedCustomer.id);
-      alert('Transaksi berhasil!');
-    } catch (error: any) {
+      notify({
+        title: 'Transaksi simpanan berhasil',
+        description: 'Saldo dan riwayat simpanan sudah diperbarui.',
+        tone: 'success',
+      });
+    } catch (error) {
       console.error("Transaction error:", error);
-      alert(`Gagal memproses transaksi: ${error.message}`);
+      notify({
+        title: 'Transaksi simpanan gagal',
+        description: getErrorMessage(error),
+        tone: 'error',
+      });
     } finally {
       setProcessing(false);
     }
@@ -157,9 +177,37 @@ export default function Savings() {
   );
 
   return (
+    <div className="space-y-6">
+      <section className="relative overflow-hidden rounded-[32px] border border-white/70 bg-[linear-gradient(135deg,rgba(67,56,202,0.96),rgba(124,58,237,0.9)_45%,rgba(168,85,247,0.78))] px-6 py-7 text-white shadow-[0_24px_80px_rgba(124,58,237,0.2)] md:px-8 md:py-9">
+        <div className="absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.18),transparent_58%)]" />
+        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-violet-100/75">Savings Desk</p>
+            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Simpanan anggota lebih tertata</h1>
+            <p className="mt-3 max-w-xl text-sm text-violet-50/82 md:text-base">
+              Pilih anggota, lihat saldo per kategori, dan catat transaksi simpanan dari panel yang lebih fokus.
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-3 md:min-w-[360px]">
+            <div className="rounded-2xl border border-white/12 bg-white/10 p-4 backdrop-blur-md">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-violet-100/75">Anggota</div>
+              <div className="mt-2 text-2xl font-bold">{customers.length}</div>
+            </div>
+            <div className="rounded-2xl border border-white/12 bg-black/10 p-4 backdrop-blur-md">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-violet-100/75">Riwayat</div>
+              <div className="mt-2 text-2xl font-bold">{transactions.length}</div>
+            </div>
+            <div className="rounded-2xl border border-white/12 bg-white/10 p-4 backdrop-blur-md">
+              <div className="text-[11px] uppercase tracking-[0.2em] text-violet-100/75">Saldo</div>
+              <div className="mt-2 text-xl font-bold">Rp {((savingsAccount?.balancePokok || 0) + (savingsAccount?.balanceWajib || 0) + (savingsAccount?.balanceSukarela || 0)).toLocaleString()}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
     <div className="flex h-[calc(100vh-theme(spacing.24))] gap-6">
       {/* Left Sidebar: Customer List */}
-      <div className="w-80 flex flex-col bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="section-shell w-80 flex flex-col overflow-hidden">
         <div className="p-4 border-b border-slate-100 bg-slate-50/50">
           <h2 className="font-bold text-slate-800 mb-4">Pilih Anggota</h2>
           <div className="relative">
@@ -213,19 +261,19 @@ export default function Savings() {
       {/* Main Content: Savings Details */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {!selectedCustomer ? (
-          <div className="flex-1 bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-slate-400">
+          <div className="section-shell flex-1 flex flex-col items-center justify-center text-slate-400">
             <Wallet className="w-16 h-16 mb-4 opacity-50" />
             <h3 className="text-lg font-medium text-slate-600">Pilih Anggota</h3>
             <p className="text-sm">Pilih anggota dari daftar untuk melihat data simpanan</p>
           </div>
         ) : loadingAccount ? (
-          <div className="flex-1 bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center justify-center">
+          <div className="section-shell flex-1 flex items-center justify-center">
             <Loader className="w-8 h-8 text-emerald-600 animate-spin" />
           </div>
         ) : (
           <div className="flex flex-col h-full gap-6">
             {/* Header */}
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-start">
+            <div className="section-shell flex justify-between items-start p-6">
               <div>
                 <h1 className="text-2xl font-bold text-slate-800">{selectedCustomer.name}</h1>
                 <p className="text-slate-500 flex items-center gap-2 mt-1">
@@ -256,7 +304,7 @@ export default function Savings() {
                 { label: 'Simpanan Wajib', value: savingsAccount?.balanceWajib || 0, color: 'emerald', type: 'wajib' },
                 { label: 'Simpanan Sukarela', value: savingsAccount?.balanceSukarela || 0, color: 'purple', type: 'sukarela' }
               ].map((item) => (
-                <div key={item.label} className={`bg-white p-5 rounded-xl shadow-sm border border-slate-100 relative overflow-hidden group`}>
+                <div key={item.label} className="section-shell relative overflow-hidden p-5 group">
                   <div className={`absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity bg-${item.color}-500 rounded-bl-3xl`}>
                     <Wallet className={`w-8 h-8 text-${item.color}-600`} />
                   </div>
@@ -266,14 +314,14 @@ export default function Savings() {
                   </h3>
                   <div className="mt-4 flex gap-2">
                     <button 
-                      onClick={() => openTransactionModal('deposit', item.type as any)}
+                      onClick={() => openTransactionModal('deposit', item.type as SavingsCategory)}
                       className="text-xs font-medium text-emerald-600 hover:text-emerald-700 flex items-center gap-1 bg-emerald-50 px-2 py-1 rounded"
                     >
                       <Plus className="w-3 h-3" /> Setor
                     </button>
                     {item.value > 0 && (
                       <button 
-                        onClick={() => openTransactionModal('withdrawal', item.type as any)}
+                        onClick={() => openTransactionModal('withdrawal', item.type as SavingsCategory)}
                         className="text-xs font-medium text-red-600 hover:text-red-700 flex items-center gap-1 bg-red-50 px-2 py-1 rounded"
                       >
                         <Minus className="w-3 h-3" /> Tarik
@@ -285,7 +333,7 @@ export default function Savings() {
             </div>
 
             {/* Transaction History */}
-            <div className="flex-1 bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col min-h-0">
+            <div className="section-shell flex-1 flex flex-col min-h-0">
               <div className="p-4 border-b border-slate-100 flex items-center gap-2">
                 <History className="w-5 h-5 text-slate-400" />
                 <h3 className="font-bold text-slate-800">Riwayat Transaksi</h3>
@@ -367,7 +415,7 @@ export default function Savings() {
                       key={cat}
                       type="button"
                       disabled={transactionType === 'deposit' && cat === 'pokok' && isPokokLunas}
-                      onClick={() => handleCategoryChange(cat as any)}
+                      onClick={() => handleCategoryChange(cat as SavingsCategory)}
                       className={`py-2 px-1 rounded-lg text-sm capitalize border transition-all ${
                         transactionCategory === cat
                           ? 'bg-emerald-600 text-white border-emerald-600 shadow-md'
@@ -430,6 +478,7 @@ export default function Savings() {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }
